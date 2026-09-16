@@ -115,12 +115,15 @@ Alpha testers are especially useful on different GPUs, APIs, architectures and g
 - REVENANT capture/inference/replacement evidence when applicable
 - `UNCANNY-STATUS.cmd` report
 
+New to UNCANNY? Start with the **[Usage / installation walkthrough](USAGE.md)**.
+
 Use the repository's **compatibility report** issue template so results can become searchable, reproducible compatibility evidence.
 
 ---
 
 ## Documentation
 
+- [Usage / installation walkthrough](USAGE.md)
 - [DLSS 5 tools and feeders — where UNCANNY fits](docs/DLSS5-TOOLS-AND-FEEDERS.md)
 - [Compatibility and evidence levels](docs/COMPATIBILITY.md)
 - [UNCANNY FAQ](docs/FAQ.md)

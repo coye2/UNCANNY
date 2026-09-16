@@ -4,53 +4,54 @@
 
 **UNCANNY** is an independent Windows real-time remastering middleware project built around **DLSS 5 / Feature-18 neural rendering**, adaptive multi-stage reconstruction, motion protection, and persistent asset reconstruction.
 
-UNCANNY is designed to put the pieces of a modern neural-remaster stack into one product: graphics-API attachment, neural transport, Clean reconstruction stages, Motion Guard, Ghosting Guard, REVENANT asset reconstruction, a Control Deck, rollback, diagnostics, and compatibility tooling.
-
-> **Current public test candidate:** `v0.19.0-alpha.1` — `release-alpha.rc2.hotfix.2`  
-> **ABI:** 140  
-> **Status:** public-alpha candidate / real-hardware validation in progress  
+> **Current public build:** `v0.19.0-alpha.1` — `release-alpha.rc2.hotfix.2`  
+> **Status:** public alpha / active development  
 > **Platform focus:** Windows + NVIDIA RTX  
 > **API focus:** Direct3D 9, 10, 11 and 12; PCSX2 is a primary emulator target
+
+## Download and install
+
+**The files in the main repository are currently the public documentation, testing information and release metadata. The full development/source workspace is not published here. The usable compiled UNCANNY runtime is distributed through GitHub Releases.**
+
+1. Open **Releases** on this repository.
+2. Download the latest `UNCANNY-...-Windows.zip` public package.
+3. Extract the ZIP somewhere outside the game folder.
+4. Drag the target game's `.exe` onto `INSTALL-NATIVE.cmd`.
+5. Follow the installer output, then launch the game normally.
+
+Do not download packages marked `PRIVATE-WORKSPACE-RECOVERY`; those are not public runtime distributions.
+
+UNCANNY is free to test. The current public GitHub repository should **not** be interpreted as a complete source distribution or a build-from-source repository.
+
+---
+
+## What UNCANNY is
 
 UNCANNY is **not simply a ReShade preset or a single graphics add-on**. The current stack contains native runtime components, x86/x64 interoperability, an x64 neural helper for legacy processes, a standalone Control Deck, REVENANT workers, diagnostics, installer/rollback logic and protected runtime resources. Some compatibility paths can interoperate with third-party graphics components internally where appropriate.
 
 UNCANNY is independent and is not affiliated with or endorsed by NVIDIA. NVIDIA and DLSS are trademarks of NVIDIA Corporation.
 
----
-
-## What UNCANNY does
-
 ### DLSS 5 neural rendering
-UNCANNY integrates a real neural-rendering path and tracks actual provider creation, evaluation, returned output and presentation evidence instead of treating file presence or a green status indicator as proof of DLSS 5 execution.
+UNCANNY integrates a neural-rendering path and tracks provider creation, evaluation, returned output and presentation evidence instead of treating file presence or a status indicator as proof of execution.
 
 ### Clean 1 / 1.5 / 2 / 2.5 / 3
-Clean stages are reconstruction-depth budgets, not labels for repeated sharpening. The current development runtime can schedule additional neural refinement stages when motion confidence, queue pressure, VRAM and frame budget permit them. Requested stage and actual neural-evaluation count are reported separately.
+Clean stages are reconstruction-depth budgets rather than repeated sharpening. Deeper stages are being developed to add refinement while respecting motion confidence, VRAM and frame budget.
 
 ### Motion Guard + Ghosting Guard
-Later reconstruction work is reduced or bypassed when temporal confidence is poor. The system is built to protect moving characters, weapon silhouettes, foliage, fences, particles, disocclusions, HUD elements and camera cuts instead of maximizing still-frame detail at any cost.
+Later reconstruction work can be reduced or bypassed when temporal confidence is poor, with the goal of protecting moving characters, weapon silhouettes, foliage, particles, disocclusions, HUD elements and camera cuts.
 
 ### REVENANT
-REVENANT is UNCANNY's persistent asset-reconstruction system. Its target pipeline is:
+REVENANT is UNCANNY's experimental persistent asset-reconstruction system. Its target pipeline is:
 
 `capture → identify → infer → validate → replace → reload/bind → rendered-use proof → persistence → exact restore`
 
-PCSX2 is the primary REVENANT acceptance target because it exposes a practical texture replacement path. Native-game resource substitution is also under active development.
+PCSX2 is the primary REVENANT acceptance target. End-to-end neural rendered-use proof is still under active development.
 
-### Legacy game compatibility
-UNCANNY contains explicit work for legacy Direct3D paths, including 32-bit game support and an x64 neural-helper route. D3D9/D3D10 legacy neural compatibility remains an active hardware-validation area; it is not represented here as universally proven.
+### Legacy compatibility
+UNCANNY contains explicit work for legacy Direct3D paths, including 32-bit game support and an x64 neural-helper route. D3D9/D3D10 neural compatibility remains an active hardware-validation area and is not claimed as universally proven.
 
 ### Control Deck, diagnostics and rollback
-UNCANNY ships as a product stack rather than a loose collection of effects. The runtime includes an integrated Control Deck, per-game state, hardware/runtime evidence, installer conflict handling, backups and rollback.
-
----
-
-## Where UNCANNY fits in the DLSS 5 ecosystem
-
-People comparing **DLSS 5 tools, DLSS5 feeders, neural-rendering injectors, real-time remaster tools and game-remaster middleware** will often encounter projects such as DLSS5-Feeder, RenoDX/ShortFuse, OptiScaler, Deep Fried Chicken and NVIDIA RTX Remix.
-
-UNCANNY occupies a different scope: it is trying to combine **neural rendering + motion-safe reconstruction + persistent asset reconstruction + compatibility + product-level control/rollback** in one independent remaster runtime.
-
-Read: **[DLSS 5 tools and feeders — where UNCANNY fits](docs/DLSS5-TOOLS-AND-FEEDERS.md)**.
+The runtime includes an external Control Deck, per-game state, runtime diagnostics, installer conflict handling, backups and rollback tooling.
 
 ---
 
@@ -61,13 +62,13 @@ Read: **[DLSS 5 tools and feeders — where UNCANNY fits](docs/DLSS5-TOOLS-AND-F
 | D3D12 x64 | strongest native PC path; regression testing continues |
 | D3D11 x64/x86 | implemented; game-specific acceptance continues |
 | D3D10 | compatibility path implemented; hardware acceptance required |
-| D3D9 / legacy x86 | UNCANNY runtime works in tested legacy titles; neural helper path remains experimental until Feature-18 return/present is proven broadly |
-| PCSX2 | primary emulator target; core UNCANNY pipeline is established, REVENANT neural rendered-use acceptance is still in progress |
+| D3D9 / legacy x86 | core runtime compatibility work exists; neural helper path remains experimental |
+| PCSX2 | primary emulator target; REVENANT neural rendered-use acceptance is still in progress |
 | Vulkan / OpenGL | not at DirectX parity yet |
 | REVENANT native PC | experimental |
-| Clean 2 / 2.5 / 3 | deeper neural scheduler implemented; real-GPU quality/performance validation ongoing |
+| Clean 2 / 2.5 / 3 | deeper scheduler exists; real-GPU quality/performance validation ongoing |
 
-See **[Compatibility](docs/COMPATIBILITY.md)** for the evidence standard and reporting terminology.
+See **[Compatibility](docs/COMPATIBILITY.md)** for more detail.
 
 ---
 
@@ -80,44 +81,20 @@ See **[Compatibility](docs/COMPATIBILITY.md)** for the evidence standard and rep
 - Helper protocol: `2`
 - Public Windows package: `UNCANNY-v0.19.0-alpha.1-ALPHA-RC2-HOTFIX-2-Windows.zip`
 - Public SHA-256: `bac0da28b86076daa18fbdeafb514043fb93e008c1518df9a17805f740754f86`
-- Build-host verification: 11 production Windows components compiled; 77 mixed regression records passed; 7 sanitizer executions passed; 527 ABI fields / 1,070 layout comparisons matched.
 
-The current candidate is intentionally described as a **test candidate**, not a universally verified release. Windows/NVIDIA/PCSX2 rendered acceptance remains required for the remaining headline gates.
+This is an **alpha test candidate**, not a claim of universal compatibility.
 
 Read **[CHANGELOG.md](CHANGELOG.md)** and **[Release status](RELEASES.md)**.
 
 ---
 
-## Frequently asked questions
+## Testing and feedback
 
-- **What is UNCANNY?** A universal real-time neural remaster engine in development for Windows games and emulators.
-- **Is UNCANNY a DLSS5 feeder?** It includes feeder/transport-style compatibility work, but its scope is broader: neural rendering, Clean reconstruction, motion protection, REVENANT asset rebuilding, controls, diagnostics and rollback.
-- **Does UNCANNY work with old DirectX games?** The core runtime has D3D9/D3D10 work, while legacy DLSS 5 Feature-18 execution is still being validated title by title.
-- **Does UNCANNY work with PCSX2?** PCSX2 is a primary target and one of the most-developed UNCANNY environments; REVENANT's final neural asset rendered-use proof is still an active acceptance gate.
-- **Is UNCANNY RTX Remix?** No. UNCANNY is an independent project with a different architecture and compatibility goal.
+Testing on different GPUs, games, APIs and architectures is welcome. Useful reports include the game/executable, graphics API, x86/x64, GPU + driver, UNCANNY revision, what worked, what failed, and the output from `UNCANNY-STATUS.cmd` when available.
 
-More: **[FAQ](docs/FAQ.md)**.
+Bug reports, compatibility findings and implementation feedback are welcome through GitHub issues.
 
----
-
-## Testing UNCANNY
-
-Alpha testers are especially useful on different GPUs, APIs, architectures and games. A good report includes:
-
-- game and executable
-- graphics API
-- x86 or x64
-- GPU + driver
-- UNCANNY revision / ABI
-- whether the core runtime attaches
-- whether Feature-18 create/evaluate succeeds
-- whether neural output returns and reaches presentation
-- REVENANT capture/inference/replacement evidence when applicable
-- `UNCANNY-STATUS.cmd` report
-
-New to UNCANNY? Start with the **[Usage / installation walkthrough](USAGE.md)**.
-
-Use the repository's **compatibility report** issue template so results can become searchable, reproducible compatibility evidence.
+New users should start with the **[Usage / installation walkthrough](USAGE.md)**.
 
 ---
 
@@ -133,9 +110,5 @@ Use the repository's **compatibility report** issue template so results can beco
 - [Security](SECURITY.md)
 
 ---
-
-## Project name and canonical link
-
-The preferred project name is **UNCANNY — Universal DLSS 5 Neural Remaster Engine**. Using the full name on first reference helps distinguish this project from unrelated uses of the ordinary word “uncanny”.
 
 Canonical repository: `github.com/coye2/UNCANNY`

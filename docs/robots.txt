@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://coye2.github.io/UNCANNY/sitemap.xml

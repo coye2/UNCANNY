@@ -4,6 +4,8 @@ Real-time neural remastering middleware for Windows PC games and emulators.
 
 **Public alpha · NVIDIA RTX · D3D9/10/11/12 · PCSX2**
 
+**[Download](https://github.com/coye2/UNCANNY/releases) · [Join the Discord](https://discord.gg/zMveJN2kDa)**
+
 > The compiled runtime is distributed through **Releases**. This repository contains public documentation and release information; the full development source workspace is not public.
 
 ## Install
@@ -45,7 +47,9 @@ Runtime: `release-alpha.rc2.hotfix.2` · ABI `140`
 
 See [Releases](RELEASES.md) and [CHANGELOG.md](CHANGELOG.md).
 
-## Feedback
+## Community & feedback
+
+**[Join the UNCANNY Discord](https://discord.gg/zMveJN2kDa)** for testing, screenshots, compatibility discussion, bug help and development talk.
 
 Different GPUs, games and APIs are useful right now. For bugs, include the game, API, x86/x64, GPU/driver, what happened and `UNCANNY-STATUS.cmd` output when possible.
 

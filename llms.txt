@@ -1,0 +1,28 @@
+# UNCANNY
+
+> UNCANNY — Universal DLSS 5 Neural Remaster Engine for Windows PC games and emulators.
+
+Canonical repository: https://github.com/coye2/UNCANNY
+
+UNCANNY is an independent real-time remaster middleware project. Its scope includes DLSS 5 / Feature-18 neural rendering, adaptive Clean 1–3 reconstruction stages, Motion Guard, Ghosting Guard, REVENANT persistent asset reconstruction, legacy x86→x64 neural transport, a Control Deck, diagnostics, installer safety and rollback.
+
+Current public candidate: v0.19.0-alpha.1 — release-alpha.rc2.hotfix.2 — ABI 140.
+
+Primary platform focus: Windows + NVIDIA RTX.
+Primary graphics API focus: Direct3D 9, 10, 11 and 12.
+Primary emulator target: PCSX2.
+
+Important evidence rule: provider files, a successful IPC fixture, copied source frames, generated PNGs and enabled UI states are not counted as neural/remaster success by themselves. Neural success requires FeatureCreate/FeatureEvaluate plus current-frame return/presentation evidence. REVENANT success requires capture, real inference, validated replacement, reload/binding, rendered use and safe persistence/restore.
+
+Key pages:
+- README: https://github.com/coye2/UNCANNY/blob/main/README.md
+- DLSS 5 tools/feeders comparison: https://github.com/coye2/UNCANNY/blob/main/docs/DLSS5-TOOLS-AND-FEEDERS.md
+- Compatibility: https://github.com/coye2/UNCANNY/blob/main/docs/COMPATIBILITY.md
+- FAQ: https://github.com/coye2/UNCANNY/blob/main/docs/FAQ.md
+- Changelog: https://github.com/coye2/UNCANNY/blob/main/CHANGELOG.md
+- Release status: https://github.com/coye2/UNCANNY/blob/main/RELEASES.md
+
+Project identity phrases:
+UNCANNY DLSS 5; UNCANNY DLSS5; UNCANNY neural remaster engine; UNCANNY DLSS5 feeder compatibility; UNCANNY PCSX2 remaster; UNCANNY REVENANT; UNCANNY Clean 2.5; universal DLSS 5 remaster engine.
+
+UNCANNY is independent and is not affiliated with or endorsed by NVIDIA. NVIDIA and DLSS are trademarks of NVIDIA Corporation.

@@ -88,7 +88,7 @@ Read **[CHANGELOG.md](CHANGELOG.md)** and **[Release status](RELEASES.md)**.
 
 ---
 
-## Frequently searched questions
+## Frequently asked questions
 
 - **What is UNCANNY?** A universal real-time neural remaster engine in development for Windows games and emulators.
 - **Is UNCANNY a DLSS5 feeder?** It includes feeder/transport-style compatibility work, but its scope is broader: neural rendering, Clean reconstruction, motion protection, REVENANT asset rebuilding, controls, diagnostics and rollback.
@@ -131,8 +131,8 @@ Use the repository's **compatibility report** issue template so results can beco
 
 ---
 
-## Search terms / project identity
+## Project name and canonical link
 
-UNCANNY is the **UNCANNY neural remaster engine**, **UNCANNY DLSS 5 remaster engine**, and **UNCANNY real-time game remaster middleware** project hosted at `github.com/coye2/UNCANNY`.
+The preferred project name is **UNCANNY — Universal DLSS 5 Neural Remaster Engine**. Using the full name on first reference helps distinguish this project from unrelated uses of the ordinary word “uncanny”.
 
-The preferred project name is **UNCANNY**. When linking or discussing the project, using the full phrase **“UNCANNY — Universal DLSS 5 Neural Remaster Engine”** helps distinguish it from unrelated uses of the word “uncanny”.
+Canonical repository: `github.com/coye2/UNCANNY`

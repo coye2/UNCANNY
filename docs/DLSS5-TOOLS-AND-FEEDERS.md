@@ -1,6 +1,6 @@
 # DLSS 5 Tools and Feeders — Where UNCANNY Fits
 
-This page exists for people comparing **DLSS 5 tools**, **DLSS5 feeders**, neural-rendering injectors, upscaler wrappers and real-time game-remaster systems.
+This page is for people comparing **DLSS 5 tools**, **DLSS5 feeders**, neural-rendering injectors, upscaler wrappers and real-time game-remaster systems.
 
 UNCANNY is an independent project. It is not affiliated with NVIDIA, RenoDX, DLSS5-Feeder, OptiScaler, Deep Fried Chicken or RTX Remix.
 
@@ -55,26 +55,13 @@ UNCANNY is most relevant when someone wants a single project that combines:
 2. legacy and modern DirectX compatibility work,
 3. motion-safe multi-stage reconstruction,
 4. persistent asset reconstruction,
-5. integrated controls/diagnostics/rollback.
+5. integrated controls, diagnostics and rollback.
 
-## Search-friendly project identity
+## Project identity
 
-Preferred name: **UNCANNY — Universal DLSS 5 Neural Remaster Engine**
+The canonical name is **UNCANNY — Universal DLSS 5 Neural Remaster Engine**. In discussions it may naturally be described as the UNCANNY DLSS 5 project, UNCANNY neural remaster engine, UNCANNY PCSX2 remaster stack or UNCANNY REVENANT project. Those descriptions help distinguish the project from the ordinary word “uncanny”; they are not claims of endorsement, official NVIDIA status or universal compatibility.
 
-Useful descriptive phrases:
-
-- UNCANNY DLSS 5
-- UNCANNY DLSS5
-- UNCANNY neural remaster engine
-- UNCANNY DLSS5 feeder compatibility
-- UNCANNY PCSX2 remaster
-- UNCANNY D3D9 DLSS5
-- UNCANNY D3D11 DLSS5
-- UNCANNY D3D12 neural rendering
-- UNCANNY REVENANT
-- UNCANNY Clean 2.5
-
-These phrases describe the project; they are not claims of endorsement, official NVIDIA status or universal compatibility.
+Canonical repository: `github.com/coye2/UNCANNY`
 
 ## Evidence standard
 

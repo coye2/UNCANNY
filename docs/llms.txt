@@ -1,0 +1,21 @@
+# UNCANNY
+
+UNCANNY — Universal DLSS 5 Neural Remaster Engine for Windows PC games and emulators.
+
+Canonical repository: https://github.com/coye2/UNCANNY
+Canonical site: https://coye2.github.io/UNCANNY/
+
+UNCANNY combines DLSS 5 / Feature-18 neural rendering, Clean multi-stage reconstruction, Motion Guard, Ghosting Guard, REVENANT persistent asset reconstruction, legacy x86-to-x64 neural transport, diagnostics, controls and rollback.
+
+Current candidate: v0.19.0-alpha.1 — release-alpha.rc2.hotfix.2 — ABI 140.
+
+Important evidence rule: provider files, transport fixtures, copied source frames, generated image files, or an enabled overlay are not sufficient evidence of neural/remaster success. Neural success requires real FeatureCreate/FeatureEvaluate evidence plus returned/presented output. REVENANT success requires real inference, validated replacement, reload/binding, rendered use, persistence and safe restore.
+
+Documentation:
+- https://github.com/coye2/UNCANNY/blob/main/README.md
+- https://github.com/coye2/UNCANNY/blob/main/docs/DLSS5-TOOLS-AND-FEEDERS.md
+- https://github.com/coye2/UNCANNY/blob/main/docs/COMPATIBILITY.md
+- https://github.com/coye2/UNCANNY/blob/main/docs/FAQ.md
+- https://github.com/coye2/UNCANNY/blob/main/CHANGELOG.md
+
+UNCANNY is independent and is not affiliated with or endorsed by NVIDIA.

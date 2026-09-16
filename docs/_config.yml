@@ -1,0 +1,6 @@
+title: "UNCANNY — Universal DLSS 5 Neural Remaster Engine"
+description: "Independent universal DLSS 5 neural remaster engine for Windows PC games and emulators: Clean reconstruction, Motion Guard, Ghosting Guard, REVENANT, legacy compatibility, diagnostics and rollback."
+url: "https://coye2.github.io"
+baseurl: "/UNCANNY"
+markdown: kramdown
+permalink: pretty

@@ -1,49 +1,27 @@
-# Contributing and Alpha Testing
+# Testing and Contributing
 
-UNCANNY's highest-value contributions during alpha are **reproducible compatibility reports** from different games, APIs, architectures and GPUs.
+UNCANNY is in public alpha. The most useful contribution right now is a reproducible compatibility or bug report.
 
-## What makes a useful report
+## Bug / compatibility report
 
 Please include:
 
-- game/title
-- exact executable name/path (you may redact personal folder names)
-- graphics API
-- x86 or x64
-- GPU model and driver
-- UNCANNY product version, runtime revision and ABI
-- whether UNCANNY attaches
-- whether Home / Control Deck works
-- whether Feature-18 create/evaluate succeeds
-- whether neural output returns and reaches presentation
-- whether REVENANT was tested
-- saved `UNCANNY-STATUS.cmd` report
+- game or emulator + version
+- executable used
+- D3D9/10/11/12
+- x86/x64
+- GPU + NVIDIA driver
+- UNCANNY version
+- what you expected
+- what actually happened
 - reproduction steps
+- `UNCANNY-STATUS.cmd` output when possible
+- screenshot/video for visual problems
 
-Use the **Compatibility report** issue template whenever possible.
+A working overlay or installed provider DLL does not by itself prove that neural output reached presentation. Keep that distinction clear when reporting results.
 
-## Evidence over assumptions
+## Security / private files
 
-Please do not report a path as working solely because:
+Do not upload private workspace-recovery archives, development material or sensitive local information to public issues.
 
-- the provider DLL exists
-- an overlay says enabled
-- an IPC fixture passed
-- a source frame was copied
-- an output file appeared on disk
-
-For neural rendering, the useful chain is:
-
-`FeatureCreate → FeatureEvaluate → neural return → composition → presentation`
-
-For REVENANT, the useful chain is:
-
-`capture → inference → validated replacement → reload/bind → visible rendered use → persistence/restore`
-
-## Private material
-
-Do not upload private source-recovery archives, development encryption material, private build workspaces or proprietary source to public issues.
-
-## Security reports
-
-See [SECURITY.md](SECURITY.md). Avoid posting exploit details or sensitive local paths in a public issue.
+For security problems, see [SECURITY.md](SECURITY.md).

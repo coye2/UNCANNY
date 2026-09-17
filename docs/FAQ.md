@@ -6,11 +6,25 @@ UNCANNY is experimental real-time remastering middleware for Windows games and e
 
 ## What is the current release?
 
-`v0.20.0-alpha.1 — ELYSIUM Hotfix 10`, runtime `release-alpha.1.elysium-hotfix10`, ABI 141.
+`v0.20.0-alpha.1 — ELYSIUM Hotfix 11`, runtime `release-alpha.1.elysium-hotfix11`, ABI 141.
+
+Exact public ZIP SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`.
 
 ## Where do I download it?
 
-Use the latest public Windows ZIP under **GitHub Releases** and follow [USAGE.md](../USAGE.md).
+Use the Hotfix 11 public Windows ZIP under **GitHub Releases** and follow [USAGE.md](../USAGE.md).
+
+## What happened with the Windows Defender warning?
+
+The first Hotfix 11 package mistakenly shipped internal acceptance-test executables under `diagnostics/`. Defender flagged `revenant-commit32.exe`. That executable is a REVENANT development test harness, not a runtime dependency.
+
+The corrected public package removes the complete internal diagnostic executable set. Microsoft Defender signatures were updated and the cleaned runtime tree plus the completed final ZIP were both scanned on a fresh GitHub-hosted Windows runner: **0 detections**. No Defender exclusions, allowlisting or bypass were used.
+
+See [MALWARE-VERIFICATION.md](MALWARE-VERIFICATION.md) for the exact verification record.
+
+## Do I need to disable Defender or whitelist UNCANNY?
+
+No. UNCANNY does not require disabling Defender or adding a broad antivirus exclusion. If a current official package is detected, report the exact file, threat name, release tag and ZIP SHA-256 so it can be investigated.
 
 ## Is the source public?
 
@@ -22,7 +36,7 @@ No. UNCANNY ships native runtime components, controls, diagnostics, installation
 
 ## What are UNCANNY PASSES 1 / 1.5 / 2 / 2.5 / 3?
 
-They control increasing native ELYSIUM reconstruction depth. Hotfix 10 fixes the Control Deck so this selector drives the actual UNCANNY renderer field.
+They control increasing native ELYSIUM reconstruction depth. Hotfix 10 fixed the Control Deck so this selector drives the actual UNCANNY renderer field; Hotfix 11 preserves that repair.
 
 ## Is that the same as DLSS 5 PASSES?
 
@@ -46,7 +60,7 @@ The runtime contains legacy compatibility work, but the neural path on D3D9/D3D1
 
 ## D3D11 / D3D12?
 
-These are the primary PC test paths, with D3D12 currently the strongest.
+These are the primary PC test paths. Hotfix 11 specifically changes D3D11 first-frame startup so native presentation is established before optional neural/Deck preprocessing.
 
 ## Vulkan / OpenGL?
 

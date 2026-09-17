@@ -1,0 +1,140 @@
+name: Publish UNCANNY ELYSIUM Engine 4.5 Adaptive Realism
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-engine45-adaptive.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      TAG: v0.20.0-alpha.1-elysium-engine45
+      RELEASE_ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
+      EXPECTED_SHA256: f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512
+      SOURCE_COMMIT: 8f021aafef138784d042d81e2c7287e934d5cf3b
+      ARTIFACT_URL: "https://sdmntprcentralus.oaiusercontent.com/files/00000000-7924-81f5-8b3e-d49295c95b22/raw?se=2026-09-17T22%3A32%3A17Z&sp=r&sv=2026-02-06&sr=b&scid=246efa3f-bd5a-5f8c-bade-9b8792d3eebb&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T18%3A16%3A18Z&ske=2026-09-18T18%3A16%3A18Z&sks=b&skv=2026-02-06&sig=mFSyj8b6uaPoq4KZXHXu67efhC0ASd5Ib%2BHe4AUhIU0%3D"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Retrieve exact Defender-gated Adaptive Realism artifact
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri $env:ARTIFACT_URL -OutFile engine45-artifact.zip -UseBasicParsing
+          New-Item -ItemType Directory -Path artifact -Force | Out-Null
+          Expand-Archive -LiteralPath engine45-artifact.zip -DestinationPath artifact -Force
+          $inner=Get-ChildItem artifact -Filter $env:RELEASE_ZIP -Recurse -File | Select-Object -First 1
+          if(-not $inner){throw 'Engine 4.5 release ZIP missing from gated artifact.'}
+          Copy-Item -LiteralPath $inner.FullName -Destination $env:RELEASE_ZIP -Force
+          $actual=(Get-FileHash -LiteralPath $env:RELEASE_ZIP -Algorithm SHA256).Hash.ToLowerInvariant()
+          if($actual -ne $env:EXPECTED_SHA256){throw "Engine 4.5 SHA-256 mismatch: $actual"}
+          "$actual  $env:RELEASE_ZIP" | Set-Content -LiteralPath ($env:RELEASE_ZIP+'.sha256') -Encoding ascii
+
+      - name: Verify public package boundary and restricted-shader exclusion
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path verify-tree -Force | Out-Null
+          Expand-Archive -LiteralPath $env:RELEASE_ZIP -DestinationPath verify-tree -Force
+          $root=Get-ChildItem verify-tree -Directory | Select-Object -First 1
+          if(-not $root){throw 'Release root missing.'}
+          foreach($required in @('UNCANNY.exe','UNCANNY-SCAN.ps1','assets/UNCANNY-logo.xaml','docs/AMD-ENGINE45.md','docs/GIGI-PRESET-MAPPING.md','config/looks.json','config/controls.json','VERSION.json')){
+            if(-not (Test-Path -LiteralPath (Join-Path $root.FullName $required))){throw "Required public file missing: $required"}
+          }
+          $leaks=@(Get-ChildItem $root.FullName -Recurse -File | Where-Object {$_.FullName -match '[\\/](src|tests|development)[\\/]'} )
+          if($leaks.Count){throw 'Private source/test material leaked into release.'}
+          $shaderSource=@(Get-ChildItem $root.FullName -Recurse -File | Where-Object {$_.Extension -match '^\.(fx|fxh|hlsl)$'})
+          if($shaderSource.Count){throw ('Shader source leaked into public release: '+(($shaderSource.FullName)-join ', '))}
+          $restricted='(?i)(MartysMods_|RTGI|ReGrade|RELIGHT|iMMERSE|METEOR|qUINT)'
+          $named=@(Get-ChildItem $root.FullName -Recurse -File | Where-Object {$_.Name -match $restricted})
+          if($named.Count){throw ('Restricted third-party shader asset name found in package: '+(($named.FullName)-join ', '))}
+          $version=Get-Content -LiteralPath (Join-Path $root.FullName 'VERSION.json') -Raw | ConvertFrom-Json
+          if($version.abi -ne 143 -or $version.revision -ne 'release-alpha.1.elysium-engine45'){throw 'Release identity mismatch.'}
+          if($version.checkpoint -ne 'ELYSIUM-ENGINE45-ADAPTIVE-REALISM'){throw 'Adaptive Realism checkpoint missing from release metadata.'}
+          Write-Host 'PASS: package boundary and restricted-shader exclusion verified.'
+
+      - name: Microsoft Defender final public-release gate
+        shell: pwsh
+        run: |
+          $before=Get-MpComputerStatus -ErrorAction Stop
+          if(-not $before.AMServiceEnabled -or -not $before.AntivirusEnabled){throw 'Microsoft Defender unavailable; release blocked.'}
+          Update-MpSignature -ErrorAction Stop
+          $tree=(Resolve-Path verify-tree).Path
+          $zip=(Resolve-Path $env:RELEASE_ZIP).Path
+          Start-MpScan -ScanType CustomScan -ScanPath $tree -ErrorAction Stop
+          Start-MpScan -ScanType CustomScan -ScanPath $zip -ErrorAction Stop
+          Start-Sleep -Seconds 2
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object {$_.Resources -match 'verify-tree' -or $_.Resources -match [regex]::Escape($zip)})
+          if($hits.Count){$hits|Format-List *|Out-String|Write-Host;throw ('Microsoft Defender detected '+$hits.Count+' threat(s); release blocked.')}
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          [ordered]@{
+            release='UNCANNY v0.20.0-alpha.1 ELYSIUM Engine 4.5 Adaptive Realism'
+            runtime='release-alpha.1.elysium-engine45'
+            source_commit=$env:SOURCE_COMMIT
+            abi=143
+            checkpoint='ELYSIUM-ENGINE45-ADAPTIVE-REALISM'
+            zip_sha256=$env:EXPECTED_SHA256
+            defender_engine=$status.AMEngineVersion
+            defender_signatures=$status.AntivirusSignatureVersion
+            defender_signature_updated=[string]$status.AntivirusSignatureLastUpdated
+            detections=0
+            scanned='extracted final public ZIP and completed ZIP'
+            restricted_shader_assets='ABSENT'
+          } | ConvertTo-Json | Set-Content -LiteralPath MALWARE-VERIFICATION-ENGINE45.json -Encoding utf8
+
+      - name: Write Adaptive Realism release notes
+        shell: pwsh
+        run: |
+          @'
+          # UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism
+
+          This Engine 4.5 build preserves the Hotfix 11/12 compatibility, launcher, installer/rollback, PCSX2, REVENANT, Control Deck and neural work and adds the original UNCANNY Adaptive Realism pipeline.
+
+          ## Adaptive Realism
+          - Five real levels: **OFF / LOW / BALANCED / HIGH / INSANE**.
+          - Vendor-neutral UNCANNY processing: no CUDA, Tensor Core or DLSS 5 requirement.
+          - D3D11 can use capability-scored discovered depth plus UNCANNY optical flow for reconstructed normals, depth-aware contact occlusion and bounded screen-space diffuse/specular indirect lighting.
+          - Tiered fallback is honest: incomplete/untrusted scene data reduces temporal/GI capability; no trustworthy depth falls back to adaptive exposure, tonal reconstruction, local contrast, clarity, color and spatial enhancement instead of pretending GI is active.
+          - Scene-adaptive exposure/highlight/shadow/local-contrast/clarity/saturation behavior is driven by current-frame evidence rather than hardcoding the Eternights grade.
+          - Motion Guard/Ghosting Guard remain authoritative; confidence loss, source/history disagreement and disocclusion reduce or reject history. X2.5 deliberately uses the lowest temporal-history weight.
+          - ENABLE UNCANNY OFF remains the master bypass. UNCANNY pass depth remains separate from DLSS 5 pass depth.
+
+          ## Compatibility preserved
+          - D3D9 / D3D10 / D3D11 / D3D12 routes compile and remain packaged.
+          - NVIDIA / AMD / Intel capability handling remains vendor-neutral for Adaptive Realism.
+          - Existing launcher/scanner, exact-path PCSX2 handling, install/rollback, REVENANT, provider handling and DLSS 5 cooperation remain intact.
+
+          ## Verification
+          - Full Python regression suite: **PASS**
+          - Engine 4.5 compiled acceptance: **PASS — 22 checks**
+          - Adaptive Realism compiled tests: **PASS — x86 and x64**
+          - x86/x64 production binaries: **COMPILED**
+          - Protected shader roundtrip/tamper checks: **PASS**
+          - Restricted third-party shader source/package audit: **PASS**
+          - Public ZIP integrity/member audit: **PASS**
+          - Dynamic Windows install + rollback regression: **PASS**
+          - Microsoft Defender scan of extracted final ZIP and completed ZIP: **0 detections**
+          - Runtime: `release-alpha.1.elysium-engine45`
+          - ABI: `143`
+          - Source commit: `8f021aafef138784d042d81e2c7287e934d5cf3b`
+          - SHA-256: `f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
+
+          No paid/restricted Marty McFly / Pascal Gilcher shader source or binaries are bundled. The supplied reference preset was used only as behavioral calibration.
+
+          Real-game GPU visual/performance acceptance across specific NVIDIA, AMD and Intel hardware still requires target-machine testing and is not claimed as completed by CI.
+          '@ | Set-Content -LiteralPath ENGINE45-RELEASE-NOTES.md -Encoding utf8
+
+      - name: Replace Engine 4.5 prerelease with validated Adaptive Realism build
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view $env:TAG --repo $env:GITHUB_REPOSITORY 2>$null | Out-Null
+          if($LASTEXITCODE -eq 0){
+            gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Adaptive Realism' --notes-file ENGINE45-RELEASE-NOTES.md --prerelease --repo $env:GITHUB_REPOSITORY
+            gh release upload $env:TAG $env:RELEASE_ZIP ($env:RELEASE_ZIP+'.sha256') MALWARE-VERIFICATION-ENGINE45.json --clobber --repo $env:GITHUB_REPOSITORY
+          } else {
+            gh release create $env:TAG $env:RELEASE_ZIP ($env:RELEASE_ZIP+'.sha256') MALWARE-VERIFICATION-ENGINE45.json --target main --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Adaptive Realism' --notes-file ENGINE45-RELEASE-NOTES.md --prerelease --repo $env:GITHUB_REPOSITORY
+          }

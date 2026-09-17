@@ -20,4 +20,18 @@ Current public candidates use compiled-code hardening and authenticated encrypte
 
 ## Antivirus / signing
 
-Current alpha binaries are unsigned and have not received broad antivirus certification. A security product warning should be investigated rather than automatically ignored or suppressed.
+Current alpha binaries are unsigned. Public packaging now treats a Microsoft Defender detection as a release blocker, and internal CI/test executables are not part of the public runtime payload.
+
+The AV-clean Hotfix 11 package was scanned on a GitHub-hosted Windows Server 2025 runner after Microsoft Defender signatures were updated. Both the cleaned runtime tree and the completed ZIP returned **0 detections**.
+
+- Microsoft Defender engine: `1.1.26080.3`
+- Defender signatures: `1.459.256.0`
+- Defender product: `4.18.26080.3`
+- Defender exclusions used: **none**
+- Defender disabled/bypassed: **no**
+- Threat restoration/allowlisting used: **none**
+- Release ZIP SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
+
+The exact verification record is published in [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md), is included inside the release ZIP, and is attached to the Hotfix 11 GitHub release as `MALWARE-VERIFICATION-HOTFIX11.json`.
+
+A clean scan is evidence for that exact build and Defender signature snapshot, not a permanent guarantee against future antivirus signature changes. Any future warning should still be investigated rather than automatically ignored or suppressed.

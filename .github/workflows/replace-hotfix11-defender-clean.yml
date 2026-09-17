@@ -1,45 +1,184 @@
-name: Replace Hotfix 11 Defender-clean package
+name: Publish Defender-verified Hotfix 11
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - .github/workflows/replace-hotfix11-defender-clean.yml
+  workflow_dispatch:
 permissions:
   contents: write
+  actions: write
 jobs:
-  replace-release:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+  verify-and-publish:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    env:
+      TAG: v0.20.0-alpha.1-elysium-hotfix11
+      PACKAGE: UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+      CLEAN_SHA256: 8eb7835e6dc50e82d27622e91aaf1f285e462e7e79bd4578ed74ad3986d59f5e
+      SUPERSEDED_RUN: '35256629816'
+      ARTIFACT_URL: "https://sdmntprcentralus.oaiusercontent.com/files/00000000-0410-81f5-a4b5-ca382cd8759d/raw?se=2026-09-17T18%3A12%3A14Z&sp=r&sv=2026-02-06&sr=b&scid=98634bb3-5d96-5218-b8cc-11731e2ecc46&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T12%3A08%3A27Z&ske=2026-09-18T12%3A08%3A27Z&sks=b&skv=2026-02-06&sig=PogZMp0Rvzo0FidQeTG9XN0TFU3WlQbI5w5rRjAmHG8%3D"
     steps:
-      - name: Download clean artifact
-        shell: bash
-        env:
-          ARTIFACT_URL: "https://sdmntprcentralus.oaiusercontent.com/files/00000000-edac-81f5-ba23-956a5356b77a/raw?se=2026-09-17T18%3A12%3A59Z&sp=r&sv=2026-02-06&sr=b&scid=7a25c51c-471d-5bf8-9b82-d807153ca92c&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T18%3A06%3A37Z&ske=2026-09-18T18%3A06%3A37Z&sks=b&skv=2026-02-06&sig=w4y0rDKP8J0tdUKLcn6tec38Vf4CDpultI9BJLdVbW4%3D"
-        run: |
-          set -euo pipefail
-          curl -L --fail --retry 3 --max-time 90 -o artifact.zip "$ARTIFACT_URL"
-          unzip -q artifact.zip -d artifact
-      - name: Verify Defender-clean payload
-        shell: bash
-        run: |
-          set -euo pipefail
-          ZIP=artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-          echo "8eb7835e6dc50e82d27622e91aaf1f285e462e7e79bd4578ed74ad3986d59f5e  $ZIP" | sha256sum -c -
-          python -c "import zipfile,json; p='$ZIP'; z=zipfile.ZipFile(p); n=z.namelist(); assert not [x for x in n if '/diagnostics/' in x or x.lower().endswith(('revenant-commit32.exe','revenant-commit64.exe'))]; r='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'; assert json.loads(z.read(r+'public-build.json')).get('diagnostics')==[]"
-      - name: Upload ZIP directly to GitHub release API
-        shell: bash
+      - name: Stop superseded publisher
+        shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          ZIP=artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-          NAME=UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-          curl --fail-with-body --retry 3 --max-time 120 \
-            -X POST \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -H "Content-Type: application/zip" \
-            --data-binary "@$ZIP" \
-            "https://uploads.github.com/repos/coye2/UNCANNY/releases/390818823/assets?name=$NAME"
+          try { gh api --method POST "repos/${env:GITHUB_REPOSITORY}/actions/runs/$env:SUPERSEDED_RUN/cancel" | Out-Null } catch { Write-Host 'Superseded run already finished or could not be cancelled.' }
+          for($i=0;$i -lt 60;$i++){
+            $state = gh api "repos/${env:GITHUB_REPOSITORY}/actions/runs/$env:SUPERSEDED_RUN" --jq .status 2>$null
+            if($state -and $state -ne 'queued' -and $state -ne 'in_progress'){ break }
+            Start-Sleep -Seconds 2
+          }
+
+      - name: Download exact clean build artifact
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri $env:ARTIFACT_URL -OutFile artifact.zip -UseBasicParsing
+          Expand-Archive -LiteralPath artifact.zip -DestinationPath artifact -Force
+          $source = Get-ChildItem artifact -Recurse -File -Filter $env:PACKAGE | Select-Object -First 1
+          if(-not $source){ throw 'Clean Hotfix 11 ZIP is missing from the verified build artifact.' }
+          $hash=(Get-FileHash -LiteralPath $source.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          if($hash -ne $env:CLEAN_SHA256){ throw "Clean build hash mismatch: $hash" }
+          New-Item -ItemType Directory -Path release-tree,out -Force | Out-Null
+          Expand-Archive -LiteralPath $source.FullName -DestinationPath release-tree -Force
+
+      - name: Enforce public-package AV boundary
+        shell: pwsh
+        run: |
+          $root = Get-ChildItem release-tree -Directory | Select-Object -First 1
+          if(-not $root){ throw 'Release root missing.' }
+          $diag = Join-Path $root.FullName 'diagnostics'
+          if(Test-Path -LiteralPath $diag){ Remove-Item -LiteralPath $diag -Recurse -Force }
+          $blocked = @('revenant-commit32.exe','revenant-commit64.exe','neural-host-startup32.exe','neural-host-startup64.exe','protected-resources32.exe','protected-resources64.exe','proof-journal32.exe','proof-journal64.exe','gpu-acceptance32.exe','gpu-acceptance64.exe','neural-host-transport32.exe','neural-host-transport64.exe')
+          $leaks = @(Get-ChildItem -LiteralPath $root.FullName -Recurse -File | Where-Object { $_.Name -in $blocked })
+          if($leaks.Count){ throw ('Internal test executable leaked into public package: '+(($leaks.FullName) -join ', ')) }
+          $metaPath=Join-Path $root.FullName 'public-build.json'
+          $meta=Get-Content -LiteralPath $metaPath -Raw | ConvertFrom-Json
+          $meta.diagnostics=@()
+          if(-not $meta.PSObject.Properties['security']){ $meta | Add-Member -NotePropertyName security -NotePropertyValue ([pscustomobject]@{}) }
+          $meta.security | Add-Member -Force -NotePropertyName public_test_executables -NotePropertyValue 'NOT_SHIPPED'
+          $meta.security | Add-Member -Force -NotePropertyName microsoft_defender_release_gate -NotePropertyValue 'REQUIRED'
+          $meta | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath $metaPath -Encoding utf8
+
+      - name: Update Microsoft Defender and scan runtime contents
+        shell: pwsh
+        run: |
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          if(-not $status.AMServiceEnabled -or -not $status.AntivirusEnabled){ throw 'Microsoft Defender Antivirus is unavailable; release blocked.' }
+          Update-MpSignature -ErrorAction Stop
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          "DEFENDER_ENGINE=$($status.AMEngineVersion)" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "DEFENDER_SIGNATURE=$($status.AntivirusSignatureVersion)" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "DEFENDER_PRODUCT=$($status.AMProductVersion)" | Out-File -FilePath $env:GITHUB_ENV -Append
+          $root=(Get-ChildItem release-tree -Directory | Select-Object -First 1).FullName
+          Start-MpScan -ScanType CustomScan -ScanPath $root -ErrorAction Stop
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue)
+          if($hits.Count){ $hits | Format-List * | Out-String | Write-Host; throw 'Microsoft Defender detected a threat in the cleaned runtime tree. Release blocked.' }
+
+      - name: Add in-package malware verification record and rebuild hashes
+        shell: pwsh
+        run: |
+          $root=(Get-ChildItem release-tree -Directory | Select-Object -First 1).FullName
+          $docs=Join-Path $root 'docs'; New-Item -ItemType Directory -Path $docs -Force | Out-Null
+          $runUrl="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+          $stamp=(Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+          $report=@"
+# Malware verification — Hotfix 11
+
+Status: **PASS**
+
+The public UNCANNY Hotfix 11 runtime contents were scanned by Microsoft Defender Antivirus on a fresh GitHub-hosted Windows runner after internal test/diagnostic executables were removed from the public payload.
+
+- Provider: Microsoft Defender Antivirus
+- Result: 0 detections
+- Scan time (UTC): $stamp
+- Defender engine: $env:DEFENDER_ENGINE
+- Defender signatures: $env:DEFENDER_SIGNATURE
+- Defender product: $env:DEFENDER_PRODUCT
+- Workflow run: $runUrl
+- Internal diagnostics executables: NOT SHIPPED
+- revenant-commit32.exe / revenant-commit64.exe: NOT SHIPPED
+
+Those removed files are development acceptance-test harnesses and are not required by the UNCANNY or REVENANT runtime. Publication is additionally blocked unless the completed ZIP passes a second Microsoft Defender scan in this same workflow.
+"@
+          [IO.File]::WriteAllText((Join-Path $docs 'MALWARE-VERIFICATION.md'),$report,[Text.UTF8Encoding]::new($false))
+          $manifest=Join-Path $root 'PUBLIC-PACKAGE-MANIFEST.txt'
+          $sums=Join-Path $root 'SHA256SUMS.txt'
+          Remove-Item $manifest,$sums -Force -ErrorAction SilentlyContinue
+          $rels=@(Get-ChildItem -LiteralPath $root -Recurse -File | ForEach-Object { [IO.Path]::GetRelativePath($root,$_.FullName).Replace('\\','/') })
+          $rels += 'PUBLIC-PACKAGE-MANIFEST.txt','SHA256SUMS.txt'
+          $rels=@($rels | Sort-Object -Unique)
+          [IO.File]::WriteAllLines($manifest,$rels,[Text.UTF8Encoding]::new($false))
+          $lines=@()
+          foreach($rel in $rels){ if($rel -eq 'SHA256SUMS.txt'){ continue }; $p=Join-Path $root ($rel.Replace('/','\\')); $h=(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash.ToLowerInvariant(); $lines += "$h *$rel" }
+          [IO.File]::WriteAllLines($sums,$lines,[Text.UTF8Encoding]::new($false))
+
+      - name: Build final ZIP and run final Defender gate
+        shell: pwsh
+        run: |
+          $root=Get-ChildItem release-tree -Directory | Select-Object -First 1
+          $zip=Join-Path (Resolve-Path out).Path $env:PACKAGE
+          Compress-Archive -LiteralPath $root.FullName -DestinationPath $zip -CompressionLevel Optimal -Force
+          Start-MpScan -ScanType CustomScan -ScanPath $root.FullName -ErrorAction Stop
+          Start-MpScan -ScanType CustomScan -ScanPath $zip -ErrorAction Stop
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue)
+          if($hits.Count){ $hits | Format-List * | Out-String | Write-Host; throw 'Microsoft Defender detected a threat in the final release. Release blocked.' }
+          $hash=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $env:PACKAGE" | Set-Content -LiteralPath "$zip.sha256" -Encoding ascii
+          "FINAL_SHA256=$hash" | Out-File -FilePath $env:GITHUB_ENV -Append
+          $attest=[ordered]@{
+            schema='UNCANNY-MALWARE-VERIFICATION-1'; release='UNCANNY v0.20.0-alpha.1 - ELYSIUM Hotfix 11'; runtime='release-alpha.1.elysium-hotfix11'; abi=141;
+            status='PASS'; detections=0; provider='Microsoft Defender Antivirus'; engine=$env:DEFENDER_ENGINE; signature=$env:DEFENDER_SIGNATURE; product=$env:DEFENDER_PRODUCT;
+            zip=$env:PACKAGE; sha256=$hash; internal_test_executables_shipped=$false; scanned_utc=(Get-Date).ToUniversalTime().ToString('o'); workflow="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+          }
+          $attest | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath out/MALWARE-VERIFICATION-HOTFIX11.json -Encoding utf8
+
+      - name: Publish verified Hotfix 11 assets and notes
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $notes=@"
+# UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11
+
+Hotfix 11 keeps the D3D11 startup fail-open repair and Hotfix 10 ELYSIUM control wiring, with an immediate security packaging correction.
+
+## Security packaging fix
+- Removed all internal test/diagnostic executables from the public ZIP.
+- `revenant-commit32.exe` and `revenant-commit64.exe` are no longer shipped. They are development acceptance-test harnesses, not REVENANT runtime requirements.
+- Public package contains no `diagnostics/` executable directory.
+- Microsoft Defender signatures were updated before scanning.
+- Cleaned runtime tree: **0 detections**.
+- Completed ZIP: **0 detections**.
+- Defender engine: `$env:DEFENDER_ENGINE`
+- Defender signatures: `$env:DEFENDER_SIGNATURE`
+- Verification record is included at `docs/MALWARE-VERIFICATION.md` and attached as `MALWARE-VERIFICATION-HOTFIX11.json`.
+
+## Hotfix 11 runtime changes
+- D3D11 startup fails open to native `Present` / `Present1` first.
+- Feature-18 / DLSS 5 startup waits for a healthy advancing Present stream.
+- Live source frames remain authoritative while neural startup is deferred.
+- Present-stage diagnostics were expanded.
+- REVENANT, PCSX2 support, Hotfix 10 pass/slider wiring, install/update/rollback and the Lucid engine bundle are preserved.
+
+**SHA-256**
+`$env:FINAL_SHA256`
+
+Runtime: `release-alpha.1.elysium-hotfix11`  
+ABI: `141`
+"@
+          [IO.File]::WriteAllText('out/HOTFIX11-RELEASE-NOTES.md',$notes,[Text.UTF8Encoding]::new($false))
+          gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11' --notes-file out/HOTFIX11-RELEASE-NOTES.md --prerelease --repo $env:GITHUB_REPOSITORY
+          gh release upload $env:TAG "out/$env:PACKAGE" "out/$env:PACKAGE.sha256" 'out/MALWARE-VERIFICATION-HOTFIX11.json' --clobber --repo $env:GITHUB_REPOSITORY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: UNCANNY-HOTFIX11-DEFENDER-VERIFIED
+          path: |
+            out/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+            out/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
+            out/MALWARE-VERIFICATION-HOTFIX11.json
+            out/HOTFIX11-RELEASE-NOTES.md
+          if-no-files-found: error
+          retention-days: 30

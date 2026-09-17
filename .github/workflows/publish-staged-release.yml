@@ -10,41 +10,62 @@ permissions:
   contents: write
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+
       - name: Verify staged release payload
-        shell: bash
+        shell: pwsh
         run: |
-          cd .release-staging
-          sha256sum -c UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
-          unzip -t UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-          python - <<'PY'
-          import zipfile
-          p='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip'
-          with zipfile.ZipFile(p) as z:
-              names=set(z.namelist())
-              root='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'
-              assert root+'UNCANNY.exe' in names
-              assert root+'UNCANNY.cmd' not in names
-              assert root+'USAGE.md' in names
-              assert root+'docs/HOTFIX11-D3D11.md' in names
-              assert root+'docs/RELEASE-NOTES.md' in names
-              assert root+'docs/TROUBLESHOOTING.md' in names
-          print('PASS: staged release is root-level EXE-first Hotfix 11')
-          PY
+          $dir=Join-Path $PWD '.release-staging'
+          $zip=Join-Path $dir 'UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip'
+          $sum=Join-Path $dir 'UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256'
+          $expected=((Get-Content -LiteralPath $sum -Raw).Trim() -split '\s+')[0].ToLowerInvariant()
+          $actual=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if($actual -ne $expected){ throw "Release checksum mismatch: $actual" }
+          New-Item -ItemType Directory -Path verify-tree -Force | Out-Null
+          Expand-Archive -LiteralPath $zip -DestinationPath verify-tree -Force
+          $root=Get-ChildItem verify-tree -Directory | Select-Object -First 1
+          if(-not $root){ throw 'Release root missing.' }
+          foreach($required in @('UNCANNY.exe','USAGE.md','docs/HOTFIX11-D3D11.md','docs/RELEASE-NOTES.md','docs/TROUBLESHOOTING.md','docs/MALWARE-VERIFICATION.md')){
+            if(-not (Test-Path -LiteralPath (Join-Path $root.FullName $required))){ throw "Required public file missing: $required" }
+          }
+          if(Test-Path -LiteralPath (Join-Path $root.FullName 'UNCANNY.cmd')){ throw 'Top-level UNCANNY.cmd must not be the public launcher.' }
+          if(Test-Path -LiteralPath (Join-Path $root.FullName 'diagnostics')){ throw 'Internal diagnostics directory is forbidden in public releases.' }
+          $blocked=@('revenant-commit32.exe','revenant-commit64.exe','neural-host-startup32.exe','neural-host-startup64.exe','protected-resources32.exe','protected-resources64.exe','proof-journal32.exe','proof-journal64.exe','gpu-acceptance32.exe','gpu-acceptance64.exe','neural-host-transport32.exe','neural-host-transport64.exe')
+          $leaks=@(Get-ChildItem -LiteralPath $root.FullName -Recurse -File | Where-Object { $_.Name -in $blocked })
+          if($leaks.Count){ throw ('Internal test executable leaked into public package: '+(($leaks.FullName) -join ', ')) }
+          Write-Host 'PASS: staged release structure and public-package boundary verified.'
+
+      - name: Microsoft Defender release gate
+        shell: pwsh
+        run: |
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          if(-not $status.AMServiceEnabled -or -not $status.AntivirusEnabled){ throw 'Microsoft Defender unavailable; staged release blocked.' }
+          Update-MpSignature -ErrorAction Stop
+          $root=(Get-ChildItem verify-tree -Directory | Select-Object -First 1).FullName
+          $zip=(Resolve-Path '.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip').Path
+          Start-MpScan -ScanType CustomScan -ScanPath $root -ErrorAction Stop
+          Start-MpScan -ScanType CustomScan -ScanPath $zip -ErrorAction Stop
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue)
+          if($hits.Count){ $hits | Format-List * | Out-String | Write-Host; throw 'Microsoft Defender detected a threat. Staged release blocked.' }
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          Write-Host ('PASS: Defender 0 detections; engine '+$status.AMEngineVersion+'; signatures '+$status.AntivirusSignatureVersion)
+
       - name: Create or replace Hotfix 11 prerelease
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: v0.20.0-alpha.1-elysium-hotfix11
-        shell: bash
+        shell: pwsh
         run: |
-          ZIP=.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-          SUM=.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
-          NOTES=.release-staging/HOTFIX11-RELEASE-NOTES.md
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file "$NOTES" --prerelease
-            gh release upload "$TAG" "$ZIP" "$SUM" --clobber
-          else
-            gh release create "$TAG" "$ZIP" "$SUM" --target main --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file "$NOTES" --prerelease
-          fi
+          $zip='.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip'
+          $sum='.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256'
+          $notes='.release-staging/HOTFIX11-RELEASE-NOTES.md'
+          gh release view $env:TAG --repo $env:GITHUB_REPOSITORY 2>$null | Out-Null
+          if($LASTEXITCODE -eq 0){
+            gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Hotfix 11' --notes-file $notes --prerelease --repo $env:GITHUB_REPOSITORY
+            gh release upload $env:TAG $zip $sum --clobber --repo $env:GITHUB_REPOSITORY
+          } else {
+            gh release create $env:TAG $zip $sum --target main --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Hotfix 11' --notes-file $notes --prerelease --repo $env:GITHUB_REPOSITORY
+          }

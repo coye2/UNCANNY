@@ -16,6 +16,22 @@ UNCANNY is currently a Windows/NVIDIA RTX public alpha. The compiled runtime is 
 
 Do not mix DLLs or EXEs from older UNCANNY packages.
 
+## Verify your download
+
+The corrected official Hotfix 11 ZIP has this SHA-256:
+
+`a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
+
+The GitHub release also includes a `.sha256` file and `MALWARE-VERIFICATION-HOTFIX11.json`.
+
+The current public ZIP does **not** ship the internal `diagnostics/` test executables that were accidentally included in the first Hotfix 11 package. `revenant-commit32.exe` and `revenant-commit64.exe` are development acceptance-test harnesses and are not runtime dependencies.
+
+Before publication, Microsoft Defender signatures were updated on a fresh GitHub-hosted Windows runner. The cleaned runtime tree and the completed release ZIP were both scanned and returned **0 detections**. No Defender exclusions, threat restoration, allowlisting or antivirus bypass were used.
+
+You do not need to disable Defender or whitelist UNCANNY. If a current official build triggers a warning, report the exact file, threat name, release tag and ZIP SHA-256 so it can be investigated.
+
+Verification record: [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md)
+
 ## D3D11 startup behavior in Hotfix 11
 
 Hotfix 11 changes the startup order for direct D3D11 targets after a PCSX2 x64 tester reached `PRESENT_PATCH_OK` but then stayed at `PresentAttempts=1`, `Presents=0`, `PresentAdvancing=0` and 0 FPS.

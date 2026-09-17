@@ -1,0 +1,58 @@
+name: Replace Hotfix 11 with Defender-clean package
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/replace-hotfix11-defender-clean.yml
+permissions:
+  contents: write
+jobs:
+  replace-release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: v0.20.0-alpha.1-elysium-hotfix11
+      EXPECTED_SHA256: 8eb7835e6dc50e82d27622e91aaf1f285e462e7e79bd4578ed74ad3986d59f5e
+      ARTIFACT_URL: https://sdmntprcentralus.oaiusercontent.com/files/00000000-ac80-81f5-8b0c-65af0586f061/raw?se=2026-09-17T18%3A06%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=e4387c59-3076-52a5-92e3-82fae3256447&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T17%3A52%3A23Z&ske=2026-09-18T17%3A52%3A23Z&sks=b&skv=2026-02-06&sig=ITCZaOkYSU/Z41s9wcvIjjKoxUH0wsEpWZpEUgZiFHw%3D
+    steps:
+      - name: Download Defender-clean build artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o artifact.zip "$ARTIFACT_URL"
+          unzip -q artifact.zip -d artifact
+          ZIP="artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip"
+          SUM="$ZIP.sha256"
+          test -f "$ZIP"
+          test -f "$SUM"
+          echo "$EXPECTED_SHA256  $ZIP" | sha256sum -c -
+      - name: Verify no internal test executables leaked
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, zipfile, pathlib
+          p=pathlib.Path('artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip')
+          with zipfile.ZipFile(p) as z:
+              names=z.namelist()
+              bad=[n for n in names if '/diagnostics/' in n or n.lower().endswith(('revenant-commit32.exe','revenant-commit64.exe'))]
+              assert not bad, bad
+              root='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'
+              meta=json.loads(z.read(root+'public-build.json'))
+              assert meta.get('diagnostics')==[], meta.get('diagnostics')
+          print('PASS: public ZIP contains no internal diagnostic/test executables')
+          PY
+      - name: Replace existing Hotfix 11 release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip"
+          SUM="$ZIP.sha256"
+          gh release upload "$TAG" "$ZIP" "$SUM" --clobber
+          gh release edit "$TAG" --notes "$(gh release view "$TAG" --json body -q .body)
+
+## Defender-clean repack
+- Removed internal CI/test executables from the public package, including the revenant-commit test harness that triggered Microsoft Defender.
+- Real UNCANNY/REVENANT production runtime remains included.
+- Rebuilt package passed the dedicated Microsoft Defender release gate after signature update.
+- New SHA-256: $EXPECTED_SHA256"

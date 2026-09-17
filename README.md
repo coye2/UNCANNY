@@ -17,7 +17,7 @@ Hotfix 10 fixes the native **UNCANNY PASSES** selector and completes the live EL
 
 ## Install
 
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX10-Windows.zip` from **Releases**.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-Windows.zip` from **Releases**.
 2. Extract the ZIP completely.
 3. Run `UNCANNY.cmd`.
 4. Let the launcher scan, or add the real game/emulator executable manually.

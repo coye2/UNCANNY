@@ -1,26 +1,43 @@
-UNCANNY official machine-readable release summary
+UNCANNY
+Official public repository: https://github.com/coye2/UNCANNY
+Official Discord: https://discord.gg/zMveJN2kDa
+Latest release endpoint: https://github.com/coye2/UNCANNY/releases/latest
+Machine-readable release manifest: https://raw.githubusercontent.com/coye2/UNCANNY/main/CURRENT_RELEASE.json
 
-Current: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism
+CURRENT RELEASE
+Version: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13
 Tag: v0.20.0-alpha.1-elysium-engine45
-Revision: release-alpha.1.elysium-engine45
+Runtime revision: release-alpha.1.elysium-engine45
+Source revision: 16ee9cb8ef9cdb9f038577884bb023909743d1e1
 ABI: 143
-ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-SHA256: f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512
-Latest: https://github.com/coye2/UNCANNY/releases/latest
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
+Windows ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
+SHA-256: 843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811
+Release URL: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
 Direct ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-Manifest: https://raw.githubusercontent.com/coye2/UNCANNY/main/CURRENT_RELEASE.json
-Usage: https://github.com/coye2/UNCANNY/blob/main/USAGE.md
-Compatibility: https://github.com/coye2/UNCANNY/blob/main/docs/COMPATIBILITY.md
-Malware verification: https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md
 
-Engine 4.5 adds UNCANNY Adaptive Realism with five live levels: OFF / LOW / BALANCED / HIGH / INSANE.
-Adaptive Realism is vendor-neutral and separate from the NVIDIA-specific DLSS 5 route.
-Capability tiers are A (depth + native motion), B (depth + UNCANNY optical flow), C (depth only), and D (no trustworthy depth; tonal/spatial fallback only).
-D3D11 currently provides the strongest generic depth-aware Adaptive Realism route. Other DirectX paths reduce capability honestly when trustworthy scene depth is unavailable.
-Motion Guard and Ghosting Guard remain authoritative. X2.5 is the clean-motion mode with the lowest temporal-history weight.
-UNCANNY PASSES and DLSS 5 PASSES are independent. ENABLE UNCANNY OFF remains the master bypass.
+HOTFIX 13
+Remove unwinds every recorded UNCANNY install layer for the exact selected target.
+Changed generated logs such as ReShade.log no longer block restore; real original/user-file conflicts remain protected.
+The official UNCANNY logo is back in the launcher UI as an inline vector.
+Adaptive Realism exposes OFF / LOW / BALANCED / HIGH / INSANE.
+New installs seed INSANE + Reference Stack.
+OFF is a real bypass; higher levels scale the complete source-bounded reference-look stack.
+Depth-aware contact occlusion, bounded diffuse/specular response, exposure adaptation, local contrast and meso clarity are stronger.
+Motion Guard and Ghosting Guard remain authoritative. X2.5 retains the lowest temporal-history weight.
 
-Release verification: Python regression PASS; Engine 4.5 compiled acceptance PASS (22 checks); Adaptive Realism x86/x64 tests PASS; public ZIP audit PASS; Windows install/rollback regression PASS; Microsoft Defender final package and ZIP scans returned 0 detections.
+VERIFICATION
+Full static/regression suite: PASS.
+x86/x64 production + Engine 4.5 acceptance builds: PASS.
+Windows HLSL compile: PASS.
+PowerShell parse gate including UNCANNY-Environment.ps1: PASS.
+Changed-ReShade.log restore regression: PASS.
+Two-layer full-stack Remove regression: PASS.
+Public package/restricted-shader audit: PASS.
+Microsoft Defender final extracted-tree gate: PASS / 0 detections.
+Defender engine: 1.1.26080.3
+Defender signatures: 1.459.260.0
 
-Full development source is private. Public releases are compiled/source-free runtime packages plus documentation.
+LIMITATIONS
+Real-game visual/performance acceptance remains title/GPU/driver specific.
+Adaptive Realism is vendor-neutral; the optional DLSS 5 route remains NVIDIA-specific.
+D3D12/D3D9 use conservative fallbacks when trustworthy generic scene depth is unavailable.

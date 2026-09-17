@@ -10,14 +10,27 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism**  
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13**  
 Runtime: `release-alpha.1.elysium-engine45` · ABI `143`
 
 Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45  
 Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`  
-SHA-256: `f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
+SHA-256: `843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811`
 
-Engine 4.5 keeps the Hotfix 11/12 launcher, install/rollback, PCSX2, Control Deck, REVENANT and D3D11 fail-open work, then adds UNCANNY's new **Adaptive Realism** pipeline.
+Hotfix 13 keeps the Engine 4.5 runtime and adds tester-driven remove/restore repairs, restores the launcher logo, and pushes **Adaptive Realism** materially harder.
+
+## Hotfix 13
+
+- **Remove now unwinds every recorded UNCANNY install layer** for the exact selected game instead of exposing an older install underneath.
+- Changed generated logs such as `ReShade.log`, OptiScaler logs and dlss5-feed logs no longer block restore.
+- Actual original/user files remain conflict-protected.
+- The official UNCANNY emblem is back in the launcher UI as an inline vector.
+- New installs seed **INSANE + Reference Stack**.
+- Adaptive Realism now drives the full source-bounded reference-look stack; **OFF is a true bypass**.
+- Depth-aware contact occlusion, bounded diffuse/specular response, exposure adaptation, local contrast and meso clarity were all strengthened.
+- Motion Guard / Ghosting Guard remain authoritative, with X2.5 retaining the lowest temporal-history weight.
+
+Source revision: `16ee9cb8ef9cdb9f038577884bb023909743d1e1`.
 
 ## Adaptive Realism
 

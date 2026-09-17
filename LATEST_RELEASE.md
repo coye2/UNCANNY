@@ -1,25 +1,68 @@
 # Latest UNCANNY public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism**
 
-- Runtime: `release-alpha.1.elysium-hotfix11`
-- ABI: `141`
+- Runtime: `release-alpha.1.elysium-engine45`
+- ABI: `143`
 - Published: 2026-09-17
-- GitHub release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix11
-- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-- SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
-- Malware verification: https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md
+- Latest release: https://github.com/coye2/UNCANNY/releases/latest
+- Tagged release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
+- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
+- SHA-256: `f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
+- Source revision used for the release build: `8f021aafef138784d042d81e2c7287e934d5cf3b`
+- Malware verification attachment: `MALWARE-VERIFICATION-ENGINE45.json`
 
-Hotfix 11 is a tester-derived D3D11 startup-safety repair. Direct D3D11 now establishes native presentation before optional UNCANNY/Control Deck preprocessing can run, Feature-18 startup waits for a healthy advancing Present stream, and diagnostics identify whether a stall occurred before or inside the game's native Present call.
+## What changed
 
-The public entry point is root-level native `UNCANNY.exe`. Hotfix 10 ELYSIUM pass/slider wiring, REVENANT, PCSX2 integration and the preserved Lucid engine bundle remain intact.
+Engine 4.5 adds UNCANNY **Adaptive Realism**, a scene-aware remastering layer that is independent from the DLSS 5 provider path.
 
-## Security packaging correction
+Five live levels are exposed:
 
-The corrected Hotfix 11 release does not ship internal acceptance-test executables. `revenant-commit32.exe`, `revenant-commit64.exe` and the other internal `diagnostics/` EXEs were removed from the user-facing package.
+`OFF / LOW / BALANCED / HIGH / INSANE`
 
-The exact final ZIP was produced behind a Microsoft Defender release gate on a fresh Windows runner. Defender signatures were updated immediately before scanning. The cleaned runtime tree and the completed ZIP both returned **0 detections** using Defender engine `1.1.26080.3`, signature version `1.459.256.0` and product version `4.18.26080.3`.
+The pipeline adapts to available scene evidence instead of pretending every API provides the same data:
 
-The ZIP contains `docs/MALWARE-VERIFICATION.md`, and the GitHub release includes the machine-readable `MALWARE-VERIFICATION-HOTFIX11.json` attachment.
+- **Tier A:** trustworthy depth + native motion
+- **Tier B:** trustworthy depth + UNCANNY optical flow
+- **Tier C:** trustworthy depth only; conservative spatial lighting
+- **Tier D:** no trustworthy depth; tonal/spatial fallback only
 
-The exact public ZIP also passed focused Hotfix 11 regressions, x86/x64 production builds, protected-resource verification, PE hardening checks and the strict package audit. Internal diagnostic/test binaries are CI-only and are not shipped. Real hardware retesting remains required for the original PCSX2/GPU black-screen report.
+D3D11 currently has the strongest Adaptive Realism path. D3D12 and D3D9 use conservative fallbacks when trustworthy generic scene depth is unavailable.
+
+Motion Guard and Ghosting Guard remain integrated with temporal history rejection. X2.5 intentionally uses the lowest history weight for cleaner motion. `ENABLE UNCANNY OFF` remains the master bypass, and UNCANNY pass depth remains separate from DLSS 5 pass depth.
+
+## Preserved from Hotfix 11/12
+
+- D3D11 fail-open startup
+- native root-level `UNCANNY.exe`
+- launcher/game scan flow
+- install/update/rollback
+- PCSX2 handling
+- Control Deck
+- REVENANT
+- provider handling
+- D3D9/D3D10/D3D11/D3D12 routes
+
+## Verification
+
+The exact Engine 4.5 release passed:
+
+- full Python regression suite
+- Engine 4.5 compiled acceptance: **22 checks PASS**
+- Adaptive Realism compiled tests: **x86 PASS / x64 PASS**
+- x86/x64 production compilation
+- protected-resource checks
+- strict public-package audit
+- ZIP CRC/member-hash verification
+- dynamic Windows install + rollback regression
+- restricted third-party shader source/package audit
+- Microsoft Defender scan of extracted final package: **0 detections**
+- Microsoft Defender scan of completed ZIP: **0 detections**
+
+The public ZIP contains no engine source, debug symbols, nested development archives or internal acceptance-test executables.
+
+No paid/restricted Marty McFly / Pascal Gilcher shader source or binaries are bundled. Reference material was used only for behavioral calibration.
+
+## Remaining acceptance work
+
+CI/build validation does not replace real rendered gameplay testing. Visual quality, compatibility and performance still require title-by-title testing on target NVIDIA, AMD and Intel hardware.

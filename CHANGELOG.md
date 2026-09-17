@@ -17,6 +17,19 @@ ABI: `141`
 - Corrected the interpretation of `Host64LaunchAttempted=0` for the normal native x64 D3D11 route: a separate helper process is not required for every x64 session.
 - Preserved the independent REVENANT path; the triggering tester report completed 38/38 texture jobs while the swapchain presentation path was stalled.
 
+### Security / packaging correction
+
+- Removed the public `diagnostics/` executable payload.
+- Removed `revenant-commit32.exe` and `revenant-commit64.exe` from public distribution. These are internal acceptance-test harnesses built from the REVENANT test suite, not runtime requirements.
+- Internal diagnostic/test binaries remain available to CI but are no longer part of the user-facing release ZIP.
+- Added a Microsoft Defender release gate on a fresh GitHub-hosted Windows runner.
+- Defender signatures are updated immediately before release scanning.
+- Cleaned runtime tree scan: **PASS / 0 detections**.
+- Final completed ZIP scan: **PASS / 0 detections**.
+- Defender engine: `1.1.26080.3`; signatures: `1.459.256.0`; product: `4.18.26080.3`.
+- Added `docs/MALWARE-VERIFICATION.md` inside the ZIP and `MALWARE-VERIFICATION-HOTFIX11.json` as a GitHub release attachment.
+- No Defender exclusions, threat restoration, allowlisting or antivirus bypass were used for the verified release.
+
 ### Launcher / package
 
 - Added native root-level **`UNCANNY.exe`** as the normal public launcher.
@@ -30,7 +43,7 @@ ABI: `141`
 - Separate **DLSS 5 PASSES** control.
 - ELYSIUM structural/surface/face/material/depth/color/edge/distant-detail/texture-relief controls.
 - PCSX2 wrapper behavior.
-- REVENANT.
+- REVENANT runtime functionality.
 - install/update/rollback flow.
 - provider policy.
 - D3D9, D3D10 and D3D12 paths outside this targeted D3D11 startup change.
@@ -41,14 +54,16 @@ ABI: `141`
 - Hotfix 10 control-wiring regression: PASS.
 - Hotfix 11 D3D11 fail-open regression: PASS.
 - native `UNCANNY.exe` regression: PASS.
-- 12 public Windows diagnostic binaries compiled successfully.
+- internal Windows diagnostic/test binaries compiled in CI and excluded from the public package.
 - 16 focused Hotfix 11 acceptance checks: PASS.
 - x86/x64 production binaries compiled successfully.
 - protected shader authentication/roundtrip verification: PASS.
 - PE hardening audit: PASS across all 11 current production/helper binaries.
 - strict public package audit and final ZIP integrity: PASS.
+- Microsoft Defender cleaned-tree scan: PASS / 0 detections.
+- Microsoft Defender final-ZIP scan: PASS / 0 detections.
 
-Release ZIP SHA-256: `14e28fad9a016a096e58167eebc53d8b96ead41687b1b366fbb34c92427c7bd7`
+Release ZIP SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
 
 Real hardware retesting remains required for the original PCSX2/GPU configuration.
 

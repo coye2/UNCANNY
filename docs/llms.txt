@@ -1,12 +1,16 @@
 UNCANNY official machine-readable release summary
 
-Current: v0.20.0-alpha.1 — ELYSIUM Hotfix 10
-Revision: release-alpha.1.elysium-hotfix10
+Current: v0.20.0-alpha.1 — ELYSIUM Hotfix 11
+Revision: release-alpha.1.elysium-hotfix11
 ABI: 141
-ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-Windows.zip
-SHA256: 521b00a5236046ca7de7feb06df1942d3bbde12eb1eb3e1a2b63a2bd20535f4b
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix10
+ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+SHA256: a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix11
 Usage: https://github.com/coye2/UNCANNY/blob/main/USAGE.md
+Malware verification: https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md
 
-Hotfix 10 fixes native UNCANNY pass-stack routing and ELYSIUM advanced-control wiring. UNCANNY PASSES and DLSS 5 PASSES are independent.
+Hotfix 11 makes D3D11 first-frame presentation fail open and delays DLSS 5 startup until Present is healthy. Hotfix 10 native UNCANNY pass-stack routing and ELYSIUM advanced-control wiring remain intact.
+
+The corrected public package excludes internal test/diagnostic executables. Microsoft Defender scanned the cleaned runtime tree and completed ZIP after signature update: 0 detections. Engine 1.1.26080.3, signatures 1.459.256.0, product 4.18.26080.3. No AV exclusions or bypass were used.
+
 Full development source is private; public releases are compiled/source-free packages.

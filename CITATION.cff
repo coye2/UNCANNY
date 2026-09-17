@@ -6,8 +6,8 @@ authors:
   - name: "coye2"
 repository-code: "https://github.com/coye2/UNCANNY"
 url: "https://github.com/coye2/UNCANNY"
-version: "v0.19.0-alpha.1 / release-alpha.rc2.hotfix.2"
-date-released: 2026-09-15
+version: "v0.20.0-alpha.1 / release-alpha.1.elysium-hotfix11"
+date-released: 2026-09-17
 keywords:
   - "DLSS 5"
   - "DLSS5"

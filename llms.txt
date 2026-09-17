@@ -3,17 +3,25 @@ Official public repository: https://github.com/coye2/UNCANNY
 Official Discord: https://discord.gg/zMveJN2kDa
 
 CURRENT RELEASE
-Version: v0.20.0-alpha.1 — ELYSIUM Hotfix 10
-Runtime revision: release-alpha.1.elysium-hotfix10
+Version: v0.20.0-alpha.1 — ELYSIUM Hotfix 11
+Runtime revision: release-alpha.1.elysium-hotfix11
 ABI: 141
-Windows ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-Windows.zip
-SHA-256: 521b00a5236046ca7de7feb06df1942d3bbde12eb1eb3e1a2b63a2bd20535f4b
-Release URL: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix10
+Windows ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+SHA-256: a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69
+Release URL: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix11
+Malware verification: https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md
 
-HOTFIX 10
-UNCANNY PASSES 1/1.5/2/2.5/3 now drives the native ELYSIUM reconstruction stack.
-DLSS 5 PASSES is a separate control.
-ELYSIUM advanced controls include structural reconstruction, surface detail, face reconstruction, material definition, depth/form recovery, source color recovery, material color separation, fine-edge recovery, distant detail and texture relief.
+HOTFIX 11
+D3D11 startup is fail-open: native Present is established before optional UNCANNY/Deck preprocessing and DLSS 5 startup waits for a healthy advancing Present stream.
+Hotfix 10 UNCANNY PASSES and ELYSIUM advanced-control wiring are preserved.
+
+SECURITY PACKAGE CORRECTION
+Internal test/diagnostic executables are not shipped in the public ZIP. revenant-commit32.exe and revenant-commit64.exe are CI test harnesses, not runtime dependencies.
+Microsoft Defender release gate: PASS, 0 detections on cleaned runtime tree and completed ZIP.
+Defender engine: 1.1.26080.3
+Defender signatures: 1.459.256.0
+Defender product: 4.18.26080.3
+No Defender exclusions, bypass or threat allowlisting were used.
 
 SOURCE POLICY
 The full engineering source is private. The public repository contains docs and release/support information. Public release ZIPs contain compiled runtime files and docs, not proprietary C/C++/HLSL source.

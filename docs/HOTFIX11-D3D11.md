@@ -89,7 +89,7 @@ That is useful evidence that these are separate subsystems. Hotfix 11 does not r
 
 ## Launcher/package change included with Hotfix 11
 
-The public user-facing entry point is now native **`UNCANNY.exe`** at the root of the extracted package.
+The public user-facing entry point is native **`UNCANNY.exe`** at the root of the extracted package.
 
 - Windows GUI executable
 - no normal top-level `UNCANNY.cmd` launch step
@@ -100,6 +100,14 @@ The public user-facing entry point is now native **`UNCANNY.exe`** at the root o
 Maintenance CMD utilities remain where they serve specific diagnostics or install workflows.
 
 The already-public UNCANNY 2.5 Lucid ABI 136 engine bundle is preserved by its existing manifest hashes so engine selection remains available alongside ELYSIUM ABI 141.
+
+## Security packaging correction
+
+The first Hotfix 11 package accidentally included internal acceptance-test executables under `diagnostics/`. Windows Defender flagged `revenant-commit32.exe`. That executable is a development REVENANT commit/recovery test harness and is not required by the runtime.
+
+The corrected public package removes the complete internal diagnostic executable set. Microsoft Defender signatures were updated before scanning, and both the cleaned runtime tree and final ZIP returned **0 detections**. No Defender exclusions, restoration or allowlisting were used.
+
+See [MALWARE-VERIFICATION.md](MALWARE-VERIFICATION.md) for the exact release-gate record.
 
 ## What was not redesigned
 
@@ -116,23 +124,25 @@ Hotfix 11 intentionally preserves:
 
 ## Publication verification
 
-The exact public Hotfix 11 build passed:
+The exact corrected public Hotfix 11 build passed:
 
 - Hotfix 9 ELYSIUM regression
 - Hotfix 10 control wiring regression
 - Hotfix 11 D3D11 fail-open regression
 - native `UNCANNY.exe` regression
-- 12 public Windows diagnostic builds
+- internal Windows diagnostic/test builds in CI; those executables are **not shipped**
 - 16 focused Hotfix 11 acceptance checks
 - x86/x64 production compilation
 - protected shader authentication/roundtrip checks
 - PE hardening checks across all 11 current production/helper binaries
 - strict public-package audit
 - final ZIP integrity verification
+- Microsoft Defender cleaned-runtime scan: **PASS / 0 detections**
+- Microsoft Defender final-ZIP scan: **PASS / 0 detections**
 
 Release ZIP SHA-256:
 
-`14e28fad9a016a096e58167eebc53d8b96ead41687b1b366fbb34c92427c7bd7`
+`a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
 
 ## Same-machine retest gate
 

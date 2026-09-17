@@ -1,125 +1,147 @@
 # UNCANNY
 
-Real-time neural remastering middleware for Windows PC games and emulators.
+Real-time remastering middleware for Windows PC games and emulators.
 
-**Public alpha · NVIDIA RTX · D3D9/10/11/12 · PCSX2**
+**Public alpha · ELYSIUM Engine 4.5 · D3D9/10/11/12 · PCSX2 · Adaptive Realism · REVENANT**
 
-**[Download](https://github.com/coye2/UNCANNY/releases) · [Join the Discord](https://discord.gg/zMveJN2kDa)**
+**[Download latest](https://github.com/coye2/UNCANNY/releases/latest) · [Join the Discord](https://discord.gg/zMveJN2kDa)**
 
-> The compiled runtime is distributed through **Releases**. This repository contains public documentation and release information; the full development source workspace is private.
+> The compiled runtime is distributed through **GitHub Releases**. This public repository contains release information, documentation and support material; the full development workspace is private.
 
-## Latest build
+## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11**  
-Runtime: `release-alpha.1.elysium-hotfix11` · ABI `141`
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism**  
+Runtime: `release-alpha.1.elysium-engine45` · ABI `143`
 
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix11
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45  
+Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`  
+SHA-256: `f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
 
-SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
+Engine 4.5 keeps the Hotfix 11/12 launcher, install/rollback, PCSX2, Control Deck, REVENANT and D3D11 fail-open work, then adds UNCANNY's new **Adaptive Realism** pipeline.
 
-Hotfix 11 is a targeted D3D11 startup-safety repair based directly on a PCSX2 x64 tester report. The affected session successfully captured the D3D11 device/swapchain and installed the Present hook, but then stopped with one Present attempt, zero successful Presents, no advancing presentation stream and 0 FPS.
+## Adaptive Realism
 
-Hotfix 11 changes that ordering so optional UNCANNY processing cannot become a prerequisite for the first visible game frame.
+Adaptive Realism is UNCANNY's scene-aware image reconstruction and enhancement layer. It is separate from the DLSS 5 provider path and can operate without DLSS 5.
 
-### D3D11 fail-open startup
+### Five real levels
 
-- The first direct-D3D11 presentation opportunities prioritize the game's original `Present` / `Present1`.
-- UNCANNY image preprocessing and in-frame Control Deck composition are deferred during the short native warmup.
-- Feature-18 / DLSS 5 initialization waits for a healthy, advancing native Present stream before starting D3D11 neural interop.
-- While neural startup is deferred, the current live source remains authoritative; UNCANNY does not substitute a stale neural result.
-- New diagnostic stages identify whether a future stall occurred before or inside the game's native Present call: `PRESENT_PREPROCESS`, `PRESENT_NATIVE_CALL`, `PRESENT1_PREPROCESS`, `PRESENT1_NATIVE_CALL`, and `PRESENT_SUCCEEDED`.
+`OFF / LOW / BALANCED / HIGH / INSANE`
 
-The tester also reported 38/38 successful REVENANT texture jobs while presentation was stalled, so Hotfix 11 deliberately leaves that independent path intact.
+These levels change actual runtime tuning rather than only changing a label. Higher levels increase reconstruction samples and the strength of supported lighting/detail work while the performance guard can reduce cost before disabling the effect.
 
-`Host64LaunchAttempted=0` is not automatically a failure on an x64 D3D11 target. The normal native x64 route can use the in-process bridge; a separate x64 helper is not required for every D3D11 session.
+### Capability tiers
 
-## Security packaging correction
+UNCANNY does not pretend every API exposes the same scene data:
 
-The Hotfix 11 public ZIP was repackaged after Windows Defender flagged `diagnostics/revenant-commit32.exe`. That executable is an internal REVENANT acceptance-test harness, not a runtime dependency, and should not have been present in the public package.
+| Tier | Available evidence | Behavior |
+|---|---|---|
+| A | trustworthy depth + native motion | strongest depth-aware/temporal path |
+| B | trustworthy depth + UNCANNY optical flow | depth-aware path with reconstructed motion |
+| C | trustworthy depth only | conservative spatial lighting; no temporal history |
+| D | no trustworthy scene depth | tonal/spatial enhancement only; no fake GI claim |
 
-The current release:
+D3D11 currently has the strongest Adaptive Realism path because it can use scored discovered depth plus UNCANNY optical flow when available. D3D12 and D3D9 fall back conservatively when trustworthy scene depth is not available.
 
-- ships **no internal test/diagnostic executables**
-- ships no `revenant-commit32.exe` or `revenant-commit64.exe`
-- passed a Microsoft Defender scan of the cleaned runtime tree with updated signatures
-- passed a second Microsoft Defender scan of the completed release ZIP
-- recorded **0 detections** in both release-gate scans
-- includes `docs/MALWARE-VERIFICATION.md` inside the ZIP
-- includes `MALWARE-VERIFICATION-HOTFIX11.json` beside the ZIP on the GitHub release
+### Motion-first behavior
 
-Defender release gate: engine `1.1.26080.3`, signatures `1.459.256.0`, product `4.18.26080.3`.
-
-Full verification record: [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md)
-
-## Install
-
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip` from the Hotfix 11 release.
-2. Extract the ZIP completely.
-3. Double-click **`UNCANNY.exe`** at the root of the extracted folder.
-4. Let the launcher scan, or add the real game/emulator executable manually.
-5. Choose **Install UNCANNY**, then launch the game.
-6. Press **HOME** for the Control Deck.
-
-`UNCANNY.exe` is now the normal public launcher. The old top-level `UNCANNY.cmd` entry point is not shipped as the user-facing launcher. Maintenance CMD tools remain where they are useful for diagnostics/install tasks.
-
-Full walkthrough: [USAGE.md](USAGE.md)
+- **Motion Guard** and **Ghosting Guard** remain authoritative.
+- Temporal history is reduced when motion confidence drops, depth disagrees, or disocclusion is detected.
+- **X2.5** deliberately uses the lowest history weight and remains the clean-motion mode.
+- `ENABLE UNCANNY OFF` remains the master bypass.
+- **UNCANNY PASSES** and **DLSS 5 PASSES** remain separate controls.
 
 ## ELYSIUM controls
 
-Hotfix 11 preserves the Hotfix 10 control-wiring repair:
+The Control Deck keeps the live ELYSIUM controls for:
 
-- **UNCANNY PASSES: 1 / 1.5 / 2 / 2.5 / 3** — native ELYSIUM reconstruction depth.
-- **DLSS 5 PASSES** — separate neural-route pass control on the DLSS 5 page.
-- Structural reconstruction
-- Surface detail
-- Face reconstruction
-- Material definition
-- Depth / form recovery
-- Source color recovery
-- Material color separation
-- Fine edge recovery
-- Distant detail
-- Texture relief
+- UNCANNY passes: `1 / 1.5 / 2 / 2.5 / 3`
+- structural reconstruction
+- surface detail
+- face reconstruction
+- material definition
+- depth / form recovery
+- source color recovery
+- material color separation
+- fine edge recovery
+- distant detail
+- texture relief
 - Motion Guard / Ghosting Guard
+- Adaptive Realism quality
 
-## Verification
+## DLSS 5
 
-The exact Hotfix 11 public build passed:
+DLSS 5 remains a separate optional neural route. Provider availability, neural feature creation/evaluation and **DLSS 5 PASSES** live on the DLSS 5 side of the runtime and are not the same thing as UNCANNY's native ELYSIUM pass depth or Adaptive Realism quality.
 
-- Hotfix 9 ELYSIUM regression
-- Hotfix 10 control-wiring regression
-- Hotfix 11 D3D11 fail-open regression
-- native `UNCANNY.exe` regression
-- internal Windows test binaries compiled in CI but excluded from the public runtime package
-- 16 focused Hotfix 11 acceptance checks
-- x86 + x64 production builds
-- protected shader verification
-- PE hardening checks across all 11 current production/helper binaries
-- strict public-package audit and ZIP integrity check
-- Microsoft Defender scan of the cleaned runtime tree: **PASS / 0 detections**
-- Microsoft Defender scan of the final ZIP: **PASS / 0 detections**
+Adaptive Realism itself is vendor-neutral; DLSS 5 remains NVIDIA-specific.
 
-These build/host checks do not replace the final hardware retest. The original PCSX2/GPU setup should be rerun to establish that the black-screen regression is gone in real use.
+## REVENANT
 
-## Current state
+REVENANT is UNCANNY's experimental persistent asset-reconstruction system. PCSX2 remains its main acceptance target. REVENANT worker success is tracked separately from live swapchain/presentation health, and native-PC-game asset replacement is still experimental rather than claimed as universal.
 
-| Path | Status |
+## Install
+
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip` from the latest release.
+2. Extract the ZIP completely.
+3. Run **`UNCANNY.exe`** from the root of the extracted folder.
+4. Let UNCANNY scan, or add the real game/emulator executable manually.
+5. Choose **Install UNCANNY**.
+6. Launch the title and press **HOME** for the Control Deck.
+
+Do not mix DLLs or EXEs from older packages.
+
+Full walkthrough: [USAGE.md](USAGE.md)
+
+## Compatibility snapshot
+
+| Path | Engine 4.5 status |
 |---|---|
-| D3D12 | Primary PC test path |
-| D3D11 | Active support; Hotfix 11 adds first-frame fail-open startup |
-| PCSX2 | Primary emulator test path; Hotfix 11 tester regression target |
-| D3D9 / D3D10 neural path | Experimental |
-| REVENANT | Experimental; separate from the Hotfix 11 Present fix |
-| Vulkan / OpenGL | Not at DirectX parity |
+| D3D11 | strongest current Adaptive Realism route; depth + flow where trustworthy |
+| D3D12 | supported runtime; Adaptive Realism uses conservative fallback when scene depth is unavailable |
+| D3D9 | supported legacy runtime; Adaptive Realism falls back when trustworthy depth is unavailable |
+| D3D10 / 10.1 | compatibility path; capability depends on available scene data |
+| PCSX2 | primary emulator acceptance target |
+| REVENANT | experimental persistent asset reconstruction |
+| Vulkan / OpenGL | not at DirectX parity |
+
+See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for evidence levels and exact limitations.
+
+## Release verification
+
+The exact Engine 4.5 public package passed:
+
+- full Python regression suite
+- **22** compiled Engine 4.5 acceptance checks
+- Adaptive Realism compiled tests on **x86 and x64**
+- x86/x64 production builds
+- protected-resource verification
+- Hotfix 11/12 compatibility regressions
+- dynamic Windows install + rollback regression
+- strict public-package audit
+- ZIP CRC/member-hash verification
+- restricted third-party shader source/package audit
+- Microsoft Defender scan of the extracted final package: **0 detections**
+- Microsoft Defender scan of the completed release ZIP: **0 detections**
+
+The public ZIP contains no engine source, debug symbols, nested development archives or internal test executables. No paid/restricted Marty McFly / Pascal Gilcher shader source or binaries are bundled.
+
+Build/CI success is not the same as broad real-game GPU acceptance. Visual quality and performance still need title-by-title testing across NVIDIA, AMD and Intel hardware.
+
+## Security
+
+The current package has a machine-readable verification attachment on the release:
+
+`MALWARE-VERIFICATION-ENGINE45.json`
+
+See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md). UNCANNY does not require users to disable Defender or create broad antivirus exclusions.
 
 ## Community & feedback
 
-**[Join the UNCANNY Discord](https://discord.gg/zMveJN2kDa)** for testing, screenshots, compatibility discussion, bug help and development talk.
+**[Join the UNCANNY Discord](https://discord.gg/zMveJN2kDa)** for testing, screenshots, compatibility reports, bug help and development discussion.
 
-For D3D11/PCSX2 reports, include `PresentAttempts`, `Presents`, `PresentAdvancing`, FPS, `AttachmentStage`, Feature-18 create/evaluate counters, game/emulator, API, x86/x64, GPU/driver, exact revision and the full `UNCANNY-STATUS.cmd` output when possible.
+For useful reports include the game/emulator, real executable, API, x86/x64, GPU/driver, exact UNCANNY revision, status output and screenshots/video for visual issues.
 
 ## Docs
 
-[Usage](USAGE.md) · [Release status](RELEASES.md) · [Malware verification](docs/MALWARE-VERIFICATION.md) · [Hotfix 11 D3D11 report](docs/HOTFIX11-D3D11.md) · [Compatibility](docs/COMPATIBILITY.md) · [FAQ](docs/FAQ.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Usage](USAGE.md) · [Latest release](LATEST_RELEASE.md) · [Release history](RELEASES.md) · [Changelog](CHANGELOG.md) · [Compatibility](docs/COMPATIBILITY.md) · [FAQ](docs/FAQ.md) · [Malware verification](docs/MALWARE-VERIFICATION.md) · [Hotfix 11 D3D11 history](docs/HOTFIX11-D3D11.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 UNCANNY is independent and is not affiliated with or endorsed by NVIDIA. NVIDIA and DLSS are trademarks of NVIDIA Corporation.

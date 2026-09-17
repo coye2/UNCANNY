@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>UNCANNY — Universal DLSS 5 Neural Remaster Engine</title>
-  <meta name="description" content="UNCANNY is an independent universal DLSS 5 neural remaster engine for Windows PC games and emulators, combining neural rendering, ELYSIUM reconstruction, motion protection, REVENANT asset reconstruction, compatibility, diagnostics and rollback.">
+  <title>UNCANNY — ELYSIUM Engine 4.5</title>
+  <meta name="description" content="UNCANNY is an independent real-time remaster engine for Windows PC games and emulators. ELYSIUM Engine 4.5 adds Adaptive Realism, multi-pass reconstruction, Motion Guard, Ghosting Guard, REVENANT and optional DLSS 5 integration.">
   <link rel="canonical" href="https://coye2.github.io/UNCANNY/">
-  <meta property="og:title" content="UNCANNY — Universal DLSS 5 Neural Remaster Engine">
-  <meta property="og:description" content="UNCANNY v0.20 ELYSIUM Hotfix 11 with D3D11 fail-open startup, multi-pass reconstruction, REVENANT and a Microsoft Defender-verified public package.">
+  <meta property="og:title" content="UNCANNY — ELYSIUM Engine 4.5">
+  <meta property="og:description" content="UNCANNY v0.20 ELYSIUM Engine 4.5 with Adaptive Realism, multi-pass reconstruction, Motion Guard, Ghosting Guard, REVENANT and a Defender-verified public package.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://coye2.github.io/UNCANNY/">
   <meta name="twitter:card" content="summary">
@@ -16,65 +16,87 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "UNCANNY",
-    "alternateName": "UNCANNY Universal DLSS 5 Neural Remaster Engine",
+    "alternateName": "UNCANNY ELYSIUM Engine",
     "applicationCategory": "GameApplication",
     "operatingSystem": "Windows",
-    "description": "Independent real-time neural remaster engine for PC games and emulators with ELYSIUM reconstruction, Motion Guard, Ghosting Guard and REVENANT persistent asset reconstruction.",
-    "softwareVersion": "v0.20.0-alpha.1 / release-alpha.1.elysium-hotfix11",
+    "description": "Independent real-time remaster engine for PC games and emulators with Adaptive Realism, ELYSIUM reconstruction, Motion Guard, Ghosting Guard, REVENANT and optional DLSS 5 integration.",
+    "softwareVersion": "v0.20.0-alpha.1 / release-alpha.1.elysium-engine45",
     "url": "https://github.com/coye2/UNCANNY",
-    "downloadUrl": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix11",
+    "downloadUrl": "https://github.com/coye2/UNCANNY/releases/latest",
     "isAccessibleForFree": true,
-    "keywords": "UNCANNY, ELYSIUM, DLSS 5, DLSS5, neural remaster, PCSX2 remaster, D3D9 DLSS5, D3D11 DLSS5, D3D12 neural rendering, REVENANT"
+    "keywords": "UNCANNY, ELYSIUM, Adaptive Realism, neural remaster, PCSX2 remaster, D3D9, D3D11, D3D12, DLSS 5, REVENANT, Motion Guard"
   }
   </script>
   <style>
-    body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:880px;margin:0 auto;padding:40px 22px;line-height:1.6;background:#0d0f14;color:#eef1f7}a{color:#9dc1ff}code{background:#171b24;padding:.15em .35em;border-radius:5px}.tag{display:inline-block;border:1px solid #394254;border-radius:999px;padding:5px 10px;margin:3px 5px 3px 0;color:#cbd5e1}h1{font-size:2.4rem;margin-bottom:.2rem}h2{margin-top:2rem}.muted{color:#aeb8c7}.card{background:#141821;border:1px solid #252c39;border-radius:14px;padding:18px;margin:18px 0}
+    body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:920px;margin:0 auto;padding:40px 22px;line-height:1.6;background:#0d0f14;color:#eef1f7}a{color:#9dc1ff}code{background:#171b24;padding:.15em .35em;border-radius:5px}.tag{display:inline-block;border:1px solid #394254;border-radius:999px;padding:5px 10px;margin:3px 5px 3px 0;color:#cbd5e1}h1{font-size:2.4rem;margin-bottom:.2rem}h2{margin-top:2rem}.muted{color:#aeb8c7}.card{background:#141821;border:1px solid #252c39;border-radius:14px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.mini{background:#11151d;border:1px solid #252c39;border-radius:12px;padding:14px}
   </style>
 </head>
 <body>
   <h1>UNCANNY</h1>
-  <p><strong>Universal DLSS 5 Neural Remaster Engine for PC Games and Emulators.</strong></p>
-  <p>UNCANNY is an independent Windows real-time remaster middleware project combining DLSS 5 / Feature-18 neural rendering, ELYSIUM multi-pass reconstruction, Motion Guard, Ghosting Guard, REVENANT persistent asset reconstruction, legacy-game compatibility, diagnostics and rollback.</p>
+  <p><strong>Real-time remaster engine for PC games and emulators.</strong></p>
+  <p>UNCANNY combines ELYSIUM multi-pass reconstruction, Adaptive Realism, Motion Guard, Ghosting Guard, REVENANT persistent asset reconstruction, legacy DirectX compatibility, diagnostics, rollback and optional DLSS 5 integration.</p>
 
   <div class="card">
-    <strong>Current public alpha</strong><br>
-    <code>v0.20.0-alpha.1</code> · <code>release-alpha.1.elysium-hotfix11</code> · ABI 141<br>
-    <code>UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip</code><br>
-    SHA-256: <code>a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69</code>
+    <strong>Current public release</strong><br>
+    <code>v0.20.0-alpha.1</code> · <code>release-alpha.1.elysium-engine45</code> · ABI 143<br>
+    <code>UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip</code><br>
+    SHA-256: <code>f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512</code><br><br>
+    <a href="https://github.com/coye2/UNCANNY/releases/latest"><strong>Download latest release</strong></a>
   </div>
 
   <p>
-    <span class="tag">ELYSIUM</span><span class="tag">DLSS 5</span><span class="tag">Neural Remaster</span><span class="tag">PCSX2</span><span class="tag">D3D9</span><span class="tag">D3D11</span><span class="tag">D3D12</span><span class="tag">REVENANT</span>
+    <span class="tag">ELYSIUM 4.5</span><span class="tag">Adaptive Realism</span><span class="tag">Motion Guard</span><span class="tag">Ghosting Guard</span><span class="tag">PCSX2</span><span class="tag">D3D9</span><span class="tag">D3D11</span><span class="tag">D3D12</span><span class="tag">REVENANT</span><span class="tag">DLSS 5</span>
   </p>
 
-  <h2>Hotfix 11</h2>
-  <p>D3D11 startup now fails open to the game's native Present path before optional UNCANNY/Control Deck preprocessing, and DLSS 5 startup waits for an advancing Present stream. Hotfix 10 ELYSIUM pass and slider wiring remains intact.</p>
+  <h2>Adaptive Realism</h2>
+  <p>Engine 4.5 introduces a scene-aware UNCANNY-native remaster layer with five live levels: <strong>OFF / LOW / BALANCED / HIGH / INSANE</strong>. Adaptive Realism is separate from the DLSS 5 provider path and can run without DLSS 5.</p>
 
-  <h2>Security verification</h2>
-  <p>The corrected Hotfix 11 public ZIP no longer ships internal acceptance-test executables. Microsoft Defender signatures were updated before release scanning; the cleaned runtime tree and the completed ZIP both returned <strong>0 detections</strong>. No Defender exclusions or bypass were used.</p>
-  <p><a href="https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md">Read the exact malware verification record</a>.</p>
+  <div class="grid">
+    <div class="mini"><strong>Tier A</strong><br>Trustworthy depth + native motion.</div>
+    <div class="mini"><strong>Tier B</strong><br>Trustworthy depth + UNCANNY optical flow.</div>
+    <div class="mini"><strong>Tier C</strong><br>Depth only; conservative spatial lighting.</div>
+    <div class="mini"><strong>Tier D</strong><br>No trustworthy depth; tonal/spatial fallback.</div>
+  </div>
+
+  <p>D3D11 currently has the strongest Adaptive Realism route. D3D12 and D3D9 remain supported with conservative fallback when trustworthy scene depth is unavailable.</p>
+
+  <h2>Motion-first reconstruction</h2>
+  <ul>
+    <li>Motion Guard and Ghosting Guard remain authoritative.</li>
+    <li>Temporal history is reduced when motion confidence, depth continuity or history agreement fails.</li>
+    <li>X2.5 deliberately uses the lowest temporal-history weight for cleaner motion.</li>
+    <li><code>ENABLE UNCANNY OFF</code> remains the master bypass.</li>
+    <li>UNCANNY pass depth remains separate from DLSS 5 pass depth.</li>
+  </ul>
 
   <h2>Core systems</h2>
   <ul>
-    <li><strong>ELYSIUM reconstruction</strong> with live multi-pass depth and advanced structural/material controls.</li>
-    <li><strong>DLSS 5 neural rendering</strong> with create/evaluate/return/present evidence.</li>
+    <li><strong>ELYSIUM reconstruction</strong> with live 1 / 1.5 / 2 / 2.5 / 3 pass-depth control.</li>
+    <li><strong>Adaptive Realism</strong> with scene-aware lighting/detail/tonal response.</li>
     <li><strong>Motion Guard + Ghosting Guard</strong> for temporal stability.</li>
-    <li><strong>REVENANT</strong> persistent asset reconstruction.</li>
-    <li><strong>Legacy compatibility</strong> including 32-bit/x86 neural-helper work.</li>
+    <li><strong>REVENANT</strong> experimental persistent asset reconstruction.</li>
+    <li><strong>DLSS 5 integration</strong> as a separate optional NVIDIA neural route.</li>
     <li><strong>Control Deck, diagnostics, backups and rollback.</strong></li>
   </ul>
 
+  <h2>Release verification</h2>
+  <p>The exact Engine 4.5 package passed the full regression suite, 22 compiled Engine 4.5 checks, x86/x64 Adaptive Realism tests, production builds, strict package/integrity audits, dynamic install/rollback testing and Microsoft Defender scans of both the extracted package and completed ZIP with <strong>0 detections</strong>.</p>
+  <p>The package does not bundle paid/restricted Marty McFly / Pascal Gilcher shader source or binaries.</p>
+
   <h2>Compatibility</h2>
-  <p>Direct3D 12 and D3D11 are primary PC paths. PCSX2 is the primary emulator target. D3D9/D3D10 neural behavior remains experimental, and Vulkan/OpenGL are not yet at DirectX parity.</p>
+  <p>D3D11 is the strongest current Adaptive Realism path. D3D12, D3D10/10.1 and D3D9 remain supported to different capability levels. PCSX2 is the primary emulator acceptance target. Vulkan/OpenGL are not yet at DirectX parity.</p>
+  <p>Build/CI validation does not replace real-game visual/performance testing across specific NVIDIA, AMD and Intel GPUs.</p>
 
   <h2>Project links</h2>
   <ul>
-    <li><a href="https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix11">Download Hotfix 11</a></li>
+    <li><a href="https://github.com/coye2/UNCANNY/releases/latest">Download latest release</a></li>
+    <li><a href="https://github.com/coye2/UNCANNY/blob/main/README.md">README</a></li>
     <li><a href="https://github.com/coye2/UNCANNY/blob/main/USAGE.md">Usage guide</a></li>
     <li><a href="https://github.com/coye2/UNCANNY/blob/main/CHANGELOG.md">Changelog</a></li>
-    <li><a href="https://github.com/coye2/UNCANNY/blob/main/RELEASES.md">Release status</a></li>
+    <li><a href="https://github.com/coye2/UNCANNY/blob/main/docs/COMPATIBILITY.md">Compatibility</a></li>
+    <li><a href="https://github.com/coye2/UNCANNY/blob/main/docs/FAQ.md">FAQ</a></li>
     <li><a href="https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md">Malware verification</a></li>
-    <li><a href="https://github.com/coye2/UNCANNY/issues">Compatibility reports and issues</a></li>
+    <li><a href="https://discord.gg/zMveJN2kDa">Discord</a></li>
   </ul>
 
   <p class="muted">UNCANNY is independent and is not affiliated with or endorsed by NVIDIA. NVIDIA and DLSS are trademarks of NVIDIA Corporation.</p>

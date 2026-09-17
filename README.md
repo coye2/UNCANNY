@@ -6,26 +6,43 @@ Real-time neural remastering middleware for Windows PC games and emulators.
 
 **[Download](https://github.com/coye2/UNCANNY/releases) · [Join the Discord](https://discord.gg/zMveJN2kDa)**
 
-> The compiled runtime is distributed through **Releases**. This repository contains public documentation and release information; the full development source workspace is not public.
+> The compiled runtime is distributed through **Releases**. This repository contains public documentation and release information; the full development source workspace is private.
+
+## Latest build
+
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 10**  
+Runtime: `release-alpha.1.elysium-hotfix10` · ABI `141`
+
+Hotfix 10 fixes the native **UNCANNY PASSES** selector and completes the live ELYSIUM slider wiring. The UNCANNY reconstruction stack and DLSS 5 pass selector are now separate controls.
 
 ## Install
 
-1. Download the latest `UNCANNY-...-Windows.zip` from **Releases**.
-2. Extract it.
-3. Drag the game/emulator `.exe` onto `INSTALL-NATIVE.cmd`.
-4. Launch normally.
-5. Press **Home** for the Control Deck.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX10-Windows.zip` from **Releases**.
+2. Extract the ZIP completely.
+3. Run `UNCANNY.cmd`.
+4. Let the launcher scan, or add the real game/emulator executable manually.
+5. Choose **Install UNCANNY**, then launch the game.
+6. Press **HOME** for the Control Deck.
 
 Full walkthrough: [USAGE.md](USAGE.md)
 
-## What it does
+## ELYSIUM controls
 
-- **Clean 1 / 1.5 / 2 / 2.5 / 3** — adaptive reconstruction-depth modes.
-- **Motion Guard / Ghosting Guard** — reduces aggressive reconstruction when temporal confidence is poor.
-- **DLSS 5 / Feature-18 integration** — neural rendering with runtime evidence/diagnostics.
-- **REVENANT** — experimental persistent asset reconstruction, currently focused on PCSX2.
-- **Legacy compatibility** — x86/x64 and D3D9/10/11/12 runtime work.
-- **Control Deck + rollback** — per-game controls, diagnostics, backups and restoration.
+- **UNCANNY PASSES: 1 / 1.5 / 2 / 2.5 / 3** — native ELYSIUM reconstruction depth.
+- **DLSS 5 PASSES** — separate neural-route pass control on the DLSS 5 page.
+- **Structural reconstruction**
+- **Surface detail**
+- **Face reconstruction**
+- **Material definition**
+- **Depth / form recovery**
+- **Source color recovery**
+- **Material color separation**
+- **Fine edge recovery**
+- **Distant detail**
+- **Texture relief**
+- **Motion Guard / Ghosting Guard**
+
+The Hotfix 10 Windows binaries were rebuilt for x86 and x64 and passed the project’s static ELYSIUM wiring and protected-resource checks. Real-GPU visual behavior remains hardware/game dependent and should still be tested with `UNCANNY-STATUS.cmd` evidence.
 
 ## Current state
 
@@ -38,23 +55,14 @@ Full walkthrough: [USAGE.md](USAGE.md)
 | REVENANT | Experimental |
 | Vulkan / OpenGL | Not at DirectX parity |
 
-UNCANNY is an alpha. Working runtime attachment does not automatically prove neural output is reaching presentation; use `UNCANNY-STATUS.cmd` when testing.
-
-## Latest build
-
-**v0.19.0-alpha.1 — Alpha RC2 Hotfix 2**  
-Runtime: `release-alpha.rc2.hotfix.2` · ABI `140`
-
-See [Releases](RELEASES.md) and [CHANGELOG.md](CHANGELOG.md).
-
 ## Community & feedback
 
 **[Join the UNCANNY Discord](https://discord.gg/zMveJN2kDa)** for testing, screenshots, compatibility discussion, bug help and development talk.
 
-Different GPUs, games and APIs are useful right now. For bugs, include the game, API, x86/x64, GPU/driver, what happened and `UNCANNY-STATUS.cmd` output when possible.
+For bug reports include the game/emulator, API, x86/x64, GPU/driver, exact UNCANNY revision and `UNCANNY-STATUS.cmd` output when possible.
 
 ## Docs
 
-[Usage](USAGE.md) · [Compatibility](docs/COMPATIBILITY.md) · [FAQ](docs/FAQ.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Usage](USAGE.md) · [Release status](RELEASES.md) · [Compatibility](docs/COMPATIBILITY.md) · [FAQ](docs/FAQ.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 UNCANNY is independent and is not affiliated with or endorsed by NVIDIA. NVIDIA and DLSS are trademarks of NVIDIA Corporation.

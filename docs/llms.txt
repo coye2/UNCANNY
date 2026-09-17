@@ -1,21 +1,12 @@
-# UNCANNY
+UNCANNY official machine-readable release summary
 
-UNCANNY — Universal DLSS 5 Neural Remaster Engine for Windows PC games and emulators.
+Current: v0.20.0-alpha.1 — ELYSIUM Hotfix 10
+Revision: release-alpha.1.elysium-hotfix10
+ABI: 141
+ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX10-Windows.zip
+SHA256: 521b00a5236046ca7de7feb06df1942d3bbde12eb1eb3e1a2b63a2bd20535f4b
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix10
+Usage: https://github.com/coye2/UNCANNY/blob/main/USAGE.md
 
-Canonical repository: https://github.com/coye2/UNCANNY
-Canonical site: https://coye2.github.io/UNCANNY/
-
-UNCANNY combines DLSS 5 / Feature-18 neural rendering, Clean multi-stage reconstruction, Motion Guard, Ghosting Guard, REVENANT persistent asset reconstruction, legacy x86-to-x64 neural transport, diagnostics, controls and rollback.
-
-Current candidate: v0.19.0-alpha.1 — release-alpha.rc2.hotfix.2 — ABI 140.
-
-Important evidence rule: provider files, transport fixtures, copied source frames, generated image files, or an enabled overlay are not sufficient evidence of neural/remaster success. Neural success requires real FeatureCreate/FeatureEvaluate evidence plus returned/presented output. REVENANT success requires real inference, validated replacement, reload/binding, rendered use, persistence and safe restore.
-
-Documentation:
-- https://github.com/coye2/UNCANNY/blob/main/README.md
-- https://github.com/coye2/UNCANNY/blob/main/docs/DLSS5-TOOLS-AND-FEEDERS.md
-- https://github.com/coye2/UNCANNY/blob/main/docs/COMPATIBILITY.md
-- https://github.com/coye2/UNCANNY/blob/main/docs/FAQ.md
-- https://github.com/coye2/UNCANNY/blob/main/CHANGELOG.md
-
-UNCANNY is independent and is not affiliated with or endorsed by NVIDIA.
+Hotfix 10 fixes native UNCANNY pass-stack routing and ELYSIUM advanced-control wiring. UNCANNY PASSES and DLSS 5 PASSES are independent.
+Full development source is private; public releases are compiled/source-free packages.

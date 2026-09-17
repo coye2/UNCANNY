@@ -1,42 +1,34 @@
 # Release Status
 
-## Current packaged candidate
+## Current public release
 
-**UNCANNY v0.19.0-alpha.1 — Alpha RC2 Hotfix 2**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 10**
 
-- Runtime revision: `release-alpha.rc2.hotfix.2`
-- ABI: `140`
-- Helper protocol: `2`
-- Windows package name: `UNCANNY-v0.19.0-alpha.1-ALPHA-RC2-HOTFIX-2-Windows.zip`
-- Windows package SHA-256: `bac0da28b86076daa18fbdeafb514043fb93e008c1518df9a17805f740754f86`
+- Runtime revision: `release-alpha.1.elysium-hotfix10`
+- ABI: `141`
+- Windows package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX10-Windows.zip`
+- SHA-256: `521b00a5236046ca7de7feb06df1942d3bbde12eb1eb3e1a2b63a2bd20535f4b`
 
-### Build-host verification
+### Hotfix 10
 
-- 11 production Windows components cross-compiled successfully.
-- 77 mixed regression records passed: 50 compile-only and 27 Linux-host execution records.
-- 7 ASan/UBSan executions passed.
-- 527 shared fields / 1,070 x86/x64 layout values matched.
-- 79 static release gates and 50 persisted control routes passed.
-- Public package inventory: 117 strictly allowlisted files.
-- Public package excludes proprietary C/C++ source, PDBs, objects and nested private archives.
+- Fixed HOME-page **UNCANNY PASSES** so 1 / 1.5 / 2 / 2.5 / 3 drives the native ELYSIUM reconstruction depth instead of the separate DLSS 5 pass field.
+- Added a separate **DLSS 5 PASSES** selector on the DLSS 5 page.
+- Exposed/wired ELYSIUM structural reconstruction, surface detail, face reconstruction, material definition, depth/form, color recovery/separation, fine-edge recovery, distant detail and texture-relief controls.
+- Synchronized the generated shader header with the current 56-float / 14-register ELYSIUM shader-control layout.
+- Preserved launcher, game scanning, install/update flow, PCSX2 wrapper behavior, REVENANT and engine switching.
 
-### Release classification
+### Verification before packaging
 
-This package is a **public test candidate** while the remaining Windows/NVIDIA/PCSX2 rendered-acceptance gates are completed.
+- x86 and x64 Windows runtime/launcher/REVENANT/Control Deck/DLSS bridge targets cross-compiled successfully, plus the x64 Neural Host.
+- Hotfix 9 static ELYSIUM regression: PASS.
+- Hotfix 10 pass/slider wiring regression: PASS.
+- Protected-resource roundtrip/authentication checks: PASS.
+- Final ZIP CRC: PASS.
+- Final compiled-binary hashes: PASS.
+- Public-package source leak audit: 0 source files found.
 
-The project intentionally does not translate compilation, transport fixtures or provider-file detection into claims of universal DLSS 5 success.
-
-### Remaining headline acceptance gates
-
-1. Broad legacy D3D9/D3D10 Feature-18 create/evaluate/return/present proof.
-2. End-to-end visible neural REVENANT replacement/persistence/restore proof on PCSX2.
-3. Real-GPU quality, motion and frametime acceptance for deeper Clean 2/2.5/3 stages.
-4. Regression testing of already-working D3D11/D3D12 and PCSX2 paths.
+Real-GPU rendered appearance and game-specific behavior still require hardware testing; build-host checks are not a substitute for that.
 
 ## Private source/workspace
 
-The private source recovery workspace is intentionally **not** a public release artifact. Do not request, mirror or redistribute private recovery packages as public builds.
-
-## Version naming
-
-The product version can remain `v0.19.0-alpha.1` while engineering candidates advance through `RC` and `Hotfix` revisions. The runtime revision and ABI are the authoritative way to identify a specific installed candidate.
+The engineering source is maintained privately and is not part of the public release. Do not redistribute private recovery/source packages.

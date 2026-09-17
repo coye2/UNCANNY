@@ -1,74 +1,71 @@
-# UNCANNY Usage
+# UNCANNY v0.20 ELYSIUM Hotfix 10 — Usage
 
-UNCANNY is currently a Windows/NVIDIA RTX public alpha. The compiled runtime is distributed through **GitHub Releases**; the repository itself is not a complete source distribution.
+UNCANNY is currently a Windows/NVIDIA RTX public alpha. The compiled runtime is distributed through GitHub Releases; the full development source is private.
 
 ## Install
 
-1. Download the latest public `UNCANNY-...-Windows.zip` from **Releases**.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX10-Windows.zip` from the latest GitHub Release.
 2. Extract the entire ZIP. Do not run it from inside the archive.
-3. Find the actual game or emulator `.exe` that renders the game.
-4. Drag that `.exe` onto `INSTALL-NATIVE.cmd`.
-5. Let the installer create its backup and install the appropriate runtime.
-6. Launch the game or emulator normally.
+3. Run `UNCANNY.cmd`.
+4. Let UNCANNY scan for games/emulators, or use **Add game** and select the real rendering executable.
+5. Select the title and choose **Install UNCANNY**.
+6. Launch from UNCANNY or normally from the selected executable.
+7. Reach gameplay and press **HOME** to open the Control Deck.
 
-Do not use a package marked `PRIVATE-WORKSPACE-RECOVERY`.
+Do not mix DLLs or EXEs from older UNCANNY packages.
 
-## First run
+## UNCANNY passes
 
-1. Reach gameplay.
-2. Press **Home** to open the UNCANNY Control Deck.
-3. Turn **ENABLE UNCANNY** on.
-4. Start with **Clean 1** and leave Motion Guard/Ghosting Guard enabled.
-5. Compare the same scene with UNCANNY off and on.
-6. If the title is stable, try deeper Clean modes.
+HOME → **UNCANNY PASSES** controls the native ELYSIUM image stack live:
 
-If Home causes an exclusive-fullscreen title to minimize, try borderless/windowed mode and report the behavior.
+`1 / 1.5 / 2 / 2.5 / 3`
 
-## Clean modes
+This is independent from **DLSS 5 PASSES**. Hotfix 10 specifically repairs this routing so the HOME selector changes `uncanny_pass_depth_x2`, the value consumed by the ELYSIUM renderer.
 
-`1 / 1.5 / 2 / 2.5 / 3` represent increasing reconstruction depth. They are not intended to be repeated sharpening presets or blindly repeated identical neural passes. Higher modes can cost more GPU time and remain under real-hardware validation.
+## ELYSIUM advanced controls
 
-## DLSS / neural verification
+HOME → **Image** → **Show Advanced** exposes:
 
-A loaded DLL or working overlay does not prove neural rendering is contributing. Run `UNCANNY-STATUS.cmd` after testing and check whether feature creation/evaluation succeeds and whether neural output reaches presentation.
+- Structural reconstruction
+- Surface detail
+- Face reconstruction
+- Material definition
+- Depth / form recovery
+- Source color recovery
+- Material color separation
+- Fine edge recovery
+- Distant detail
+- Texture relief
 
-D3D9/D3D10 neural execution remains experimental. D3D11/D3D12 and PCSX2 are currently the primary test paths.
+These controls are live and saved per executable. Editing an individual ELYSIUM image control moves the coordinated quality mode to Custom.
 
-## REVENANT
+## Quality presets
 
-REVENANT is experimental persistent asset reconstruction. PCSX2 is its primary acceptance target. Capturing or generating an asset does not by itself prove that the replacement was rendered; rendered-use/persistence is still being validated.
+Performance / Balanced / Quality / Photoreal coordinate multiple ELYSIUM controls at once and may change UNCANNY pass depth.
 
-## If something breaks
+## DLSS 5
 
-First test the game without other graphics injectors stacked on top of UNCANNY. Use the included rollback/uninstall path to restore the target if necessary.
+DLSS 5 is a separate path. Use the **DLSS 5** page for provider status, enable/disable, **DLSS 5 PASSES**, provider preset and neural diagnostics.
 
-For a useful bug report, include:
+## Motion
 
-- game/emulator + version
-- target executable
-- D3D9/10/11/12
-- x86/x64
-- GPU + NVIDIA driver
-- UNCANNY version
-- what you expected and what happened
-- `UNCANNY-STATUS.cmd` output
-- screenshot/video when the problem is visual
+Keep Motion Guard and Ghosting Guard enabled for normal testing. They are intended to reduce unstable reconstruction during motion, disocclusion and unreliable temporal history.
+
+## Compare / bypass
+
+Use the runtime bypass control for matched before/after testing. Cached REVENANT replacements are separate from image-processing bypass and may remain present until restored/removed through their own workflow.
+
+## Diagnostics
+
+Run `UNCANNY-STATUS.cmd` after testing. A loaded DLL or enabled overlay is not by itself proof that neural output reached presentation.
+
+For bug reports include the game/emulator, target executable, API, x86/x64, GPU/driver, exact UNCANNY revision, expected behavior, actual behavior, status output and a screenshot/video for visual issues.
 
 ## Current limitations
 
-- D3D9/D3D10 neural compatibility is still being validated.
+- D3D9/D3D10 neural compatibility remains experimental.
 - Vulkan/OpenGL are not at DirectX parity.
-- REVENANT rendered-use is experimental.
-- Clean 2/2.5/3 quality and performance are still undergoing broader GPU testing.
-- Some fullscreen titles may have overlay/focus issues.
+- REVENANT rendered-use remains experimental.
+- Real-GPU visual/performance acceptance varies by title and hardware.
 
-## More
-
-- [README](README.md)
-- [Releases](RELEASES.md)
-- [Compatibility](docs/COMPATIBILITY.md)
-- [FAQ](docs/FAQ.md)
-- [Contributing / testing](CONTRIBUTING.md)
-- [Security](SECURITY.md)
-
-UNCANNY is independent and is not affiliated with or endorsed by NVIDIA. NVIDIA and DLSS are trademarks of NVIDIA Corporation.
+UNCANNY is independent and is not affiliated with or endorsed by NVIDIA.

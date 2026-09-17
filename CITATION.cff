@@ -1,18 +1,20 @@
 cff-version: 1.2.0
-title: "UNCANNY — Universal DLSS 5 Neural Remaster Engine"
+title: "UNCANNY — Universal Real-Time Remaster Engine"
 message: "If you reference UNCANNY, please cite the canonical GitHub repository and the exact runtime revision tested."
 type: software
 authors:
   - name: "coye2"
 repository-code: "https://github.com/coye2/UNCANNY"
 url: "https://github.com/coye2/UNCANNY"
-version: "v0.20.0-alpha.1 / release-alpha.1.elysium-hotfix11"
+version: "v0.20.0-alpha.1 / release-alpha.1.elysium-engine45"
 date-released: 2026-09-17
 keywords:
+  - "UNCANNY"
+  - "ELYSIUM"
+  - "Adaptive Realism"
   - "DLSS 5"
-  - "DLSS5"
   - "neural rendering"
-  - "neural remaster"
+  - "real-time remaster"
   - "game remastering"
   - "PCSX2"
   - "Direct3D 9"

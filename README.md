@@ -15,7 +15,7 @@ Runtime: `release-alpha.1.elysium-hotfix11` · ABI `141`
 
 Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix11
 
-SHA-256: `14e28fad9a016a096e58167eebc53d8b96ead41687b1b366fbb34c92427c7bd7`
+SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
 
 Hotfix 11 is a targeted D3D11 startup-safety repair based directly on a PCSX2 x64 tester report. The affected session successfully captured the D3D11 device/swapchain and installed the Present hook, but then stopped with one Present attempt, zero successful Presents, no advancing presentation stream and 0 FPS.
 
@@ -32,6 +32,24 @@ Hotfix 11 changes that ordering so optional UNCANNY processing cannot become a p
 The tester also reported 38/38 successful REVENANT texture jobs while presentation was stalled, so Hotfix 11 deliberately leaves that independent path intact.
 
 `Host64LaunchAttempted=0` is not automatically a failure on an x64 D3D11 target. The normal native x64 route can use the in-process bridge; a separate x64 helper is not required for every D3D11 session.
+
+## Security packaging correction
+
+The Hotfix 11 public ZIP was repackaged after Windows Defender flagged `diagnostics/revenant-commit32.exe`. That executable is an internal REVENANT acceptance-test harness, not a runtime dependency, and should not have been present in the public package.
+
+The current release:
+
+- ships **no internal test/diagnostic executables**
+- ships no `revenant-commit32.exe` or `revenant-commit64.exe`
+- passed a Microsoft Defender scan of the cleaned runtime tree with updated signatures
+- passed a second Microsoft Defender scan of the completed release ZIP
+- recorded **0 detections** in both release-gate scans
+- includes `docs/MALWARE-VERIFICATION.md` inside the ZIP
+- includes `MALWARE-VERIFICATION-HOTFIX11.json` beside the ZIP on the GitHub release
+
+Defender release gate: engine `1.1.26080.3`, signatures `1.459.256.0`, product `4.18.26080.3`.
+
+Full verification record: [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md)
 
 ## Install
 
@@ -72,12 +90,14 @@ The exact Hotfix 11 public build passed:
 - Hotfix 10 control-wiring regression
 - Hotfix 11 D3D11 fail-open regression
 - native `UNCANNY.exe` regression
-- 12 public Windows diagnostic cross-builds
+- internal Windows test binaries compiled in CI but excluded from the public runtime package
 - 16 focused Hotfix 11 acceptance checks
 - x86 + x64 production builds
 - protected shader verification
 - PE hardening checks across all 11 current production/helper binaries
 - strict public-package audit and ZIP integrity check
+- Microsoft Defender scan of the cleaned runtime tree: **PASS / 0 detections**
+- Microsoft Defender scan of the final ZIP: **PASS / 0 detections**
 
 These build/host checks do not replace the final hardware retest. The original PCSX2/GPU setup should be rerun to establish that the black-screen regression is gone in real use.
 
@@ -100,6 +120,6 @@ For D3D11/PCSX2 reports, include `PresentAttempts`, `Presents`, `PresentAdvancin
 
 ## Docs
 
-[Usage](USAGE.md) · [Release status](RELEASES.md) · [Hotfix 11 D3D11 report](docs/HOTFIX11-D3D11.md) · [Compatibility](docs/COMPATIBILITY.md) · [FAQ](docs/FAQ.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+[Usage](USAGE.md) · [Release status](RELEASES.md) · [Malware verification](docs/MALWARE-VERIFICATION.md) · [Hotfix 11 D3D11 report](docs/HOTFIX11-D3D11.md) · [Compatibility](docs/COMPATIBILITY.md) · [FAQ](docs/FAQ.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 UNCANNY is independent and is not affiliated with or endorsed by NVIDIA. NVIDIA and DLSS are trademarks of NVIDIA Corporation.

@@ -1,0 +1,86 @@
+name: Publish UNCANNY Engine 4.5 Hotfix 13
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/publish-engine45-hotfix13.yml'
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Fetch exact validated private artifact
+        env:
+          ARTIFACT_URL: 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-ac68-81f5-858c-656d34699490/raw?se=2026-09-17T23%3A49%3A29Z&sp=r&sv=2026-02-06&sr=b&scid=467458a5-6c94-51b5-8d7d-93c1f9c11629&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T18%3A13%3A53Z&ske=2026-09-18T18%3A13%3A53Z&sks=b&skv=2026-02-06&sig=8XZmlc%2BtSNjuwOHF8xTrp5V1R4OxLlpS0YMm1g6mRuk%3D'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 "$ARTIFACT_URL" -o artifact.zip
+          echo "aa5ed04281204b8f805f8a1ac4faa0bb86ec999a1373b316756a9408ed98f4eb  artifact.zip" | sha256sum -c -
+          unzip -q artifact.zip -d artifact
+          ZIP="artifact/dist/public-adaptive/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip"
+          test -f "$ZIP"
+          echo "843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811  $ZIP" | sha256sum -c -
+          unzip -t "$ZIP"
+      - name: Audit public package boundary
+        run: |
+          python - <<'PY'
+          import zipfile,pathlib
+          p=pathlib.Path('artifact/dist/public-adaptive/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip')
+          forbidden=('martysmods_','rtgi','regrade','relight','immerse','meteor','quint')
+          with zipfile.ZipFile(p) as z:
+              names=[n.lower() for n in z.namelist()]
+              assert not any('/src/' in n or '/tests/' in n or '/development/' in n for n in names)
+              assert not any(any(x in n for x in forbidden) for n in names)
+          print('PASS: Hotfix 13 public boundary')
+          PY
+      - name: Replace Engine 4.5 release with Hotfix 13 build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ZIP="artifact/dist/public-adaptive/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip"
+          SHA="artifact/dist/public-adaptive/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip.sha256"
+          cat > release.md <<'EOF'
+          # UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13
+
+          Hotfix 13 is a tester-driven repair and realism update for Engine 4.5.
+
+          ## Fixed
+          - **Remove now unwinds the full UNCANNY install stack** for the exact selected game. Updating UNCANNY and then removing it no longer reveals an older UNCANNY install underneath.
+          - Changed runtime-generated graphics logs such as **ReShade.log** no longer block restore/uninstall.
+          - Original/user files remain conflict-protected; the relaxed rule applies only to known mutable generated logs.
+          - **UNCANNY logo is back in the launcher UI** as an inline official vector so packaging cannot lose the image.
+          - Windows release tests now parse the environment restore script too.
+
+          ## Adaptive Realism — pushed harder
+          - The live control is now **OFF / LOW / BALANCED / HIGH / INSANE**.
+          - New installs seed **INSANE + Reference Stack**.
+          - The Reference Stack is now gated by Adaptive Realism, so **OFF is a real bypass** and the higher levels scale the complete source-bounded look.
+          - Stronger depth-aware contact occlusion, bounded indirect diffuse/specular response, exposure adaptation, local contrast and meso clarity where scene evidence supports it.
+          - The reference-look stack now scales shadow separation, local clarity, cast reduction, color balance, concavity, highlight response and filmic shoulder with the Adaptive Realism level.
+          - Motion Guard / Ghosting Guard remain authoritative and X2.5 keeps the lowest temporal-history weight.
+
+          No paid/restricted Marty McFly / Pascal Gilcher shader source or binaries are bundled. The reference preset is used only to independently match visible behavior.
+
+          ## Verification
+          - Full Python/static regression suite: **PASS**
+          - Protected shader authentication/roundtrip: **PASS**
+          - x86/x64 production and Engine 4.5 acceptance builds: **PASS**
+          - Public package/restricted-shader audit: **PASS**
+          - Windows HLSL compile: **PASS**
+          - PowerShell parser gate: **PASS**
+          - Dynamic changed-ReShade.log restore regression: **PASS**
+          - Dynamic stacked-install full-remove regression: **PASS**
+          - Final ZIP integrity/hash verification: **PASS**
+          - Microsoft Defender final extracted-tree gate: **PASS / 0 detections**
+
+          Source revision: `16ee9cb8ef9cdb9f038577884bb023909743d1e1`
+          ABI: `143`
+          SHA-256: `843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811`
+
+          Real-game visual/performance acceptance is still title/GPU/driver specific.
+          EOF
+          gh release edit v0.20.0-alpha.1-elysium-engine45             --repo "${{ github.repository }}"             --title "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Hotfix 13"             --notes-file release.md             --prerelease=false
+          gh release upload v0.20.0-alpha.1-elysium-engine45 "$ZIP" "$SHA" --clobber --repo "${{ github.repository }}"

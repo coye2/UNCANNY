@@ -4,7 +4,7 @@ UNCANNY is currently a Windows/NVIDIA RTX public alpha. The compiled runtime is 
 
 ## Install
 
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX10-Windows.zip` from the latest GitHub Release.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-Windows.zip` from the latest GitHub Release.
 2. Extract the entire ZIP. Do not run it from inside the archive.
 3. Run `UNCANNY.cmd`.
 4. Let UNCANNY scan for games/emulators, or use **Add game** and select the real rendering executable.

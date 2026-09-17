@@ -15,120 +15,141 @@ env:
   ZIP_NAME: UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
 
 jobs:
-  clean-and-scan:
-    name: Clean package + Microsoft Defender verification
-    runs-on: windows-latest
+  sanitize:
+    name: Remove internal test executables
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Download currently published Hotfix 11
-        shell: pwsh
+      - name: Download published Hotfix 11
+        shell: bash
         run: |
-          $url = "https://github.com/${{ github.repository }}/releases/download/$env:TAG/$env:ZIP_NAME"
-          Invoke-WebRequest -Uri $url -OutFile old-release.zip -UseBasicParsing
-          New-Item -ItemType Directory -Path work -Force | Out-Null
-          Expand-Archive -LiteralPath old-release.zip -DestinationPath work -Force
-          $root = Get-ChildItem -LiteralPath work -Directory | Select-Object -First 1
-          if(-not $root){ throw 'Release root folder not found.' }
-          "PACKAGE_ROOT=$($root.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          set -euo pipefail
+          curl -L --fail --retry 3 -o old-release.zip "https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/${ZIP_NAME}"
+          rm -rf work
+          mkdir work
+          unzip -q old-release.zip -d work
+          ROOT="$(find work -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+          test -n "$ROOT"
+          echo "PACKAGE_ROOT=$ROOT" >> "$GITHUB_ENV"
 
-      - name: Strip internal test executables from public payload
-        shell: pwsh
+      - name: Strip diagnostics and update public metadata
+        shell: bash
         run: |
-          $diag = Join-Path $env:PACKAGE_ROOT 'diagnostics'
-          if(Test-Path -LiteralPath $diag){ Remove-Item -LiteralPath $diag -Recurse -Force }
-          $leaks = @(Get-ChildItem -LiteralPath $env:PACKAGE_ROOT -Recurse -File | Where-Object {
-            $_.FullName -match '[\\/]diagnostics[\\/]' -or $_.Name -match '^(revenant-commit|proof-journal|protected-resources|gpu-acceptance|neural-host-(startup|transport))(32|64)\.exe$'
-          })
-          if($leaks.Count){ throw ('Internal test executable leak: '+(($leaks.FullName) -join ', ')) }
+          set -euo pipefail
+          rm -rf "$PACKAGE_ROOT/diagnostics"
           python - <<'PY'
-          import json, os, pathlib
+          import json, os, pathlib, re
           root=pathlib.Path(os.environ['PACKAGE_ROOT'])
+          blocked=re.compile(r'^(revenant-commit|proof-journal|protected-resources|gpu-acceptance|neural-host-(startup|transport))(32|64)\.exe$',re.I)
+          leaks=[p for p in root.rglob('*') if p.is_file() and (blocked.match(p.name) or 'diagnostics' in {x.lower() for x in p.parts})]
+          assert not leaks, f'internal test executable leak: {leaks}'
           p=root/'public-build.json'
           data=json.loads(p.read_text(encoding='utf-8-sig'))
           data['diagnostics']=[]
           data['packaging_security']={
-              'internal_test_executables_shipped': False,
-              'policy': 'CI diagnostic binaries are test-only and are never part of the public runtime payload.'
+              'internal_test_executables_shipped':False,
+              'microsoft_defender_release_gate':'REQUIRED',
+              'policy':'CI diagnostic binaries are test-only and are never part of the public runtime payload.'
           }
           p.write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8')
           PY
+          rm -f interim-clean.zip
+          (cd work && zip -qr ../interim-clean.zip "$(basename "$PACKAGE_ROOT")")
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hotfix11-sanitized-pre-scan
+          path: interim-clean.zip
+          if-no-files-found: error
+
+  defender:
+    name: Microsoft Defender release gate
+    needs: sanitize
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: hotfix11-sanitized-pre-scan
+          path: input
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Expand sanitized package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path work -Force | Out-Null
+          Expand-Archive -LiteralPath input/interim-clean.zip -DestinationPath work -Force
+          $root=Get-ChildItem -LiteralPath work -Directory | Select-Object -First 1
+          if(-not $root){ throw 'Sanitized release root missing.' }
+          if(Test-Path -LiteralPath (Join-Path $root.FullName 'diagnostics')){ throw 'diagnostics directory still present.' }
+          $blocked='^(revenant-commit|proof-journal|protected-resources|gpu-acceptance|neural-host-(startup|transport))(32|64)\.exe$'
+          $leaks=@(Get-ChildItem -LiteralPath $root.FullName -Recurse -File | Where-Object { $_.Name -match $blocked })
+          if($leaks.Count){ throw ('Internal test executable leak: '+(($leaks.FullName) -join ', ')) }
+          "PACKAGE_ROOT=$($root.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Update Microsoft Defender signatures
         shell: pwsh
         run: |
-          $status = Get-MpComputerStatus -ErrorAction Stop
-          if(-not $status.AMServiceEnabled -or -not $status.AntivirusEnabled){
-            throw 'Microsoft Defender Antivirus is unavailable. Release blocked.'
-          }
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          if(-not $status.AMServiceEnabled -or -not $status.AntivirusEnabled){ throw 'Microsoft Defender Antivirus unavailable. Release blocked.' }
           Update-MpSignature -ErrorAction Stop
-          $status = Get-MpComputerStatus -ErrorAction Stop
+          $status=Get-MpComputerStatus -ErrorAction Stop
           "DEFENDER_ENGINE=$($status.AMEngineVersion)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "DEFENDER_SIGNATURE=$($status.AntivirusSignatureVersion)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "DEFENDER_PRODUCT=$($status.AMProductVersion)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "SCAN_TIME_UTC=$([DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ'))" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Host "Defender engine: $($status.AMEngineVersion)"
           Write-Host "Defender signatures: $($status.AntivirusSignatureVersion)"
 
-      - name: Defender scan extracted public release
+      - name: Scan extracted runtime tree
         shell: pwsh
         run: |
-          $scanPath=(Resolve-Path -LiteralPath $env:PACKAGE_ROOT).Path
-          Start-MpScan -ScanType CustomScan -ScanPath $scanPath -ErrorAction Stop
+          $path=(Resolve-Path -LiteralPath $env:PACKAGE_ROOT).Path
+          Start-MpScan -ScanType CustomScan -ScanPath $path -ErrorAction Stop
           Start-Sleep -Seconds 2
-          $detections=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object { $_.Resources -match [regex]::Escape($scanPath) })
-          if($detections.Count){
-            $detections | Format-List * | Out-String | Write-Host
-            throw ('Microsoft Defender detected '+$detections.Count+' threat(s). Release blocked.')
-          }
-          Write-Host 'PASS: Microsoft Defender found 0 threats in the extracted public release.'
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object { $_.Resources -match [regex]::Escape($path) })
+          if($hits.Count){ $hits | Format-List * | Out-String | Write-Host; throw 'Defender detected a threat in sanitized runtime tree. Release blocked.' }
+          Write-Host 'PASS: extracted runtime tree = 0 Microsoft Defender detections.'
 
-      - name: Write verification report and rebuild checksums
-        shell: pwsh
+      - name: Write malware report and regenerate package hashes
+        shell: bash
         run: |
+          set -euo pipefail
           python - <<'PY'
           import hashlib, json, os, pathlib
           root=pathlib.Path(os.environ['PACKAGE_ROOT'])
           docs=root/'docs'; docs.mkdir(exist_ok=True)
           run_url=f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
-          report=f'''# Hotfix 11 malware verification\n\nRelease: UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11\n\n- Scan time (UTC): `{os.environ['SCAN_TIME_UTC']}`\n- Scanner: Microsoft Defender Antivirus\n- Defender engine: `{os.environ['DEFENDER_ENGINE']}`\n- Defender signatures: `{os.environ['DEFENDER_SIGNATURE']}`\n- Scope: complete extracted public release tree\n- Result: **PASS — 0 detections**\n- Defender exclusions used: **none**\n- Defender disabled/bypassed: **no**\n- Threat restoration/allowlisting used: **none**\n- CI run: {run_url}\n\n## Packaging correction\n\nThe earlier Hotfix 11 ZIP accidentally shipped internal CI/test executables under `diagnostics/`, including `revenant-commit32.exe`. Those binaries are not required by the UNCANNY runtime and are not installed as REVENANT. The public package now excludes the entire internal diagnostic executable set.\n\nThe actual ELYSIUM runtime, REVENANT runtime, launcher, PCSX2 integration, provider routing and Hotfix 11 D3D11 fail-open fix remain present.\n\n## Verification policy\n\nA public package is blocked if Microsoft Defender reports a detection on the extracted release. Internal diagnostic/test executables remain CI-only. Hashes are regenerated after the scan report and package metadata are written.\n\nThis is one antivirus engine and one signature snapshot, not a claim that any file can be guaranteed to remain detection-free forever as security signatures change.\n'''
+          report=f'''# Malware verification — Hotfix 11\n\nStatus: **PASS**\n\nThe cleaned UNCANNY Hotfix 11 public runtime was scanned by Microsoft Defender Antivirus after internal CI/test executables were removed from the user package.\n\n- Release: UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11\n- Runtime: `release-alpha.1.elysium-hotfix11`\n- ABI: `141`\n- Scan time (UTC): `{os.environ['SCAN_TIME_UTC']}`\n- Provider: Microsoft Defender Antivirus\n- Engine: `{os.environ['DEFENDER_ENGINE']}`\n- Signatures: `{os.environ['DEFENDER_SIGNATURE']}`\n- Product: `{os.environ['DEFENDER_PRODUCT']}`\n- Extracted runtime result: **0 detections**\n- Defender exclusions used: **none**\n- Defender disabled/bypassed: **no**\n- Threat restoration/allowlisting used: **none**\n- Workflow run: {run_url}\n\n## Packaging correction\n\nThe earlier Hotfix 11 ZIP mistakenly included internal CI acceptance-test executables under `diagnostics/`, including `revenant-commit32.exe`. These are not required by UNCANNY or REVENANT and are no longer shipped. The real ELYSIUM runtime, REVENANT runtime, launcher, PCSX2 integration, provider routing and Hotfix 11 D3D11 fail-open fix remain present.\n\n## Release rule\n\nA public package is blocked when Microsoft Defender reports a detection on the sanitized runtime or the completed ZIP. This report documents one engine/signature snapshot and is not a permanent guarantee against future antivirus signature changes.\n'''
           (docs/'MALWARE-CHECK.md').write_text(report,encoding='utf-8')
-          pb=root/'public-build.json'; data=json.loads(pb.read_text(encoding='utf-8-sig'))
+          pb=root/'public-build.json'
+          data=json.loads(pb.read_text(encoding='utf-8-sig'))
+          data['diagnostics']=[]
           data['malware_scan']={
-            'scanner':'Microsoft Defender Antivirus',
-            'engine':os.environ['DEFENDER_ENGINE'],
-            'signatures':os.environ['DEFENDER_SIGNATURE'],
-            'scan_time_utc':os.environ['SCAN_TIME_UTC'],
-            'scope':'complete extracted public release tree',
-            'detections':0,
-            'result':'PASS',
-            'exclusions_used':False,
-            'ci_run':run_url
+            'scanner':'Microsoft Defender Antivirus','engine':os.environ['DEFENDER_ENGINE'],'signatures':os.environ['DEFENDER_SIGNATURE'],
+            'product':os.environ['DEFENDER_PRODUCT'],'scan_time_utc':os.environ['SCAN_TIME_UTC'],'detections':0,'result':'PASS',
+            'exclusions_used':False,'ci_run':run_url
           }
           pb.write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8')
-          manifest=root/'PUBLIC-PACKAGE-MANIFEST.txt'
-          sums=root/'SHA256SUMS.txt'
+          manifest=root/'PUBLIC-PACKAGE-MANIFEST.txt'; sums=root/'SHA256SUMS.txt'
           files=sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file())
-          if 'PUBLIC-PACKAGE-MANIFEST.txt' not in files: files.append('PUBLIC-PACKAGE-MANIFEST.txt')
-          if 'SHA256SUMS.txt' not in files: files.append('SHA256SUMS.txt')
-          files=sorted(set(files))
+          files=sorted(set(files+['PUBLIC-PACKAGE-MANIFEST.txt','SHA256SUMS.txt']))
           manifest.write_text(''.join(x+'\n' for x in files),encoding='utf-8')
           lines=[]
           for rel in files:
             if rel=='SHA256SUMS.txt': continue
-            p=root/rel
-            digest=hashlib.sha256(p.read_bytes()).hexdigest()
+            digest=hashlib.sha256((root/rel).read_bytes()).hexdigest()
             lines.append(f'{digest} *{rel}\n')
           sums.write_text(''.join(lines),encoding='utf-8')
-          assert not any('/diagnostics/' in '/'+p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file())
-          assert json.loads(pb.read_text())['diagnostics']==[]
+          assert data['diagnostics']==[]
+          assert not (root/'diagnostics').exists()
           PY
 
-      - name: Build cleaned release ZIP and verify internal hashes
-        shell: pwsh
+      - name: Build final ZIP and verify internal hashes
+        shell: bash
         run: |
+          set -euo pipefail
           python - <<'PY'
           import hashlib, os, pathlib, zipfile
           root=pathlib.Path(os.environ['PACKAGE_ROOT'])
@@ -138,30 +159,27 @@ jobs:
               if p.is_file(): z.write(p,root.name+'/'+p.relative_to(root).as_posix())
           with zipfile.ZipFile(out) as z:
             assert z.testzip() is None
-            names=z.namelist(); prefix=root.name+'/'
-            assert not any('/diagnostics/' in n for n in names)
-            assert prefix+'docs/MALWARE-CHECK.md' in names
+            prefix=root.name+'/'
+            assert prefix+'docs/MALWARE-CHECK.md' in z.namelist()
+            assert not any('/diagnostics/' in n for n in z.namelist())
             for line in z.read(prefix+'SHA256SUMS.txt').decode().splitlines():
               digest,rel=line.split(' *',1)
-              assert hashlib.sha256(z.read(prefix+rel)).hexdigest()==digest, rel
-          print('ZIP_SHA256='+hashlib.sha256(out.read_bytes()).hexdigest())
+              assert hashlib.sha256(z.read(prefix+rel)).hexdigest()==digest,rel
+          print(hashlib.sha256(out.read_bytes()).hexdigest())
           PY
 
-      - name: Defender scan final ZIP
+      - name: Scan completed ZIP and generate release checksum
         shell: pwsh
         run: |
           $zip=(Resolve-Path -LiteralPath $env:ZIP_NAME).Path
           Start-MpScan -ScanType CustomScan -ScanPath $zip -ErrorAction Stop
           Start-Sleep -Seconds 2
-          $detections=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object { $_.Resources -match [regex]::Escape($zip) })
-          if($detections.Count){
-            $detections | Format-List * | Out-String | Write-Host
-            throw ('Microsoft Defender detected '+$detections.Count+' threat(s) in final ZIP. Release blocked.')
-          }
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object { $_.Resources -match [regex]::Escape($zip) })
+          if($hits.Count){ $hits | Format-List * | Out-String | Write-Host; throw 'Defender detected a threat in final ZIP. Release blocked.' }
           $hash=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
           "$hash *$env:ZIP_NAME" | Set-Content -LiteralPath "$env:ZIP_NAME.sha256" -Encoding ascii
           Copy-Item -LiteralPath (Join-Path $env:PACKAGE_ROOT 'docs/MALWARE-CHECK.md') -Destination MALWARE-CHECK.md
-          Write-Host "PASS: final ZIP Defender scan = 0 detections"
+          Write-Host "PASS: final ZIP = 0 Microsoft Defender detections"
           Write-Host "SHA-256: $hash"
 
       - uses: actions/upload-artifact@v4
@@ -174,8 +192,8 @@ jobs:
           if-no-files-found: error
 
   publish:
-    name: Publish verified Hotfix 11 repack
-    needs: clean-and-scan
+    name: Publish Defender-verified Hotfix 11
+    needs: defender
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -185,7 +203,8 @@ jobs:
         with:
           name: hotfix11-av-clean-release
           path: release
-      - name: Publish cleaned release assets
+
+      - name: Replace release assets and notes
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -200,99 +219,83 @@ jobs:
           Hotfix 11 has been repacked after an antivirus packaging issue was reported.
 
           ## Security / AV packaging fix
-
           - Removed internal CI/test executables from the public ZIP, including the mistakenly shipped \`diagnostics/revenant-commit32.exe\`.
-          - These diagnostic binaries were test harnesses and were not required by the UNCANNY or REVENANT runtime.
-          - The cleaned package was scanned on a GitHub-hosted Windows runner using Microsoft Defender with updated signatures.
-          - **Microsoft Defender result: PASS — 0 detections.**
-          - No Defender exclusions, bypasses, disabled protection, threat restoration or allowlisting were used.
-          - A copy of the verification report is included inside the ZIP at \`docs/MALWARE-CHECK.md\` and is also published in this repository.
+          - Those files are acceptance-test harnesses and are not required by the UNCANNY or REVENANT runtime.
+          - The sanitized runtime tree and completed ZIP were scanned using Microsoft Defender with updated signatures.
+          - **Microsoft Defender: PASS — 0 detections.**
+          - No Defender exclusions, disabled protection, bypasses, threat restoration or allowlisting were used.
+          - Verification is included inside the ZIP at \`docs/MALWARE-CHECK.md\` and published in this repository.
 
           ## Hotfix 11 runtime fixes preserved
-
           - D3D11 startup fails open so native Present can advance before optional processing.
           - Feature-18 / DLSS 5 startup waits for a healthy D3D11 Present stream.
-          - Live source frames remain authoritative while neural startup is deferred.
-          - Hotfix 10 ELYSIUM pass/slider wiring is preserved.
-          - REVENANT, PCSX2 integration, launcher, rollback and engine switching are preserved.
+          - Hotfix 10 ELYSIUM pass/slider wiring remains intact.
+          - REVENANT, PCSX2 integration, launcher, rollback and engine switching remain intact.
 
           **SHA-256**  
           \`$HASH\`
 
-          This remains alpha software. Hardware-specific graphics behavior still requires normal real-machine testing.
+          Runtime: \`release-alpha.1.elysium-hotfix11\`  
+          ABI: \`141\`
           EOF
           gh release upload "$TAG" "$ZIP" "$SUM" release/MALWARE-CHECK.md --clobber
           gh release edit "$TAG" --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file release/RELEASE-NOTES.md --prerelease
           echo "NEW_HASH=$HASH" >> "$GITHUB_ENV"
 
-      - name: Update public repository documentation
+      - name: Update README, security docs, changelog and release docs
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import os, pathlib, re, shutil
-          root=pathlib.Path('.')
-          h=os.environ['NEW_HASH']
-
-          def rep(path, old, new, required=True):
-            p=root/path; t=p.read_text(encoding='utf-8')
-            if required and old not in t: raise SystemExit(f'missing expected text in {path}: {old[:80]}')
-            p.write_text(t.replace(old,new),encoding='utf-8')
-
-          # Exact release hash references.
+          import os, pathlib, shutil
+          root=pathlib.Path('.'); h=os.environ['NEW_HASH']
           old='14e28fad9a016a096e58167eebc53d8b96ead41687b1b366fbb34c92427c7bd7'
           for f in ['README.md','LATEST_RELEASE.md','CHANGELOG.md','RELEASES.md']:
             p=root/f
-            if p.exists():
-              t=p.read_text(encoding='utf-8')
-              p.write_text(t.replace(old,h),encoding='utf-8')
+            if p.exists(): p.write_text(p.read_text(encoding='utf-8').replace(old,h),encoding='utf-8')
 
           p=root/'README.md'; t=p.read_text(encoding='utf-8')
-          marker='## Verification\n'
-          sec='''## Malware verification\n\nThe current Hotfix 11 ZIP was repacked after an internal CI test executable was accidentally included under `diagnostics/`. Internal test executables are no longer shipped. The cleaned package passed Microsoft Defender on a Windows CI runner with updated signatures: **0 detections**, with no exclusions or bypasses. See [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md).\n\n'''
-          if '## Malware verification' not in t:
-            t=t.replace(marker,sec+marker)
-          t=t.replace('- 12 public Windows diagnostic cross-builds\n','- internal diagnostic tests built and run in CI only; diagnostic executables are not shipped\n')
-          t=t.replace('- strict public-package audit and ZIP integrity check\n','- strict public-package audit and ZIP integrity check\n- Microsoft Defender scan of the cleaned extracted release: PASS — 0 detections\n')
+          sec='''## Malware verification\n\nThe current Hotfix 11 ZIP is the AV-clean repack. Internal CI/test executables are no longer shipped. The sanitized runtime tree and final ZIP passed Microsoft Defender with updated signatures at **0 detections**, with no exclusions or bypasses. See [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md).\n\n'''
+          if '## Malware verification' not in t: t=t.replace('## Verification\n',sec+'## Verification\n')
+          t=t.replace('- 12 public Windows diagnostic cross-builds\n','- internal diagnostic tests built/run in CI only; diagnostic executables are not shipped\n')
+          if '- Microsoft Defender AV-clean release scan: PASS — 0 detections\n' not in t:
+            t=t.replace('- strict public-package audit and ZIP integrity check\n','- strict public-package audit and ZIP integrity check\n- Microsoft Defender AV-clean release scan: PASS — 0 detections\n')
           p.write_text(t,encoding='utf-8')
 
           p=root/'SECURITY.md'; t=p.read_text(encoding='utf-8')
           oldsec='''## Antivirus / signing\n\nCurrent alpha binaries are unsigned and have not received broad antivirus certification. A security product warning should be investigated rather than automatically ignored or suppressed.\n'''
-          newsec='''## Antivirus / signing\n\nCurrent alpha binaries are unsigned. Public release packaging now treats Microsoft Defender detections as a release blocker. Internal CI/test executables are not part of the public runtime payload.\n\nThe cleaned Hotfix 11 package was scanned with Microsoft Defender using updated signatures and returned **0 detections** without exclusions, disabled protection, threat restoration or allowlisting. The exact scan record is published in [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md) and included inside the release ZIP.\n\nA clean scan is evidence for that exact build and signature snapshot, not a permanent guarantee against future antivirus signature changes. Any future warning should still be investigated rather than automatically ignored.\n'''
+          newsec='''## Antivirus / signing\n\nCurrent alpha binaries are unsigned. Public packaging now treats a Microsoft Defender detection as a release blocker, and internal CI/test executables are not part of the public runtime payload.\n\nThe cleaned Hotfix 11 package was scanned with updated Microsoft Defender signatures and returned **0 detections** on both the sanitized runtime tree and completed ZIP. No exclusions, disabled protection, bypasses, threat restoration or allowlisting were used. The exact record is published in [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md) and included inside the ZIP.\n\nA clean scan is evidence for that exact build and signature snapshot, not a permanent guarantee against future antivirus signature changes. Future warnings should still be investigated.\n'''
           if oldsec in t: t=t.replace(oldsec,newsec)
           elif '## Antivirus / signing' not in t: t+='\n'+newsec
           p.write_text(t,encoding='utf-8')
 
           p=root/'CHANGELOG.md'; t=p.read_text(encoding='utf-8')
-          anchor='### Preserved\n'
-          av='''### Security / AV repack\n\n- Removed internal CI/test executables that were mistakenly included under `diagnostics/`, including `revenant-commit32.exe`.\n- Diagnostic/test executables remain CI-only and are no longer shipped in the public runtime package.\n- Rebuilt public manifest and SHA-256 coverage after cleanup.\n- Microsoft Defender scan with updated signatures: **PASS — 0 detections**.\n- No Defender exclusions, bypasses, disabled protection, threat restoration or allowlisting were used.\n- Added `docs/MALWARE-CHECK.md` to both the repository and the public ZIP.\n\n'''
-          if '### Security / AV repack' not in t: t=t.replace(anchor,av+anchor,1)
-          t=t.replace('- 12 public Windows diagnostic binaries compiled successfully.\n','- internal Windows diagnostic binaries compiled for CI only; they are not shipped.\n')
+          av='''### Security / AV repack\n\n- Removed internal CI/test executables mistakenly included under `diagnostics/`, including `revenant-commit32.exe`.\n- Diagnostic/test executables remain CI-only and are no longer shipped.\n- Regenerated public manifest and SHA-256 coverage after cleanup.\n- Microsoft Defender with updated signatures: **PASS — 0 detections** on the sanitized tree and completed ZIP.\n- No Defender exclusions, bypasses, disabled protection, threat restoration or allowlisting were used.\n- Added `docs/MALWARE-CHECK.md` to the repository and public ZIP.\n\n'''
+          if '### Security / AV repack' not in t: t=t.replace('### Preserved\n',av+'### Preserved\n',1)
+          t=t.replace('- 12 public Windows diagnostic binaries compiled successfully.\n','- internal Windows diagnostic binaries compile for CI only and are not shipped.\n')
           p.write_text(t,encoding='utf-8')
 
           p=root/'LATEST_RELEASE.md'; t=p.read_text(encoding='utf-8')
-          add='''\n## Malware verification\n\nThe current ZIP is the AV-clean repack. Internal test executables were removed from the public payload, and the full extracted package passed Microsoft Defender with updated signatures at **0 detections** and no exclusions/bypasses. See [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md).\n'''
-          if '## Malware verification' not in t: t += add
+          note='''\n## Malware verification\n\nThis is the AV-clean Hotfix 11 repack. Internal test executables were removed from the public payload, and the sanitized runtime plus completed ZIP passed Microsoft Defender with updated signatures at **0 detections** without exclusions or bypasses. See [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md).\n'''
+          if '## Malware verification' not in t: t+=note
           p.write_text(t,encoding='utf-8')
 
           p=root/'RELEASES.md'; t=p.read_text(encoding='utf-8')
-          note='''\n### Hotfix 11 AV-clean repack\n\nThe Hotfix 11 public ZIP was repacked to remove internal CI/test executables that were not runtime dependencies. The cleaned ZIP passed Microsoft Defender with updated signatures: **0 detections**, no exclusions/bypasses. Verification: [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md).\n'''
+          note='''\n### Hotfix 11 AV-clean repack\n\nThe Hotfix 11 ZIP was repacked to remove internal CI/test executables that were not runtime dependencies. The sanitized runtime and final ZIP passed Microsoft Defender with updated signatures at **0 detections**, without exclusions/bypasses. Verification: [docs/MALWARE-CHECK.md](docs/MALWARE-CHECK.md).\n'''
           if '### Hotfix 11 AV-clean repack' not in t:
-            pos=t.find('\n## ',3)
-            t=t+note if pos<0 else t[:pos]+note+t[pos:]
+            pos=t.find('\n## ',3); t=t+note if pos<0 else t[:pos]+note+t[pos:]
           p.write_text(t,encoding='utf-8')
-
           shutil.copyfile('release/MALWARE-CHECK.md','docs/MALWARE-CHECK.md')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add README.md SECURITY.md CHANGELOG.md LATEST_RELEASE.md RELEASES.md docs/MALWARE-CHECK.md
           if ! git diff --cached --quiet; then
-            git commit -m 'Document Hotfix 11 Defender-verified AV repack'
+            git commit -m 'Document Defender-verified Hotfix 11 AV repack'
             git push origin HEAD:main
           fi
 
-      - name: Verify published release
+      - name: Verify official release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -300,4 +303,4 @@ jobs:
           set -euo pipefail
           gh release view "$TAG" --json name,tagName,assets,url
           test -f docs/MALWARE-CHECK.md
-          echo "Published Hotfix 11 AV-clean repack SHA-256: $NEW_HASH"
+          echo "OFFICIAL HOTFIX 11 AV-CLEAN SHA-256: $NEW_HASH"

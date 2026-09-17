@@ -1,0 +1,123 @@
+name: Publish UNCANNY ELYSIUM Engine 4.5
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-engine45.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      TAG: v0.20.0-alpha.1-elysium-engine45
+      RELEASE_ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
+      EXPECTED_SHA256: eb902c1b10dfecd54b38100a89a358e1bf623d2bbe0f4d9d44325908ebec4eb2
+      ARTIFACT_URL: https://sdmntprcentralus.oaiusercontent.com/files/00000000-dd84-81f5-a8af-776da5520d75/raw?se=2026-09-17T21%3A47%3A46Z&sp=r&sv=2026-02-06&sr=b&scid=3c248e5e-2a1c-5e58-84e4-207b1f9b8478&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T18%3A22%3A29Z&ske=2026-09-18T18%3A22%3A29Z&sks=b&skv=2026-02-06&sig=/EnshjSongZ1OcnwYfjXXy0XOM7fr9fiVuj0%2BCedOpg%3D
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Retrieve exact Defender-gated Engine 4.5 artifact
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri $env:ARTIFACT_URL -OutFile engine45-artifact.zip -UseBasicParsing
+          New-Item -ItemType Directory -Path artifact -Force | Out-Null
+          Expand-Archive -LiteralPath engine45-artifact.zip -DestinationPath artifact -Force
+          $inner=Get-ChildItem artifact -Filter $env:RELEASE_ZIP -Recurse -File | Select-Object -First 1
+          if(-not $inner){throw 'Engine 4.5 release ZIP missing from gated artifact.'}
+          Copy-Item -LiteralPath $inner.FullName -Destination $env:RELEASE_ZIP -Force
+          $actual=(Get-FileHash -LiteralPath $env:RELEASE_ZIP -Algorithm SHA256).Hash.ToLowerInvariant()
+          if($actual -ne $env:EXPECTED_SHA256){throw "Engine 4.5 SHA-256 mismatch: $actual"}
+          "$actual  $env:RELEASE_ZIP" | Set-Content -LiteralPath ($env:RELEASE_ZIP+'.sha256') -Encoding ascii
+
+      - name: Verify public package boundary
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path verify-tree -Force | Out-Null
+          Expand-Archive -LiteralPath $env:RELEASE_ZIP -DestinationPath verify-tree -Force
+          $root=Get-ChildItem verify-tree -Directory | Select-Object -First 1
+          if(-not $root){throw 'Release root missing.'}
+          foreach($required in @('UNCANNY.exe','UNCANNY-SCAN.ps1','assets/UNCANNY-logo.xaml','docs/AMD-ENGINE45.md','docs/GIGI-PRESET-MAPPING.md','config/looks.json','config/controls.json','VERSION.json')){
+            if(-not (Test-Path -LiteralPath (Join-Path $root.FullName $required))){throw "Required public file missing: $required"}
+          }
+          $leaks=@(Get-ChildItem $root.FullName -Recurse -File | Where-Object {$_.FullName -match '[\\/](src|tests|development)[\\/]'} )
+          if($leaks.Count){throw 'Private source/test material leaked into release.'}
+          $version=Get-Content -LiteralPath (Join-Path $root.FullName 'VERSION.json') -Raw | ConvertFrom-Json
+          if($version.abi -ne 143 -or $version.revision -ne 'release-alpha.1.elysium-engine45'){throw 'Release identity mismatch.'}
+
+      - name: Microsoft Defender final public-release gate
+        shell: pwsh
+        run: |
+          $before=Get-MpComputerStatus -ErrorAction Stop
+          if(-not $before.AMServiceEnabled -or -not $before.AntivirusEnabled){throw 'Microsoft Defender unavailable; release blocked.'}
+          Update-MpSignature -ErrorAction Stop
+          Start-MpScan -ScanType CustomScan -ScanPath (Resolve-Path verify-tree).Path -ErrorAction Stop
+          Start-Sleep -Seconds 2
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object {$_.Resources -match 'verify-tree'})
+          if($hits.Count){$hits|Format-List *|Out-String|Write-Host;throw ('Microsoft Defender detected '+$hits.Count+' threat(s); release blocked.')}
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          [ordered]@{
+            release='UNCANNY v0.20.0-alpha.1 ELYSIUM Engine 4.5'
+            runtime='release-alpha.1.elysium-engine45'
+            abi=143
+            zip_sha256=$env:EXPECTED_SHA256
+            defender_engine=$status.AMEngineVersion
+            defender_signatures=$status.AntivirusSignatureVersion
+            defender_signature_updated=[string]$status.AntivirusSignatureLastUpdated
+            detections=0
+            scanned='extracted final public ZIP'
+          } | ConvertTo-Json | Set-Content -LiteralPath MALWARE-VERIFICATION-ENGINE45.json -Encoding utf8
+
+      - name: Write Engine 4.5 release notes
+        shell: pwsh
+        run: |
+          @'
+          # UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5
+
+          Engine 4.5 is the next ELYSIUM build, focused on making the visual transformation stronger, easier to use, and more consistent without sacrificing the safety and rollback work already proven in Hotfix 11.
+
+          ## Engine 4.5
+          - Expanded the real UNCANNY reconstruction path and raised the native visual-control ceiling beyond the old 2.0 limit where supported.
+          - Added **Gigi's preset**, a dedicated ELYSIUM look derived from the supplied ReShade `hp.ini`, including its strong clarity/detail, filmic tone, depth separation, restrained haze, and color character while retaining UNCANNY motion/HUD/halo protections.
+          - UNCANNY pass depth remains independent from DLSS 5 pass selection.
+          - Added opt-in external DLSS 5 preset import and clean restore-to-default behavior.
+          - Strengthened REVENANT replacement stability with quality rejection and hysteresis so good reconstructed assets are not repeatedly replaced by transient weaker candidates.
+
+          ## Control Deck / launcher
+          - Control Deck layout is movable, resizable, persistent, and includes opacity/reset behavior.
+          - Launcher scanning is asynchronous and keeps duplicate PCSX2 installs distinct instead of silently collapsing the wrong executable.
+          - Repair/remove operations are explicitly bound to the selected executable path.
+          - Packaged UNCANNY logo fallback and cleaned release layout.
+
+          ## Compatibility / hardware reporting
+          - Added truthful AMD capability reporting for the UNCANNY path without pretending NVIDIA-only DLSS 5 features exist on unsupported hardware.
+          - x86 and x64 runtime targets are built and audited.
+          - Preserved the exact published Lucid 2.5 compatibility bundle.
+
+          ## Verification
+          - Full Python regression suite: PASS
+          - Engine 4.5 focused acceptance: PASS (20 checks)
+          - x86/x64 production binaries: COMPILED
+          - Public-package boundary / ZIP integrity audit: PASS
+          - Microsoft Defender scan of extracted final ZIP: **0 detections**
+          - Runtime: `release-alpha.1.elysium-engine45`
+          - ABI: `143`
+          - SHA-256: `eb902c1b10dfecd54b38100a89a358e1bf623d2bbe0f4d9d44325908ebec4eb2`
+
+          This is still an alpha build. Game-specific rendered validation is encouraged, especially for unusual injectors, legacy APIs, and emulator configurations.
+          '@ | Set-Content -LiteralPath ENGINE45-RELEASE-NOTES.md -Encoding utf8
+
+      - name: Create or replace Engine 4.5 prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view $env:TAG --repo $env:GITHUB_REPOSITORY 2>$null | Out-Null
+          if($LASTEXITCODE -eq 0){
+            gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5' --notes-file ENGINE45-RELEASE-NOTES.md --prerelease --repo $env:GITHUB_REPOSITORY
+            gh release upload $env:TAG $env:RELEASE_ZIP ($env:RELEASE_ZIP+'.sha256') MALWARE-VERIFICATION-ENGINE45.json --clobber --repo $env:GITHUB_REPOSITORY
+          } else {
+            gh release create $env:TAG $env:RELEASE_ZIP ($env:RELEASE_ZIP+'.sha256') MALWARE-VERIFICATION-ENGINE45.json --target main --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5' --notes-file ENGINE45-RELEASE-NOTES.md --prerelease --repo $env:GITHUB_REPOSITORY
+          }

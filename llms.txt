@@ -6,7 +6,7 @@ CURRENT RELEASE
 Version: v0.20.0-alpha.1 — ELYSIUM Hotfix 10
 Runtime revision: release-alpha.1.elysium-hotfix10
 ABI: 141
-Windows ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX10-Windows.zip
+Windows ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-Windows.zip
 SHA-256: 521b00a5236046ca7de7feb06df1942d3bbde12eb1eb3e1a2b63a2bd20535f4b
 Release URL: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-hotfix10
 

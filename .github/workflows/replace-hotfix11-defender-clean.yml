@@ -10,29 +10,36 @@ permissions:
 jobs:
   replace-release:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Download clean artifact
         shell: bash
         env:
-          ARTIFACT_URL: "https://sdmntprcentralus.oaiusercontent.com/files/00000000-ac80-81f5-8b0c-65af0586f061/raw?se=2026-09-17T18%3A06%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=e4387c59-3076-52a5-92e3-82fae3256447&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T17%3A52%3A23Z&ske=2026-09-18T17%3A52%3A23Z&sks=b&skv=2026-02-06&sig=ITCZaOkYSU/Z41s9wcvIjjKoxUH0wsEpWZpEUgZiFHw%3D"
+          ARTIFACT_URL: "https://sdmntprcentralus.oaiusercontent.com/files/00000000-edac-81f5-ba23-956a5356b77a/raw?se=2026-09-17T18%3A12%3A59Z&sp=r&sv=2026-02-06&sr=b&scid=7a25c51c-471d-5bf8-9b82-d807153ca92c&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T18%3A06%3A37Z&ske=2026-09-18T18%3A06%3A37Z&sks=b&skv=2026-02-06&sig=w4y0rDKP8J0tdUKLcn6tec38Vf4CDpultI9BJLdVbW4%3D"
         run: |
           set -euo pipefail
-          curl -L --fail --retry 3 -o artifact.zip "$ARTIFACT_URL"
+          curl -L --fail --retry 3 --max-time 90 -o artifact.zip "$ARTIFACT_URL"
           unzip -q artifact.zip -d artifact
-          test -f artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-      - name: Verify payload
+      - name: Verify Defender-clean payload
         shell: bash
         run: |
           set -euo pipefail
           ZIP=artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
           echo "8eb7835e6dc50e82d27622e91aaf1f285e462e7e79bd4578ed74ad3986d59f5e  $ZIP" | sha256sum -c -
-          python -c "import zipfile,json; p='$ZIP'; z=zipfile.ZipFile(p); n=z.namelist(); assert not [x for x in n if '/diagnostics/' in x]; r='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'; assert json.loads(z.read(r+'public-build.json')).get('diagnostics')==[]"
-      - name: Replace release assets
+          python -c "import zipfile,json; p='$ZIP'; z=zipfile.ZipFile(p); n=z.namelist(); assert not [x for x in n if '/diagnostics/' in x or x.lower().endswith(('revenant-commit32.exe','revenant-commit64.exe'))]; r='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'; assert json.loads(z.read(r+'public-build.json')).get('diagnostics')==[]"
+      - name: Upload ZIP directly to GitHub release API
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           ZIP=artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-          SUM="$ZIP.sha256"
-          gh release upload v0.20.0-alpha.1-elysium-hotfix11 "$ZIP" "$SUM" --clobber --repo coye2/UNCANNY
+          NAME=UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+          curl --fail-with-body --retry 3 --max-time 120 \
+            -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Content-Type: application/zip" \
+            --data-binary "@$ZIP" \
+            "https://uploads.github.com/repos/coye2/UNCANNY/releases/390818823/assets?name=$NAME"

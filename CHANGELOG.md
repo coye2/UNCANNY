@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 Hotfix 13
+
+- Remove now unwinds every recorded UNCANNY install layer for the exact selected target.
+- Generated ReShade/OptiScaler/dlss5-feed logs no longer block restore.
+- Original/user-file conflict protection remains strict.
+- Restored the UNCANNY launcher emblem as an inline vector.
+- Adaptive Realism now exposes OFF / LOW / BALANCED / HIGH / INSANE in the live Control Deck.
+- New installs seed INSANE + Reference Stack.
+- Strengthened source/evidence-bounded AO, indirect diffuse/specular response, exposure adaptation, local contrast and meso clarity.
+- Regenerated protected shader resources and passed authentication/tamper checks.
+- Windows dynamic two-layer rollback and changed-ReShade.log regressions: PASS.
+- Windows HLSL compile: PASS.
+- Microsoft Defender: PASS / 0 detections.
+- Source revision: `16ee9cb8ef9cdb9f038577884bb023909743d1e1`.
+- ZIP SHA-256: `843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811`.
+
+---
+
 All notable public UNCANNY alpha changes are documented here.
 
 ## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism

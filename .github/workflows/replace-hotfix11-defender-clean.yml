@@ -83,25 +83,25 @@ jobs:
           $docs=Join-Path $root 'docs'; New-Item -ItemType Directory -Path $docs -Force | Out-Null
           $runUrl="$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
           $stamp=(Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
-          $report=@"
-# Malware verification — Hotfix 11
-
-Status: **PASS**
-
-The public UNCANNY Hotfix 11 runtime contents were scanned by Microsoft Defender Antivirus on a fresh GitHub-hosted Windows runner after internal test/diagnostic executables were removed from the public payload.
-
-- Provider: Microsoft Defender Antivirus
-- Result: 0 detections
-- Scan time (UTC): $stamp
-- Defender engine: $env:DEFENDER_ENGINE
-- Defender signatures: $env:DEFENDER_SIGNATURE
-- Defender product: $env:DEFENDER_PRODUCT
-- Workflow run: $runUrl
-- Internal diagnostics executables: NOT SHIPPED
-- revenant-commit32.exe / revenant-commit64.exe: NOT SHIPPED
-
-Those removed files are development acceptance-test harnesses and are not required by the UNCANNY or REVENANT runtime. Publication is additionally blocked unless the completed ZIP passes a second Microsoft Defender scan in this same workflow.
-"@
+          $report=@(
+            '# Malware verification - Hotfix 11',
+            '',
+            'Status: **PASS**',
+            '',
+            'The public UNCANNY Hotfix 11 runtime contents were scanned by Microsoft Defender Antivirus on a fresh GitHub-hosted Windows runner after internal test/diagnostic executables were removed from the public payload.',
+            '',
+            '- Provider: Microsoft Defender Antivirus',
+            '- Result: 0 detections',
+            "- Scan time (UTC): $stamp",
+            "- Defender engine: $env:DEFENDER_ENGINE",
+            "- Defender signatures: $env:DEFENDER_SIGNATURE",
+            "- Defender product: $env:DEFENDER_PRODUCT",
+            "- Workflow run: $runUrl",
+            '- Internal diagnostics executables: NOT SHIPPED',
+            '- revenant-commit32.exe / revenant-commit64.exe: NOT SHIPPED',
+            '',
+            'Those removed files are development acceptance-test harnesses and are not required by the UNCANNY or REVENANT runtime. Publication is additionally blocked unless the completed ZIP passes a second Microsoft Defender scan in this same workflow.'
+          ) -join [Environment]::NewLine
           [IO.File]::WriteAllText((Join-Path $docs 'MALWARE-VERIFICATION.md'),$report,[Text.UTF8Encoding]::new($false))
           $manifest=Join-Path $root 'PUBLIC-PACKAGE-MANIFEST.txt'
           $sums=Join-Path $root 'SHA256SUMS.txt'
@@ -139,37 +139,37 @@ Those removed files are development acceptance-test harnesses and are not requir
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $notes=@"
-# UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11
-
-Hotfix 11 keeps the D3D11 startup fail-open repair and Hotfix 10 ELYSIUM control wiring, with an immediate security packaging correction.
-
-## Security packaging fix
-- Removed all internal test/diagnostic executables from the public ZIP.
-- `revenant-commit32.exe` and `revenant-commit64.exe` are no longer shipped. They are development acceptance-test harnesses, not REVENANT runtime requirements.
-- Public package contains no `diagnostics/` executable directory.
-- Microsoft Defender signatures were updated before scanning.
-- Cleaned runtime tree: **0 detections**.
-- Completed ZIP: **0 detections**.
-- Defender engine: `$env:DEFENDER_ENGINE`
-- Defender signatures: `$env:DEFENDER_SIGNATURE`
-- Verification record is included at `docs/MALWARE-VERIFICATION.md` and attached as `MALWARE-VERIFICATION-HOTFIX11.json`.
-
-## Hotfix 11 runtime changes
-- D3D11 startup fails open to native `Present` / `Present1` first.
-- Feature-18 / DLSS 5 startup waits for a healthy advancing Present stream.
-- Live source frames remain authoritative while neural startup is deferred.
-- Present-stage diagnostics were expanded.
-- REVENANT, PCSX2 support, Hotfix 10 pass/slider wiring, install/update/rollback and the Lucid engine bundle are preserved.
-
-**SHA-256**
-`$env:FINAL_SHA256`
-
-Runtime: `release-alpha.1.elysium-hotfix11`  
-ABI: `141`
-"@
+          $notes=@(
+            '# UNCANNY v0.20.0-alpha.1 - ELYSIUM Hotfix 11',
+            '',
+            'Hotfix 11 keeps the D3D11 startup fail-open repair and Hotfix 10 ELYSIUM control wiring, with an immediate security packaging correction.',
+            '',
+            '## Security packaging fix',
+            '- Removed all internal test/diagnostic executables from the public ZIP.',
+            '- revenant-commit32.exe and revenant-commit64.exe are no longer shipped. They are development acceptance-test harnesses, not REVENANT runtime requirements.',
+            '- Public package contains no diagnostics executable directory.',
+            '- Microsoft Defender signatures were updated before scanning.',
+            '- Cleaned runtime tree: **0 detections**.',
+            '- Completed ZIP: **0 detections**.',
+            "- Defender engine: $env:DEFENDER_ENGINE",
+            "- Defender signatures: $env:DEFENDER_SIGNATURE",
+            '- Verification record is included at docs/MALWARE-VERIFICATION.md and attached as MALWARE-VERIFICATION-HOTFIX11.json.',
+            '',
+            '## Hotfix 11 runtime changes',
+            '- D3D11 startup fails open to native Present / Present1 first.',
+            '- Feature-18 / DLSS 5 startup waits for a healthy advancing Present stream.',
+            '- Live source frames remain authoritative while neural startup is deferred.',
+            '- Present-stage diagnostics were expanded.',
+            '- REVENANT, PCSX2 support, Hotfix 10 pass/slider wiring, install/update/rollback and the Lucid engine bundle are preserved.',
+            '',
+            '**SHA-256**',
+            "`$env:FINAL_SHA256`",
+            '',
+            'Runtime: release-alpha.1.elysium-hotfix11',
+            'ABI: 141'
+          ) -join [Environment]::NewLine
           [IO.File]::WriteAllText('out/HOTFIX11-RELEASE-NOTES.md',$notes,[Text.UTF8Encoding]::new($false))
-          gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11' --notes-file out/HOTFIX11-RELEASE-NOTES.md --prerelease --repo $env:GITHUB_REPOSITORY
+          gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Hotfix 11' --notes-file out/HOTFIX11-RELEASE-NOTES.md --prerelease --repo $env:GITHUB_REPOSITORY
           gh release upload $env:TAG "out/$env:PACKAGE" "out/$env:PACKAGE.sha256" 'out/MALWARE-VERIFICATION-HOTFIX11.json' --clobber --repo $env:GITHUB_REPOSITORY
 
       - uses: actions/upload-artifact@v4

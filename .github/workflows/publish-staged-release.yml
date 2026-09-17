@@ -1,50 +1,48 @@
-name: Publish staged UNCANNY release
+name: Publish Defender-clean Hotfix 11
 on:
   push:
     branches: [release-staging-hotfix11]
     paths:
-      - .release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-      - .release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
-      - .release-staging/HOTFIX11-RELEASE-NOTES.md
+      - .github/workflows/publish-staged-release.yml
 permissions:
   contents: write
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      TAG: v0.20.0-alpha.1-elysium-hotfix11
+      EXPECTED_SHA256: 8eb7835e6dc50e82d27622e91aaf1f285e462e7e79bd4578ed74ad3986d59f5e
+      ARTIFACT_URL: "https://sdmntprcentralus.oaiusercontent.com/files/00000000-ac80-81f5-8b0c-65af0586f061/raw?se=2026-09-17T18%3A06%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=e4387c59-3076-52a5-92e3-82fae3256447&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-17T17%3A52%3A23Z&ske=2026-09-18T17%3A52%3A23Z&sks=b&skv=2026-02-06&sig=ITCZaOkYSU/Z41s9wcvIjjKoxUH0wsEpWZpEUgZiFHw%3D"
     steps:
-      - uses: actions/checkout@v4
-      - name: Verify staged release payload
+      - name: Download Defender-clean build
         shell: bash
         run: |
-          cd .release-staging
-          sha256sum -c UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
-          unzip -t UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+          set -euo pipefail
+          curl -L --fail --retry 3 -o artifact.zip "$ARTIFACT_URL"
+          unzip -q artifact.zip -d artifact
+          ZIP="artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip"
+          test -f "$ZIP"
+          echo "$EXPECTED_SHA256  $ZIP" | sha256sum -c -
+      - name: Verify public payload
+        shell: bash
+        run: |
           python - <<'PY'
-          import zipfile
-          p='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip'
+          import json, zipfile
+          p='artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip'
           with zipfile.ZipFile(p) as z:
-              names=set(z.namelist())
+              names=z.namelist()
+              assert not [n for n in names if '/diagnostics/' in n]
+              assert not [n for n in names if n.lower().endswith(('revenant-commit32.exe','revenant-commit64.exe'))]
               root='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'
-              assert root+'UNCANNY.exe' in names
-              assert root+'UNCANNY.cmd' not in names
-              assert root+'USAGE.md' in names
-              assert root+'docs/HOTFIX11-D3D11.md' in names
-              assert root+'docs/RELEASE-NOTES.md' in names
-              assert root+'docs/TROUBLESHOOTING.md' in names
-          print('PASS: staged release is root-level EXE-first Hotfix 11')
+              assert json.loads(z.read(root+'public-build.json')).get('diagnostics')==[]
+          print('PASS: no internal diagnostic/test executables')
           PY
-      - name: Create or replace Hotfix 11 prerelease
+      - name: Replace Hotfix 11 release assets
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: v0.20.0-alpha.1-elysium-hotfix11
         shell: bash
         run: |
-          ZIP=.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
-          SUM=.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
-          NOTES=.release-staging/HOTFIX11-RELEASE-NOTES.md
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file "$NOTES" --prerelease
-            gh release upload "$TAG" "$ZIP" "$SUM" --clobber
-          else
-            gh release create "$TAG" "$ZIP" "$SUM" --target main --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file "$NOTES" --prerelease
-          fi
+          set -euo pipefail
+          ZIP="artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip"
+          SUM="$ZIP.sha256"
+          gh release upload "$TAG" "$ZIP" "$SUM" --clobber

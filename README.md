@@ -134,6 +134,18 @@ The current package has a machine-readable verification attachment on the releas
 
 See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md). UNCANNY does not require users to disable Defender or create broad antivirus exclusions.
 
+## Automated readers / Cammy
+
+Bots and release monitors do not need to scrape the README. The current release is published in simple public machine-readable surfaces:
+
+- `CURRENT_RELEASE.json` — canonical release/version/package/hash/feature manifest
+- `llms.txt` — plain-text current release summary
+- `docs/llms.txt` — lightweight docs-site summary
+- `https://github.com/coye2/UNCANNY/releases/latest` — canonical GitHub latest-release endpoint
+
+Raw manifest: https://raw.githubusercontent.com/coye2/UNCANNY/main/CURRENT_RELEASE.json  
+Raw text summary: https://raw.githubusercontent.com/coye2/UNCANNY/main/llms.txt
+
 ## Community & feedback
 
 **[Join the UNCANNY Discord](https://discord.gg/zMveJN2kDa)** for testing, screenshots, compatibility reports, bug help and development discussion.

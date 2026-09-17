@@ -1,7 +1,7 @@
 name: Publish staged UNCANNY release
 on:
   push:
-    branches: [main]
+    branches: [release-staging-hotfix11]
     paths:
       - .release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
       - .release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
@@ -27,10 +27,11 @@ jobs:
               root='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'
               assert root+'UNCANNY.exe' in names
               assert root+'UNCANNY.cmd' not in names
+              assert root+'USAGE.md' in names
               assert root+'docs/HOTFIX11-D3D11.md' in names
               assert root+'docs/RELEASE-NOTES.md' in names
               assert root+'docs/TROUBLESHOOTING.md' in names
-          print('PASS: staged release is EXE-first Hotfix 11')
+          print('PASS: staged release is root-level EXE-first Hotfix 11')
           PY
       - name: Create or replace Hotfix 11 prerelease
         env:
@@ -47,11 +48,3 @@ jobs:
           else
             gh release create "$TAG" "$ZIP" "$SUM" --target main --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file "$NOTES" --prerelease
           fi
-      - name: Remove transient staging files
-        shell: bash
-        run: |
-          git config user.name "UNCANNY release bot"
-          git config user.email "actions@users.noreply.github.com"
-          git rm -r .release-staging
-          git commit -m "Clean Hotfix 11 release staging"
-          git push

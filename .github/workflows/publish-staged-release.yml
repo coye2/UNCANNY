@@ -1,0 +1,57 @@
+name: Publish staged UNCANNY release
+on:
+  push:
+    branches: [main]
+    paths:
+      - .release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+      - .release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
+      - .release-staging/HOTFIX11-RELEASE-NOTES.md
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify staged release payload
+        shell: bash
+        run: |
+          cd .release-staging
+          sha256sum -c UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
+          unzip -t UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+          python - <<'PY'
+          import zipfile
+          p='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip'
+          with zipfile.ZipFile(p) as z:
+              names=set(z.namelist())
+              root='UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11/'
+              assert root+'UNCANNY.exe' in names
+              assert root+'UNCANNY.cmd' not in names
+              assert root+'docs/HOTFIX11-D3D11.md' in names
+              assert root+'docs/RELEASE-NOTES.md' in names
+              assert root+'docs/TROUBLESHOOTING.md' in names
+          print('PASS: staged release is EXE-first Hotfix 11')
+          PY
+      - name: Create or replace Hotfix 11 prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v0.20.0-alpha.1-elysium-hotfix11
+        shell: bash
+        run: |
+          ZIP=.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
+          SUM=.release-staging/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip.sha256
+          NOTES=.release-staging/HOTFIX11-RELEASE-NOTES.md
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file "$NOTES" --prerelease
+            gh release upload "$TAG" "$ZIP" "$SUM" --clobber
+          else
+            gh release create "$TAG" "$ZIP" "$SUM" --target main --title "UNCANNY v0.20.0-alpha.1 — ELYSIUM Hotfix 11" --notes-file "$NOTES" --prerelease
+          fi
+      - name: Remove transient staging files
+        shell: bash
+        run: |
+          git config user.name "UNCANNY release bot"
+          git config user.email "actions@users.noreply.github.com"
+          git rm -r .release-staging
+          git commit -m "Clean Hotfix 11 release staging"
+          git push

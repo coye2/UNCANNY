@@ -35,4 +35,4 @@ jobs:
           set -euo pipefail
           ZIP=artifact/dist/public-hotfix11/UNCANNY-v0.20.0-alpha.1-ELYSIUM-HOTFIX11.zip
           SUM="$ZIP.sha256"
-          gh release upload v0.20.0-alpha.1-elysium-hotfix11 "$ZIP" "$SUM" --clobber
+          gh release upload v0.20.0-alpha.1-elysium-hotfix11 "$ZIP" "$SUM" --clobber --repo coye2/UNCANNY

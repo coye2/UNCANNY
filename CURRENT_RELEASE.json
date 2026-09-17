@@ -1,0 +1,60 @@
+{
+  "project": "UNCANNY",
+  "version": "0.20.0-alpha.1",
+  "engine": "ELYSIUM Engine 4.5",
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Adaptive Realism",
+  "tag": "v0.20.0-alpha.1-elysium-engine45",
+  "runtime_revision": "release-alpha.1.elysium-engine45",
+  "abi": 143,
+  "published": "2026-09-17",
+  "latest_release_url": "https://github.com/coye2/UNCANNY/releases/latest",
+  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45",
+  "package": {
+    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
+    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
+    "sha256": "f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512"
+  },
+  "source_revision": "8f021aafef138784d042d81e2c7287e934d5cf3b",
+  "features": {
+    "adaptive_realism_levels": ["OFF", "LOW", "BALANCED", "HIGH", "INSANE"],
+    "uncanny_passes": [1, 1.5, 2, 2.5, 3],
+    "adaptive_realism_vendor_neutral": true,
+    "dlss5_separate_optional_route": true,
+    "motion_guard": true,
+    "ghosting_guard": true,
+    "revenant": "experimental"
+  },
+  "adaptive_realism_tiers": {
+    "A": "trustworthy depth + native motion",
+    "B": "trustworthy depth + UNCANNY optical flow",
+    "C": "trustworthy depth only; conservative spatial lighting; no temporal history",
+    "D": "no trustworthy depth; tonal/spatial fallback only"
+  },
+  "api_notes": {
+    "d3d11": "strongest current Adaptive Realism route; capability-scored depth and optical flow where available",
+    "d3d12": "supported; conservative fallback when trustworthy generic scene depth is unavailable",
+    "d3d10_10_1": "compatibility route; capability depends on available evidence",
+    "d3d9": "supported legacy route; conservative fallback when trustworthy depth is unavailable",
+    "vulkan_opengl": "not at DirectX parity"
+  },
+  "verification": {
+    "python_regression_suite": "PASS",
+    "engine45_compiled_acceptance_checks": 22,
+    "adaptive_realism_x86": "PASS",
+    "adaptive_realism_x64": "PASS",
+    "production_builds": "PASS",
+    "public_package_audit": "PASS",
+    "zip_integrity": "PASS",
+    "windows_install_rollback": "PASS",
+    "restricted_third_party_shader_audit": "PASS",
+    "defender_extracted_package_detections": 0,
+    "defender_final_zip_detections": 0
+  },
+  "malware_verification_url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/MALWARE-VERIFICATION-ENGINE45.json",
+  "limitations": [
+    "Real-game visual and performance acceptance remains title/GPU/driver specific.",
+    "D3D12 and D3D9 do not claim depth-aware GI when trustworthy generic scene depth is unavailable.",
+    "Native-PC-game REVENANT asset replacement remains experimental.",
+    "DLSS 5 is NVIDIA-specific even though Adaptive Realism itself is vendor-neutral."
+  ]
+}

@@ -2,6 +2,71 @@
 
 All notable public UNCANNY alpha changes are documented here.
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism
+
+Runtime revision: `release-alpha.1.elysium-engine45`  
+ABI: `143`
+
+### Adaptive Realism
+
+- Added five live quality levels: **OFF / LOW / BALANCED / HIGH / INSANE**.
+- Added capability-tiered scene handling instead of assuming identical data on every API.
+- Tier A uses trustworthy depth + native motion.
+- Tier B uses trustworthy depth + UNCANNY optical flow.
+- Tier C uses trustworthy depth with conservative spatial lighting and no temporal history.
+- Tier D uses tonal/spatial enhancement only when trustworthy scene depth is unavailable.
+- Added scene-adaptive exposure, highlight/shadow response, local contrast, clarity and bounded saturation correction.
+- Added depth-aware contact occlusion and bounded screen-space diffuse/specular support where the scene evidence is trustworthy.
+- Added performance-guard degradation that reduces samples/intensity before disabling the feature.
+
+### Motion / temporal behavior
+
+- Motion Guard and Ghosting Guard remain authoritative.
+- Temporal history is reduced/rejected when motion confidence is low, depth disagrees, source/history structure disagrees or disocclusion is detected.
+- X2.5 now deliberately carries the lowest temporal-history weight for the cleanest motion behavior.
+- `ENABLE UNCANNY OFF` remains the master bypass.
+- UNCANNY pass depth remains separate from DLSS 5 pass depth.
+
+### API behavior
+
+- D3D11 can use capability-scored discovered depth plus UNCANNY optical flow and is the strongest current Adaptive Realism route.
+- D3D12 preserves runtime support but does not claim generic trustworthy scene depth where the route cannot establish it; Adaptive Realism falls back accordingly.
+- D3D9 preserves the legacy runtime path and uses conservative fallback when trustworthy depth is unavailable.
+- D3D10/10.1 remain compatibility paths with behavior determined by available evidence.
+
+### Preserved
+
+- Hotfix 11 D3D11 fail-open startup behavior.
+- native root-level `UNCANNY.exe` launcher.
+- launcher/game scanning and exact-path handling.
+- install/update/rollback.
+- PCSX2 integration.
+- Control Deck.
+- REVENANT.
+- provider handling and DLSS 5 cooperation.
+- protected runtime/package model.
+
+### Release checks
+
+- Full Python regression suite: PASS.
+- Engine 4.5 compiled acceptance: **22 checks PASS**.
+- Adaptive Realism compiled tests: **x86 PASS / x64 PASS**.
+- x86/x64 production builds: PASS.
+- protected-resource verification: PASS.
+- Hotfix 11/12 regressions: PASS.
+- dynamic Windows install + rollback regression: PASS.
+- strict public-package audit: PASS.
+- final ZIP CRC/member-hash verification: PASS.
+- restricted third-party shader source/package audit: PASS.
+- Microsoft Defender extracted-package scan: **0 detections**.
+- Microsoft Defender completed-ZIP scan: **0 detections**.
+
+Release ZIP SHA-256: `f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
+
+No paid/restricted Marty McFly / Pascal Gilcher shader source or binaries are bundled. Real-game visual/performance acceptance remains a hardware/title-specific test requirement.
+
+---
+
 ## v0.20.0-alpha.1 — ELYSIUM Hotfix 11
 
 Runtime revision: `release-alpha.1.elysium-hotfix11`  
@@ -20,52 +85,17 @@ ABI: `141`
 ### Security / packaging correction
 
 - Removed the public `diagnostics/` executable payload.
-- Removed `revenant-commit32.exe` and `revenant-commit64.exe` from public distribution. These are internal acceptance-test harnesses built from the REVENANT test suite, not runtime requirements.
+- Removed `revenant-commit32.exe` and `revenant-commit64.exe` from public distribution. These are internal acceptance-test harnesses, not runtime requirements.
 - Internal diagnostic/test binaries remain available to CI but are no longer part of the user-facing release ZIP.
 - Added a Microsoft Defender release gate on a fresh GitHub-hosted Windows runner.
-- Defender signatures are updated immediately before release scanning.
 - Cleaned runtime tree scan: **PASS / 0 detections**.
 - Final completed ZIP scan: **PASS / 0 detections**.
-- Defender engine: `1.1.26080.3`; signatures: `1.459.256.0`; product: `4.18.26080.3`.
-- Added `docs/MALWARE-VERIFICATION.md` inside the ZIP and `MALWARE-VERIFICATION-HOTFIX11.json` as a GitHub release attachment.
-- No Defender exclusions, threat restoration, allowlisting or antivirus bypass were used for the verified release.
 
 ### Launcher / package
 
 - Added native root-level **`UNCANNY.exe`** as the normal public launcher.
 - Removed the old top-level `UNCANNY.cmd` from the normal user launch path.
-- Native launcher uses the Windows GUI subsystem, starts the bundled launcher without a console flash, prevents duplicate launcher instances and records native startup failures.
-- Preserved the already-published UNCANNY 2.5 Lucid ABI 136 engine bundle by its existing manifest hashes so ELYSIUM/Lucid selection remains available.
-
-### Preserved
-
-- Hotfix 10 **UNCANNY PASSES** wiring.
-- Separate **DLSS 5 PASSES** control.
-- ELYSIUM structural/surface/face/material/depth/color/edge/distant-detail/texture-relief controls.
-- PCSX2 wrapper behavior.
-- REVENANT runtime functionality.
-- install/update/rollback flow.
-- provider policy.
-- D3D9, D3D10 and D3D12 paths outside this targeted D3D11 startup change.
-
-### Release checks
-
-- Hotfix 9 ELYSIUM regression: PASS.
-- Hotfix 10 control-wiring regression: PASS.
-- Hotfix 11 D3D11 fail-open regression: PASS.
-- native `UNCANNY.exe` regression: PASS.
-- internal Windows diagnostic/test binaries compiled in CI and excluded from the public package.
-- 16 focused Hotfix 11 acceptance checks: PASS.
-- x86/x64 production binaries compiled successfully.
-- protected shader authentication/roundtrip verification: PASS.
-- PE hardening audit: PASS across all 11 current production/helper binaries.
-- strict public package audit and final ZIP integrity: PASS.
-- Microsoft Defender cleaned-tree scan: PASS / 0 detections.
-- Microsoft Defender final-ZIP scan: PASS / 0 detections.
-
-Release ZIP SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
-
-Real hardware retesting remains required for the original PCSX2/GPU configuration.
+- Preserved the already-published UNCANNY 2.5 Lucid ABI 136 engine bundle by its existing manifest hashes.
 
 ---
 
@@ -79,7 +109,7 @@ ABI: `141`
 - HOME-page **UNCANNY PASSES** now controls the native ELYSIUM reconstruction stack instead of accidentally writing the DLSS 5 pass-depth control.
 - **DLSS 5 PASSES** remains independent on the DLSS 5 page.
 - ELYSIUM structural, surface, face, material, depth/form, color, edge, distant-detail and texture-relief controls are exposed through the live Control Deck and persisted control registry.
-- Generated and protected shader-control layouts are synchronized to the current 56-float / 14-register ELYSIUM layout.
+- Generated and protected shader-control layouts are synchronized to the current ELYSIUM layout.
 
 ### Preserved
 

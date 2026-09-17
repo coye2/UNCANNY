@@ -2,25 +2,99 @@
 
 ## What is UNCANNY?
 
-UNCANNY is experimental real-time remastering middleware for Windows games and emulators. It combines reconstruction, motion protection, neural-rendering integration, diagnostics and compatibility tooling in one runtime.
+UNCANNY is experimental real-time remastering middleware for Windows games and emulators. It combines ELYSIUM reconstruction, Adaptive Realism, motion protection, neural-provider integration, REVENANT asset reconstruction, diagnostics and compatibility tooling in one runtime.
 
 ## What is the current release?
 
-`v0.20.0-alpha.1 — ELYSIUM Hotfix 11`, runtime `release-alpha.1.elysium-hotfix11`, ABI 141.
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism**
 
-Exact public ZIP SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`.
+Runtime: `release-alpha.1.elysium-engine45`  
+ABI: `143`
+
+Exact public ZIP SHA-256:
+
+`f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
 
 ## Where do I download it?
 
-Use the Hotfix 11 public Windows ZIP under **GitHub Releases** and follow [USAGE.md](../USAGE.md).
+Use https://github.com/coye2/UNCANNY/releases/latest and follow [USAGE.md](../USAGE.md).
 
-## What happened with the Windows Defender warning?
+## What is Adaptive Realism?
 
-The first Hotfix 11 package mistakenly shipped internal acceptance-test executables under `diagnostics/`. Defender flagged `revenant-commit32.exe`. That executable is a REVENANT development test harness, not a runtime dependency.
+Adaptive Realism is UNCANNY's scene-aware image reconstruction/enhancement layer introduced in ELYSIUM Engine 4.5. It can run independently from DLSS 5 and adjusts its behavior to the scene evidence UNCANNY can safely obtain.
 
-The corrected public package removes the complete internal diagnostic executable set. Microsoft Defender signatures were updated and the cleaned runtime tree plus the completed final ZIP were both scanned on a fresh GitHub-hosted Windows runner: **0 detections**. No Defender exclusions, allowlisting or bypass were used.
+## What are the five Adaptive Realism levels?
 
-See [MALWARE-VERIFICATION.md](MALWARE-VERIFICATION.md) for the exact verification record.
+`OFF / LOW / BALANCED / HIGH / INSANE`
+
+They are real runtime levels. Higher settings increase supported reconstruction samples/intensity while the performance guard can reduce cost before turning features off.
+
+## What are the Adaptive Realism tiers?
+
+- **Tier A:** trustworthy depth + native motion.
+- **Tier B:** trustworthy depth + UNCANNY optical flow.
+- **Tier C:** trustworthy depth only; conservative spatial lighting and no temporal history.
+- **Tier D:** no trustworthy depth; tonal/spatial enhancement only.
+
+UNCANNY intentionally falls back instead of pretending depth-aware GI is active when trustworthy depth is missing.
+
+## Which API currently gets the strongest Adaptive Realism path?
+
+D3D11. It can use capability-scored discovered depth and UNCANNY optical flow where available.
+
+D3D12 and D3D9 remain supported but currently use conservative fallbacks when trustworthy scene depth is unavailable.
+
+## Is Adaptive Realism the same as DLSS 5?
+
+No. They are separate systems.
+
+Adaptive Realism is UNCANNY-native and vendor-neutral. DLSS 5 is a separate NVIDIA-specific neural-provider route.
+
+## What are UNCANNY PASSES 1 / 1.5 / 2 / 2.5 / 3?
+
+They control native ELYSIUM reconstruction depth. They are separate from Adaptive Realism quality and separate from **DLSS 5 PASSES**.
+
+## Why is X2.5 special?
+
+X2.5 deliberately uses substantially less temporal history. It is intended to be the clean-motion mode when suppressing trails/afterimages matters more than preserving maximum temporal detail.
+
+## What are Motion Guard and Ghosting Guard?
+
+They reduce unstable reconstruction during motion, disocclusion and unreliable temporal history. Engine 4.5 uses them to lower or reject history when motion/depth/current-frame evidence disagrees.
+
+## What ELYSIUM controls are available?
+
+Advanced controls include structural reconstruction, surface detail, face reconstruction, material definition, depth/form recovery, source color recovery, material color separation, fine-edge recovery, distant detail, texture relief, Motion Guard, Ghosting Guard and Adaptive Realism quality.
+
+## What is REVENANT?
+
+REVENANT is UNCANNY's experimental persistent asset-reconstruction system. PCSX2 is currently its main acceptance target.
+
+A successful REVENANT worker job does not automatically prove that the replacement is visibly bound by the game/emulator. Native-PC-game asset replacement remains experimental.
+
+## Does it support D3D9 / D3D10?
+
+The runtime includes D3D9 and D3D10/10.1 compatibility paths. Their Adaptive Realism/neural capabilities depend on the trustworthy scene data and provider path available to that title.
+
+## D3D11 / D3D12?
+
+Both are active PC paths. D3D11 currently has the strongest Adaptive Realism scene-data route. Engine 4.5 also preserves the Hotfix 11 D3D11 fail-open startup behavior.
+
+## Vulkan / OpenGL?
+
+Not at DirectX parity yet.
+
+## Does ENABLE UNCANNY OFF really bypass the engine?
+
+It is intended to remain the master UNCANNY image-processing bypass. REVENANT cached/replaced assets are a separate system and may need to be restored separately for a complete asset-level before/after comparison.
+
+## What happened with the Windows Defender warning from Hotfix 11?
+
+The first Hotfix 11 package mistakenly included internal acceptance-test executables under `diagnostics/`. One of those development harnesses was flagged. It was not a runtime dependency and the public package was corrected.
+
+The current Engine 4.5 package again passed Microsoft Defender scans of both the extracted final package and completed ZIP with **0 detections**. The release includes `MALWARE-VERIFICATION-ENGINE45.json`.
+
+See [MALWARE-VERIFICATION.md](MALWARE-VERIFICATION.md).
 
 ## Do I need to disable Defender or whitelist UNCANNY?
 
@@ -32,43 +106,19 @@ No. The public repository contains documentation, release information and suppor
 
 ## Is it just a ReShade preset?
 
-No. UNCANNY ships native runtime components, controls, diagnostics, installation/rollback tooling and compatibility components.
+No. UNCANNY ships native runtime components, controls, diagnostics, installation/rollback tooling, DirectX compatibility components and its own ELYSIUM/Adaptive Realism processing.
 
-## What are UNCANNY PASSES 1 / 1.5 / 2 / 2.5 / 3?
+## Does UNCANNY bundle paid Marty McFly / Pascal Gilcher shaders?
 
-They control increasing native ELYSIUM reconstruction depth. Hotfix 10 fixed the Control Deck so this selector drives the actual UNCANNY renderer field; Hotfix 11 preserves that repair.
-
-## Is that the same as DLSS 5 PASSES?
-
-No. They are separate controls. **UNCANNY PASSES** controls the ELYSIUM image stack; **DLSS 5 PASSES** controls the separate DLSS 5/neural route.
-
-## What ELYSIUM controls are available?
-
-Advanced Image controls include structural reconstruction, surface detail, face reconstruction, material definition, depth/form recovery, source color recovery, material color separation, fine-edge recovery, distant detail and texture relief.
-
-## What are Motion Guard and Ghosting Guard?
-
-Controls intended to reduce unstable reconstruction during motion, disocclusion and unreliable temporal history.
-
-## What is REVENANT?
-
-An experimental persistent asset-reconstruction system. PCSX2 is currently its main acceptance target.
-
-## Does it support D3D9 / D3D10?
-
-The runtime contains legacy compatibility work, but the neural path on D3D9/D3D10 remains experimental.
-
-## D3D11 / D3D12?
-
-These are the primary PC test paths. Hotfix 11 specifically changes D3D11 first-frame startup so native presentation is established before optional neural/Deck preprocessing.
-
-## Vulkan / OpenGL?
-
-Not at DirectX parity yet.
+No. The Engine 4.5 package audit checks for restricted third-party shader source/package leakage. The release does not bundle paid/restricted Marty McFly / Pascal Gilcher shader source or binaries.
 
 ## How do I know the runtime actually ran?
 
-Use `UNCANNY-STATUS.cmd`. A DLL being present or an overlay saying enabled is not enough evidence by itself.
+Use `UNCANNY-STATUS.cmd` and visible before/after testing. A DLL existing on disk or an overlay saying enabled is not enough evidence by itself.
+
+## Does passing CI prove every game/GPU works?
+
+No. Engine 4.5 passed its regression suite, compiled acceptance tests, production builds, package audit, install/rollback test and Defender scans. Real visual quality, compatibility and performance still require title-by-title hardware testing.
 
 ## Is UNCANNY affiliated with NVIDIA?
 

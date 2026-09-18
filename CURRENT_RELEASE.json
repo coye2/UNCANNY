@@ -2,11 +2,11 @@
   "project": "UNCANNY",
   "version": "0.20.0-alpha.1",
   "engine": "ELYSIUM Engine 4.5",
-  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF16",
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF17",
   "tag": "v0.20.0-alpha.1-elysium-engine45",
   "runtime_revision": "release-alpha.1.elysium-engine45",
-  "buildId": "elysium45-hf16",
-  "updateSerial": 1600,
+  "buildId": "elysium45-hf17",
+  "updateSerial": 1700,
   "abi": 143,
   "published": "2026-09-17",
   "latest_release_url": "https://github.com/coye2/UNCANNY/releases/latest",
@@ -14,10 +14,10 @@
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
     "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
-    "sha256": "fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a",
+    "sha256": "cef5daff98e611e9da27f9365a660f14f82208238ce3d277db3f1088ba1a304e",
     "size_bytes": 8655500
   },
-  "source_revision": "6c7ee4675a110fceb3c2c5bdddf82eb4d2745471",
+  "source_revision": "192d0c652b2ef3dee8dcb542a93ed816cc6cea9f",
   "features": {
     "scan_on_startup_persisted": true,
     "manual_add_persists_without_scan": true,
@@ -45,10 +45,14 @@
     "dlss5_separate_optional_route": true,
     "postfx_recovery_backoff": true,
     "session_local_safe_degradation": true,
-    "sustained_clean_restore": true
+    "sustained_clean_restore": true,
+    "launcher_post_install_refresh_fail_open": true,
+    "legacy_library_entry_normalization": true,
+    "fallout4_d3d11_safe_mode": true,
+    "control_deck_lazy_home_start": true
   },
   "verification": {
-    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35305423361",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35308356045",
     "windows_manual_add_persistence": "PASS",
     "windows_install_rollback": "PASS",
     "python_regression_suite": "PASS",
@@ -72,5 +76,5 @@
     "Native-PC-game REVENANT asset replacement remains experimental.",
     "DLSS 5 is NVIDIA-specific even though Adaptive Realism itself is vendor-neutral."
   ],
-  "hotfix": "HF16"
+  "hotfix": "HF17"
 }

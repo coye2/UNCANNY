@@ -1,23 +1,28 @@
 # UNCANNY — current public release
 
-UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.3
-Runtime revision: release-alpha.1.elysium-engine45-hf18.3
-BuildId: elysium45-hf18.3
-updateSerial: 1830
+UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.4
+Runtime revision: release-alpha.1.elysium-engine45-hf18.4
+BuildId: elysium45-hf18.4
+updateSerial: 1840
 ABI: 143
-Source revision: 47841050ac5fbb04ffaa90823e2d0adc5c9236da
-Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip
-SHA-256: 9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.3
+Source revision: b865fab000762e7e3015484945d1f1af5d96fe52
+Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.4.zip
+SHA-256: c874239bbd41cfa6c271db10e364f97c241bdc5d5d55c2ff50542d12c6b8f417
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.4
 Latest: https://github.com/coye2/UNCANNY/releases/latest
-Validation: https://github.com/coye2/uncanny-dev/actions/runs/35393751767
+Validation: https://github.com/coye2/uncanny-dev/actions/runs/35399115389
 
-HF18.3 polished refresh:
+HF18.4:
+- process-scoped policy-independent UNCANNY.exe bootstrap so Restricted/AllSigned cannot silently kill startup
+- persistent machine/user PowerShell execution policy is not changed
+- Defender and SmartScreen are not disabled
+- updater hotfix serial ordering fixed (HF18.3=1830, HF18.4=1840)
 - StrictMode-safe launcher discovery/cache/installed-game path handling
-- resilient WPF ShowDialog event recovery
-- official cropped silver UNCANNY U emblem PNG; synthetic vector-style badge removed
-- native UNCANNY.exe bootstrap no longer uses -ExecutionPolicy Bypass
-- stale/unmarked Lucid engine preferences migrate to Automatic/ELYSIUM
+- official cropped silver UNCANNY U PNG launcher emblem
+- stale/unmarked Lucid preferences migrate to Automatic/ELYSIUM
 - only explicit current UserSelected=1 choices may preserve Lucid
+- HF18 rendering and Universal API Bridge behavior preserved
 
-The exact package passed build/package/Windows/WARP/launcher-smoke/hash/Defender validation with 0 Defender detections. Real-game behavior remains title/GPU/driver specific.
+Exact package gates: build PASS; Windows startup PASS; AllSigned startup PASS; WARP PASS; ZIP/hash PASS; Defender PASS / 0 detections.
+
+Signing status: unsigned. Windows SmartScreen/Unknown Publisher warnings may remain until trusted Authenticode signing is configured.

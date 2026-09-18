@@ -2,24 +2,22 @@
 
 ## Current public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.2**
 
-- Runtime revision: `release-alpha.1.elysium-engine45-hf18`
-- BuildId: `elysium45-hf18.1`
-- updateSerial: `1810`
+- Runtime revision: `release-alpha.1.elysium-engine45-hf18.2`
+- BuildId: `elysium45-hf18.2`
+- updateSerial: `1820`
 - ABI: `143`
-- Source revision: `458dc5820beb9322c7ee115ed98fd07a7b1b0c77`
-- Windows package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.1.zip`
-- SHA-256: `82257f00d4c323853fef1b5576578d6b0b025b44829c17027c46019ece726777`
+- Source revision: `ba47d93292179fda8e3d83bdb3f8c9347e5cfa65`
+- Windows package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.2.zip`
+- SHA-256: `2cc50a82e5e30b206e7de2a307f3fb70c31895f088de85edc332dea3fb60b1e4`
 - Release: https://github.com/coye2/UNCANNY/releases/latest
 
-HF18.1 is the focused launcher/install hotfix for the 2% preflight stall, updater-button clipping and ELYSIUM color-logo refresh. HF18 rendering/compatibility behavior is preserved.
-
-The exact candidate passed the full build/package/Windows/WARP/hash/Defender gate.
+HF18.2 fixes the launcher state-refresh bug, fast target-EXE inspection, ELYSIUM badge crop, and public ZIP root clutter. The exact candidate passed the full build/package/Windows/WARP/hash/Defender gate.
 
 ## Previous release history
 
-HF18 closed the Universal API Bridge and tester-feedback push. HF17 focused on launcher completion, Fallout 4 compatibility and Control Deck startup/fallback. Older releases remain available in GitHub Releases.
+HF18.1 addressed install preflight progress and update-button layout. HF18 closed the Universal API Bridge/tester-feedback push. Older releases remain available in GitHub Releases.
 
 ## Private source/workspace
 

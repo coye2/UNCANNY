@@ -2,22 +2,22 @@
   "project": "UNCANNY",
   "version": "0.20.0-alpha.1",
   "engine": "ELYSIUM Engine 4.5",
-  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.2",
-  "tag": "v0.20.0-alpha.1-elysium-engine45-hf18.2",
-  "runtime_revision": "release-alpha.1.elysium-engine45-hf18.2",
-  "buildId": "elysium45-hf18.2",
-  "updateSerial": 1820,
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.3",
+  "tag": "v0.20.0-alpha.1-elysium-engine45-hf18.3",
+  "runtime_revision": "release-alpha.1.elysium-engine45-hf18.3",
+  "buildId": "elysium45-hf18.3",
+  "updateSerial": 1830,
   "abi": 143,
   "published": "2026-09-18",
   "latest_release_url": "https://github.com/coye2/UNCANNY/releases/latest",
-  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.2",
+  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.3",
   "package": {
-    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.2.zip",
-    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.2/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.2.zip",
-    "sha256": "2cc50a82e5e30b206e7de2a307f3fb70c31895f088de85edc332dea3fb60b1e4",
-    "size_bytes": 8731159
+    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip",
+    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.3/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip",
+    "sha256": "4f252c9c21891ecab2f7ecc37f95a0149854f4a2d18f2300402366f515169428",
+    "size_bytes": 8732419
   },
-  "source_revision": "ba47d93292179fda8e3d83bdb3f8c9347e5cfa65",
+  "source_revision": "75e8d346bea6fb30d2a20e50dd8e7e0170b77760",
   "features": {
     "universal_d3d11_native_present_stabilization": true,
     "universal_api_bridge": true,
@@ -56,10 +56,16 @@
     "clean_public_root": true,
     "powershell_under_runtime": true,
     "maintenance_commands_under_tools": true,
-    "elysium_emblem_crop_fixed": true
+    "elysium_emblem_crop_fixed": true,
+    "launcher_strictmode_safe_discovery": true,
+    "packaged_launcher_showdialog_smoke": true,
+    "stale_lucid_preference_migration": true,
+    "explicit_engine_choice_tracking": true,
+    "vector_elysium_badge": true,
+    "current_deck_identity_marker": true
   },
   "verification": {
-    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35387436459",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35391373976",
     "python_regression_suite": "PASS",
     "production_builds_x86_x64": "PASS",
     "engine45_compiled_acceptance": "PASS",
@@ -76,7 +82,9 @@
     "defender_extracted_tree_scan": "PASS",
     "defender_detections": 0,
     "public_package_clean_root": "PASS",
-    "packaged_powershell_parse": "PASS"
+    "packaged_powershell_parse": "PASS",
+    "packaged_launcher_showdialog_smoke": "PASS",
+    "stale_lucid_migration": "PASS"
   },
   "limitations": [
     "Real-game visual, motion and performance acceptance remains title/GPU/driver specific.",
@@ -85,5 +93,5 @@
     "Native-PC-game REVENANT asset replacement remains experimental.",
     "DLSS 5 remains NVIDIA/provider-specific even though the ELYSIUM image path is vendor-neutral."
   ],
-  "hotfix": "HF18.2"
+  "hotfix": "HF18.3"
 }

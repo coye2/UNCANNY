@@ -1,3 +1,25 @@
+# Changelog
+
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.5
+
+- Fixed packaged scanner dependency resolution after PowerShell moved under `runtime\`.
+- Fixed cache/manual/scan schema handoff so missing legacy properties cannot blank the launcher.
+- Made manually added targets authoritative through subsequent scans instead of re-filtering them heuristically.
+- Replaced the broken launcher asset with a 64×64 RGBA crop derived from the official Library file `Monochrome Circular U Emblem(1).png`.
+- Packaged official-logo WPF decode: **PASS**.
+- Packaged cache normalization: **PASS**.
+- Packaged scanner execution + manual-entry retention: **PASS**.
+- Normal packaged launcher startup: **PASS**.
+- AllSigned packaged launcher startup: **PASS**.
+- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
+- Preserved HF18.4 startup recovery and HF18 rendering/runtime behavior.
+- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35404395219
+- Source: `8414a99010fff395c117baaadb77d63dbde946bf`
+- SHA-256: `bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9`
+- Signing status: **unsigned**; SmartScreen/Unknown Publisher may remain until trusted Authenticode signing is configured.
+
+---
+
 # v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.5 — 2026-09-18
 
 `release-alpha.1.elysium-engine45-hf18.5`, ABI 143, BuildId `elysium45-hf18.5`, updateSerial `1850`.

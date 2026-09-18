@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF16
+
+- Added bounded post-FX fault backoff that preserves native Present during repeated rendering/device instability.
+- Added staged session-local ELYSIUM recovery: safer Adaptive Realism/Performance Guard first, then reduced Reference Stack/pass depth/optional DLSS 5 cost if instability persists.
+- Saved user settings are not overwritten by recovery.
+- Added sustained-clean-frame requirement before restoring higher-cost rendering to prevent oscillation.
+- Added diagnostics: `PostFxRecoveryFaults`, `PostFxRecoveryCleanFrames`, `PostFxRecoveryBackoffMs`.
+- Preserved all HF15 launcher/library/rollback/Adaptive Realism/Motion Guard/PCSX2/REVENANT work.
+- Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35305423361
+- x86/x64 production + acceptance builds: **PASS**.
+- Windows HLSL compile: **PASS**.
+- Manual Add game persistence: **PASS**.
+- Dynamic install/remove rollback: **PASS**.
+- ZIP integrity/hash verification: **PASS**.
+- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
+- Source revision: `6c7ee4675a110fceb3c2c5bdddf82eb4d2745471`.
+- ZIP SHA-256: `fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`.
+
+---
+
 ## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF15
 
 - Added persisted **Scan on startup** control; disabling it prevents discovery at boot while preserving cached/manual entries.

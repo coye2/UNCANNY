@@ -1,36 +1,21 @@
-UNCANNY
-Official public repository: https://github.com/coye2/UNCANNY
-Latest release endpoint: https://github.com/coye2/UNCANNY/releases/latest
-Machine-readable release manifest: https://raw.githubusercontent.com/coye2/UNCANNY/main/CURRENT_RELEASE.json
+# UNCANNY — current public release
 
-CURRENT RELEASE
-Version: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF17
-BuildId: elysium45-hf17
-updateSerial: 1700
-Source revision: 192d0c652b2ef3dee8dcb542a93ed816cc6cea9f
+UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18
+Runtime revision: release-alpha.1.elysium-engine45-hf18
+BuildId: elysium45-hf18
+updateSerial: 1800
 ABI: 143
-Windows ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-SHA-256: cef5daff98e611e9da27f9365a660f14f82208238ce3d277db3f1088ba1a304e
-Release URL: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
-Direct ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
+Source revision: 0c5de983a400dd77d85992c6a5c1d37bcc3139eb
+Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip
+SHA-256: 21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18
+Latest: https://github.com/coye2/UNCANNY/releases/latest
+Validation: https://github.com/coye2/uncanny-dev/actions/runs/35377702421
 
-HF17
-Fixes launcher crashes after successful per-game install/update by making cache parsing and post-install UI refresh fail-open.
-Legacy/malformed library entry shapes are normalized safely instead of throwing on missing Exe properties.
-Fallout4.exe uses a title-scoped D3D11 safe route: 120 native Presents before preprocessing, D3D11 neural interop disabled, conservative current-frame ELYSIUM.
-Control Deck now starts only on HOME and self-falls back to a visible desktop Deck if in-frame handshake fails.
-HF16 recovery, HF15 launcher/library changes, Motion Guard/Ghosting Guard, PCSX2 and REVENANT are preserved.
+HF18 closes the current Universal API Bridge and tester-feedback push. It adds universal D3D11 native-Present startup stabilization, deterministic fail-open API ownership/capability routing, stronger source-backed face/color/edge/microtexture reconstruction, independent Motion Protection and Ghosting Guard strength, Control Deck help, updater/install/uninstall fixes, and a D3D11 WARP rendered-quality matrix covering all 42 exposed floating image controls.
 
-VERIFICATION
-Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35308356045
-Windows legacy library reproducer: PASS.
-Manual Add game persistence: PASS.
-Static/regression suite: PASS.
-x86/x64 production + acceptance builds: PASS.
-Windows HLSL compile: PASS.
-PowerShell parse: PASS.
-Dynamic install/remove rollback: PASS.
-Exact ZIP hash verification: PASS.
-Microsoft Defender final ZIP + extracted tree: PASS / 0 detections.
+The exact final package passed x86/x64 production and legacy builds, HLSL compilation, WARP rendered visual-quality gates, installer/rollback/manual-add regressions, ZIP integrity/hash verification and Microsoft Defender scans with 0 detections.
 
-Fallout 4 requires real-machine retesting after installing HF17.
+Vulkan/OpenGL support remains conservative lifecycle/presentation compatibility observation rather than a claim of full ELYSIUM/neural parity. AMD shares the vendor-neutral ELYSIUM image path, but this CI result is not an AMD hardware test. Real-game quality, motion and performance acceptance remains title/GPU/driver specific.
+
+The public repository contains release information, documentation and support material. The full engineering source/workspace remains private.

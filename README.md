@@ -140,7 +140,7 @@ Build/CI success is not the same as broad real-game GPU acceptance. Visual quali
 
 The current package has a machine-readable verification attachment on the release:
 
-`MALWARE-VERIFICATION-ENGINE45.json`
+`MALWARE-VERIFICATION-ENGINE45-HF18.3.json`
 
 See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md). UNCANNY does not require users to disable Defender or create broad antivirus exclusions.
 

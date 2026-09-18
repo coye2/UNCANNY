@@ -1,37 +1,32 @@
 # Latest UNCANNY public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF15**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF16**
 
 - Runtime: `release-alpha.1.elysium-engine45`
-- BuildId: `elysium45-hf15`
+- BuildId: `elysium45-hf16`
 - ABI: `143`
-- Source revision: `b253880333ce2b8e4036cd5e53a6dcaf3bc69f8d`
-- Published: 2026-09-17
+- Source revision: `6c7ee4675a110fceb3c2c5bdddf82eb4d2745471`
+- Published: 2026-09-18
 - Latest release: https://github.com/coye2/UNCANNY/releases/latest
 - Tagged release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
 - Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-- SHA-256: `8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`
+- SHA-256: `fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`
 
-## HF15
+## HF16
 
-HF15 closes the current ELYSIUM 4.5 flagship build.
+HF16 adds a bounded ELYSIUM runtime recovery path for repeated post-FX/device faults.
 
-- **Scan on startup** is persisted and may be disabled.
-- With startup scanning off, UNCANNY loads cached and manually-added entries without discovery.
-- **Add game** remains authoritative across reboot and does not require a later scan.
-- Windows short/long path aliases are canonicalized before deduplication.
-- Adaptive Realism now includes shared scene evidence, split contact/diffuse lighting, bounded emissive bounce, Black Floor Intelligence, asymmetric local contrast, Legacy Cinema Reconstruction v2 and High/Insane Depth Material Sculpt.
-- Motion Guard, Ghosting Guard and X2.5 clean-motion behavior remain protected.
+- Native Present remains alive during recovery backoff.
+- Recovery first reduces Adaptive Realism / Performance Guard cost.
+- Continued instability locally cuts Reference Stack, pass depth and optional DLSS 5 cost.
+- Saved user settings are not overwritten.
+- Higher-cost rendering returns only after a sustained clean run.
+- HF15 launcher/library, rollback, Adaptive Realism, Motion Guard/Ghosting Guard, PCSX2 and REVENANT work is preserved.
 
 ## Verification
 
-The exact source revision above passed the release gate in run:
-https://github.com/coye2/uncanny-dev/actions/runs/35302273751
+Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35305423361
 
-Windows manual-add persistence, install/remove rollback, HLSL compilation, PowerShell parsing, x86/x64 production builds, package audits, exact ZIP hash verification and Microsoft Defender ZIP/extracted-tree scans all passed.
-
-Defender engine: `1.1.26080.3`  
-Defender signatures: `1.459.263.0`  
-Detections: **0**
+Static/resource gates, x86/x64 production builds, Windows HLSL compilation, PowerShell parsing, manual Add game persistence, dynamic install/remove rollback, exact ZIP hash verification and Microsoft Defender ZIP/extracted-tree scans all passed with **0 detections**.
 
 Real-game visual/performance acceptance remains title/GPU/driver specific.

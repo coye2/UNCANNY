@@ -10,16 +10,21 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF16**  
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF17**  
 Runtime: `release-alpha.1.elysium-engine45` · ABI `143`
 
 Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45  
 Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`  
-SHA-256: `fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`
+SHA-256: `cef5daff98e611e9da27f9365a660f14f82208238ce3d277db3f1088ba1a304e`
 
-HF16 is the emergency ELYSIUM 4.5 runtime-resilience update. It preserves HF15 and adds a bounded recovery circuit breaker so repeated post-FX/device faults back off and degrade safely instead of hammering the failing path every Present.
+HF17 is the emergency ELYSIUM 4.5 runtime-resilience update. It preserves HF15 and adds a bounded recovery circuit breaker so repeated post-FX/device faults back off and degrade safely instead of hammering the failing path every Present.
 
-## HF16
+## HF17
+
+- Fixed launcher crashes after a successful game install/update when cached library entries were malformed or legacy-shaped.
+- Post-install UI/cache refresh is fail-open after install verification.
+- Added a title-scoped Fallout 4 D3D11 safe path with extended native-Present stabilization and D3D11 neural interop disabled.
+- Control Deck now starts only on HOME and falls back visibly if in-frame handshake fails.
 
 - Added bounded **post-FX recovery backoff** so repeated advanced-rendering/device faults preserve native Present instead of repeatedly retrying the failing path.
 - Recovery first retries ELYSIUM at safer Adaptive Realism / Performance Guard settings.
@@ -28,10 +33,10 @@ HF16 is the emergency ELYSIUM 4.5 runtime-resilience update. It preserves HF15 a
 - Higher-cost rendering returns only after a sustained clean run to avoid fallback/retry oscillation.
 - New diagnostics expose `PostFxRecoveryFaults`, `PostFxRecoveryCleanFrames` and `PostFxRecoveryBackoffMs`.
 - HF15 startup-scan, manual-game, rollback, Adaptive Realism, Motion Guard/Ghosting Guard, PCSX2 and REVENANT work is preserved.
-- Exact HF16 candidate passed static gates, x86/x64 production builds, Windows HLSL, manual Add game persistence, dynamic install/remove rollback, exact ZIP hash verification and Microsoft Defender scans.
+- Exact HF17 candidate passed static gates, x86/x64 production builds, Windows HLSL, manual Add game persistence, dynamic install/remove rollback, exact ZIP hash verification and Microsoft Defender scans.
 
-Source revision: `6c7ee4675a110fceb3c2c5bdddf82eb4d2745471`.  
-BuildId: `elysium45-hf16`.
+Source revision: `192d0c652b2ef3dee8dcb542a93ed816cc6cea9f`.  
+BuildId: `elysium45-hf17`.
 
 ## Adaptive Realism
 

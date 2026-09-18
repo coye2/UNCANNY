@@ -5,13 +5,13 @@ Latest release endpoint: https://github.com/coye2/UNCANNY/releases/latest
 Machine-readable release manifest: https://raw.githubusercontent.com/coye2/UNCANNY/main/CURRENT_RELEASE.json
 
 CURRENT RELEASE
-Version: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13
+Version: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13.1
 Tag: v0.20.0-alpha.1-elysium-engine45
 Runtime revision: release-alpha.1.elysium-engine45
-Source revision: 16ee9cb8ef9cdb9f038577884bb023909743d1e1
+Source revision: 6d9b367bb4ef6506ff33be7023c05634019e78f2
 ABI: 143
 Windows ZIP: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-SHA-256: 843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811
+SHA-256: 69face793720c1d832afb6d8ea7d69091e5475ce231c7c62f84beef02c96675a
 Release URL: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
 Direct ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
 

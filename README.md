@@ -10,33 +10,33 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF17**  
-Runtime: `release-alpha.1.elysium-engine45` · ABI `143`
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18**  
+Runtime: `release-alpha.1.elysium-engine45-hf18` · BuildId `elysium45-hf18` · updateSerial `1800` · ABI `143`
 
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45  
-Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`  
-SHA-256: `cef5daff98e611e9da27f9365a660f14f82208238ce3d277db3f1088ba1a304e`
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18  
+Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip`  
+SHA-256: `21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489`
 
-HF17 is the emergency ELYSIUM 4.5 runtime-resilience update. It preserves HF15 and adds a bounded recovery circuit breaker so repeated post-FX/device faults back off and degrade safely instead of hammering the failing path every Present.
+HF18 closes the current Universal API Bridge and tester-feedback push while preserving the proven HF17 fail-open baseline.
 
-## HF17
+## HF18
 
-- Fixed launcher crashes after a successful game install/update when cached library entries were malformed or legacy-shaped.
-- Post-install UI/cache refresh is fail-open after install verification.
-- Added a title-scoped Fallout 4 D3D11 safe path with extended native-Present stabilization and D3D11 neural interop disabled.
-- Control Deck now starts only on HOME and falls back visibly if in-frame handshake fails.
+- Universal D3D11 startup stabilization waits for **120 successful native Presents** before optional preprocessing joins the path, reducing first-frame/black-screen risk without title guessing.
+- Universal API Bridge routing now separates presentation ownership from processing-source evidence and fails open instead of guessing unsupported ownership/capability state.
+- D3D12 queue/backbuffer/state evidence is captured from creation/lifecycle events rather than inferred.
+- Vulkan/OpenGL and legacy API support remains conservative: UNCANNY records compatible lifecycle/presentation evidence without claiming full ELYSIUM/neural parity where it is not proven.
+- Facial reconstruction, source-hue/color recovery, material/edge reconstruction and Microtexture have materially stronger source-backed response.
+- Motion Protection Strength and Ghosting Guard now remain independently effective instead of one masking the other.
+- Added clean-room local exposure fusion, source-radiance recovery, depth-proven relighting/contact shaping, contrast-adaptive clarity and source-directed subpixel edge resolve.
+- Every live Control Deck image control has visible info/help text.
+- Installer verification reports exact failure causes without asking users to disable security software; updater naming and ownership-safe uninstall residue cleanup are fixed.
+- All **42 exposed floating image controls** are rendered through the D3D11 WARP visual-quality matrix and must clear a meaningful response floor.
+- Exact HF18 candidate passed x86/x64 production builds, HLSL, WARP visual-quality gates, installer/rollback/manual-add, ZIP integrity and Microsoft Defender scans with 0 detections.
 
-- Added bounded **post-FX recovery backoff** so repeated advanced-rendering/device faults preserve native Present instead of repeatedly retrying the failing path.
-- Recovery first retries ELYSIUM at safer Adaptive Realism / Performance Guard settings.
-- Continued instability locally reduces Reference Stack, pass depth and optional DLSS 5 cost.
-- Recovery is session-local and does **not** overwrite the user's saved settings.
-- Higher-cost rendering returns only after a sustained clean run to avoid fallback/retry oscillation.
-- New diagnostics expose `PostFxRecoveryFaults`, `PostFxRecoveryCleanFrames` and `PostFxRecoveryBackoffMs`.
-- HF15 startup-scan, manual-game, rollback, Adaptive Realism, Motion Guard/Ghosting Guard, PCSX2 and REVENANT work is preserved.
-- Exact HF17 candidate passed static gates, x86/x64 production builds, Windows HLSL, manual Add game persistence, dynamic install/remove rollback, exact ZIP hash verification and Microsoft Defender scans.
+Source revision: `0c5de983a400dd77d85992c6a5c1d37bcc3139eb`.  
+Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35377702421
 
-Source revision: `192d0c652b2ef3dee8dcb542a93ed816cc6cea9f`.  
-BuildId: `elysium45-hf17`.
+Real-game visual quality, motion behavior and performance still require title/GPU/driver-specific testing.
 
 ## Adaptive Realism
 
@@ -99,7 +99,7 @@ REVENANT is UNCANNY's experimental persistent asset-reconstruction system. PCSX2
 
 ## Install
 
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip` from the latest release.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip` from the latest release.
 2. Extract the ZIP completely.
 3. Run **`UNCANNY.exe`** from the root of the extracted folder.
 4. Let UNCANNY scan, or add the real game/emulator executable manually.
@@ -120,7 +120,7 @@ Full walkthrough: [USAGE.md](USAGE.md)
 | D3D10 / 10.1 | compatibility path; capability depends on available scene data |
 | PCSX2 | primary emulator acceptance target |
 | REVENANT | experimental persistent asset reconstruction |
-| Vulkan / OpenGL | not at DirectX parity |
+| Vulkan / OpenGL | lifecycle/presentation compatibility observation; full ELYSIUM/neural parity is not claimed |
 
 See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) for evidence levels and exact limitations.
 

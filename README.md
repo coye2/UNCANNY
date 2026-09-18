@@ -10,14 +10,14 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.3**  
-Runtime: `release-alpha.1.elysium-engine45-hf18.3` · BuildId `elysium45-hf18.3` · updateSerial `1830` · ABI `143`
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.4**  
+Runtime: `release-alpha.1.elysium-engine45-hf18.4` · BuildId `elysium45-hf18.4` · updateSerial `1840` · ABI `143`
 
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.3  
-Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip`  
-SHA-256: `9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21`
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.4  
+Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.4.zip`  
+SHA-256: `c874239bbd41cfa6c271db10e364f97c241bdc5d5d55c2ff50542d12c6b8f417`
 
-## HF18.3
+## HF18.4
 
 - Fixes the launcher startup crash caused by missing legacy/discovery object properties under PowerShell StrictMode.
 - Startup, selection and action callbacks recover/log malformed records instead of tearing down WPF `ShowDialog()`.
@@ -26,10 +26,12 @@ SHA-256: `9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21`
 - Only explicit current `UserSelected=1` Lucid choices may preserve the legacy engine.
 - Adds a packaged-launcher survival smoke test against the final ZIP.
 - Hardens installed-game/cache path handling so missing `.Path`/schema fields cannot crash the launcher.
-- Removes `-ExecutionPolicy Bypass` from the native EXE bootstrap while keeping the launch hidden/non-interactive.
+- Uses process-scoped `ExecutionPolicy Bypass` only for UNCANNY's child PowerShell bootstrap so Restricted/AllSigned policy cannot silently kill startup; persistent policy is not changed.
+- Updater hotfix ordering now correctly maps HF18.3 → 1830 and HF18.4 → 1840.
 - Preserves the HF18.2 clean `runtime\` / `Tools\` package layout and HF18 rendering stack.
+- **Windows trust:** HF18.4 is still unsigned, so SmartScreen/Unknown Publisher may still appear until a trusted Authenticode signing identity is configured.
 
-Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35393751767
+Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35399115389
 
 ## Adaptive Realism
 
@@ -92,7 +94,7 @@ REVENANT is UNCANNY's experimental persistent asset-reconstruction system. PCSX2
 
 ## Install
 
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip` from the latest release.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.4.zip` from the latest release.
 2. Extract the ZIP completely.
 3. Run **`UNCANNY.exe`** from the root of the extracted folder.
 4. Let UNCANNY scan, or add the real game/emulator executable manually.
@@ -142,7 +144,7 @@ Build/CI success is not the same as broad real-game GPU acceptance. Visual quali
 
 The current package has a machine-readable verification attachment on the release:
 
-`MALWARE-VERIFICATION-ENGINE45-HF18.3.json`
+`MALWARE-VERIFICATION-ENGINE45-HF18.4.json`
 
 See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md). UNCANNY does not require users to disable Defender or create broad antivirus exclusions.
 

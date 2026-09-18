@@ -2,7 +2,7 @@
   "project": "UNCANNY",
   "version": "0.20.0-alpha.1",
   "engine": "ELYSIUM Engine 4.5",
-  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Hotfix 13",
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Hotfix 13.1",
   "tag": "v0.20.0-alpha.1-elysium-engine45",
   "runtime_revision": "release-alpha.1.elysium-engine45",
   "abi": 143,
@@ -12,9 +12,9 @@
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
     "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
-    "sha256": "843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811"
+    "sha256": "69face793720c1d832afb6d8ea7d69091e5475ce231c7c62f84beef02c96675a"
   },
-  "source_revision": "16ee9cb8ef9cdb9f038577884bb023909743d1e1",
+  "source_revision": "6d9b367bb4ef6506ff33be7023c05634019e78f2",
   "features": {
     "adaptive_realism_levels": [
       "OFF",
@@ -38,7 +38,8 @@
     "full_stack_remove": true,
     "mutable_generated_logs_do_not_block_restore": true,
     "launcher_logo_inline": true,
-    "reference_stack_default": "INSANE"
+    "reference_stack_default": "INSANE",
+    "launcher_xaml_startup_fix": true
   },
   "adaptive_realism_tiers": {
     "A": "trustworthy depth + native motion",
@@ -68,7 +69,8 @@
     "windows_dynamic_stacked_remove": "PASS",
     "windows_dynamic_changed_reshade_log_restore": "PASS",
     "windows_hlsl_compile": "PASS",
-    "defender_signature_version": "1.459.260.0"
+    "launcher_xaml_startup_patch": "PASS",
+    "public_patch_defender_scan": "PASS"
   },
   "malware_verification_url": "https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md",
   "limitations": [
@@ -77,5 +79,5 @@
     "Native-PC-game REVENANT asset replacement remains experimental.",
     "DLSS 5 is NVIDIA-specific even though Adaptive Realism itself is vendor-neutral."
   ],
-  "hotfix": 13
+  "hotfix": "13.1"
 }

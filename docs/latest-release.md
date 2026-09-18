@@ -1,33 +1,37 @@
 # Latest UNCANNY public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13.1**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18**
 
-- Runtime: `release-alpha.1.elysium-engine45`
+- Runtime: `release-alpha.1.elysium-engine45-hf18`
+- BuildId: `elysium45-hf18`
+- updateSerial: `1800`
 - ABI: `143`
-- Source revision: `6d9b367bb4ef6506ff33be7023c05634019e78f2`
-- Published: 2026-09-17
+- Source revision: `0c5de983a400dd77d85992c6a5c1d37bcc3139eb`
+- Published: 2026-09-18
 - Latest release: https://github.com/coye2/UNCANNY/releases/latest
-- Tagged release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
-- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-- SHA-256: `69face793720c1d832afb6d8ea7d69091e5475ce231c7c62f84beef02c96675a`
+- Tagged release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18
+- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip
+- SHA-256: `21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489`
 
-## Hotfix 13.1
+## HF18
 
-The launcher startup crash from the inline logo XAML `Path.FillRule` member is fixed in the current package.
+HF18 closes the current compatibility and perceptual-quality push:
 
-Hotfix 13.1 fixes the tester-reported remove/restore failures and pushes Adaptive Realism harder.
-
-- Remove restores the complete recorded UNCANNY install stack for the selected target.
-- Runtime-generated graphics logs such as `ReShade.log` may change without blocking uninstall.
-- Original/user files remain protected from unsafe overwrite.
-- The launcher carries the official UNCANNY emblem inline.
-- Adaptive Realism is **OFF / LOW / BALANCED / HIGH / INSANE**.
-- New installs seed **INSANE + Reference Stack**.
-- The reference stack scales with Adaptive Realism; OFF is a true bypass.
-- Stronger source/evidence-bounded contact occlusion, diffuse/specular response, scene adaptation, local contrast and meso clarity.
+- universal D3D11 native-Present startup stabilization before optional preprocessing
+- deterministic Universal API Bridge ownership/capability/source evidence with fail-open behavior
+- stronger source-backed face reconstruction and source-hue/color recovery
+- clean-room local exposure fusion, source-radiance recovery, relighting/contact shaping and adaptive clarity
+- source-directed subpixel edge resolve
+- independent Motion Protection Strength and Ghosting Guard behavior
+- stronger dedicated Microtexture response
+- visible Control Deck info icons and hover help
+- exact installer verification diagnostics, safer owned-residue cleanup and current release-name updater support
+- all 42 exposed floating image controls rendered through the D3D11 WARP quality matrix
 
 ## Verification
 
-Windows HLSL compile, PowerShell parsing, two-layer full-stack rollback, changed-ReShade.log restore, archive integrity and Microsoft Defender all passed. Defender engine `1.1.26080.3`, signatures `1.459.260.0`, 0 detections.
+Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35377702421
+
+Static/generated-resource regressions, x86/x64 production/legacy builds, Windows HLSL, WARP rendered visual-quality gates, PowerShell installer/rollback/manual-add, exact ZIP integrity/hash and Microsoft Defender all passed. Defender reported 0 detections on the exact final ZIP and extracted tree.
 
 Real-game visual/performance acceptance remains title/GPU/driver specific.

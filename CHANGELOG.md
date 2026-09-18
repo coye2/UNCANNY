@@ -1,271 +1,180 @@
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.5 — 2026-09-18
+
+`release-alpha.1.elysium-engine45-hf18.5`, ABI 143, BuildId `elysium45-hf18.5`, updateSerial `1850`.
+
+- Fixes packaged scanner dependency resolution after PowerShell moved under `runtime\`.
+- Canonicalizes heterogeneous cache/manual/scan records before WPF binding.
+- Removes remaining brittle `Resolve-Path(...).Path` provider-object reads from library discovery helpers.
+- Re-encodes the official UNCANNY PNG through 32-bit ARGB before WPF display.
+- Adds stack + invocation-position diagnostics for recovered launcher failures.
+- Adds exact packaged cache/render/logo and packaged scan execution gates.
+- Preserves HF18.4 startup-policy recovery and all HF18 rendering/runtime behavior.
+
+Exact build/package/Windows/cache-render/scan/WARP/hash/Defender validation is required before publication.
+
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.4 — 2026-09-18
+
+`release-alpha.1.elysium-engine45-hf18.4`, ABI 143, BuildId `elysium45-hf18.4`, updateSerial `1840`.
+
+- Fixes launcher startup crashes caused by StrictMode property access on malformed/legacy discovery records.
+- Adds guarded WPF startup/selection/action callbacks so malformed records are logged/recovered instead of tearing down `ShowDialog()`.
+- Fixes the HF18.3 no-launch regression under Restricted/AllSigned PowerShell policy using a process-scoped policy-independent bootstrap that does not change persistent system/user policy.
+- Fixes updater hotfix serial ordering so HF18.4 is discoverable over HF18.3.
+- Replaces the raster/poster launcher badge path with a official cropped silver UNCANNY U PNG.
+- Adds explicit engine-choice tracking (`UserSelected=1`) to new Control Deck selections.
+- Migrates stale/unmarked Lucid preferences to Automatic/ELYSIUM at install and launch time.
+- Prevents updated PCSX2 installs from silently booting the preserved Lucid 2.5 Control Deck unless Lucid was explicitly selected by the user.
+- Preserves HF18.2 clean public package layout and all HF18 rendering/runtime work.
+
+Exact build/package/Windows/WARP/hash/Defender validation is required before publication.
+
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.2 — 2026-09-18
+
+`release-alpha.1.elysium-engine45-hf18.2`, ABI 143, BuildId `elysium45-hf18.2`, updateSerial `1820`.
+
+- Fixes launcher post-install/update state refresh when a record does not already contain `InstalledBuildId`.
+- Normalizes cached, manually-added and newly-scanned game records to one launcher schema.
+- Adds direct PE-table target inspection so install/update no longer reads an entire large game executable into memory just to discover architecture/API imports.
+- Corrects ELYSIUM launcher emblem crop and centering.
+- Cleans the public package root: PowerShell implementation moves to `runtime\`; maintenance CMDs move to `Tools\`; `UNCANNY.exe` stays at root.
+- Adds package gates that reject root-level maintenance scripts and parse every shipped runtime PowerShell file after ZIP extraction.
+- Preserves HF18 rendering and Universal API Bridge behavior.
+
+Exact build/package/Windows/WARP/hash/Defender validation is required before publication.
+
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.1 — 2026-09-18
+
+`release-alpha.1.elysium-engine45-hf18`, ABI 143, BuildId `elysium45-hf18.1`, updateSerial `1810`.
+
+- Fixes installer/update preflight that could appear stuck at 2% while repeatedly enumerating Windows processes.
+- Replaces those repeated full WMI walks with bounded local process inspection for the selected target folder.
+- Adds visible 3/4/5/6% preflight progress stages before release-binary verification.
+- Fixes launcher update-button text clipping with a wider compact status control and shorter status labels.
+- Replaces the monochrome launcher badge with the current full-color ELYSIUM emblem.
+- Preserves the HF18 rendering pipeline and Universal API Bridge behavior.
+
+Final package still requires the exact build/package/Windows/WARP/hash/Defender gate before publication.
+
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — Adaptive Realism — 2026-09-17
+
+`release-alpha.1.elysium-engine45`, ABI 143.
+
+- Adds original UNCANNY **Adaptive Realism** with OFF / LOW / BALANCED / HIGH / INSANE levels.
+- Adaptive Realism is vendor-neutral and does not require DLSS 5, CUDA or Tensor Cores.
+- D3D11 can use capability-scored discovered depth plus UNCANNY optical flow for depth-aware contact occlusion and bounded screen-space indirect lighting.
+- When trustworthy depth is unavailable, the engine fails safely to spatial/tonal adaptation instead of claiming full GI. D3D9/D3D10/D3D12 currently use reduced capability where scene depth is not trustworthy.
+- Scene adaptation derives bounded exposure, highlight/shadow recovery, local contrast, clarity and saturation shaping from the current scene rather than hardcoding the Eternights grade.
+- Motion Guard/Ghosting Guard remain authoritative. Flow confidence loss, source disagreement and disocclusion reduce/reject history; X2.5 deliberately uses the lowest temporal-history weight.
+- ENABLE UNCANNY OFF remains a true master bypass. The UNCANNY pass stack remains separate from DLSS 5 pass depth.
+- Preserves current launcher, clean package structure, PCSX2 scanner/install fixes, rollback, REVENANT, provider handling, DirectX adapters and Hotfix 11/12 safety work.
+- CI cross-built production binaries and passed compiled Engine 4.5 acceptance, Python regressions, protected-shader verification and restricted-shader source auditing. Real game/GPU visual acceptance is still required.
+- No paid/restricted Marty McFly / Pascal Gilcher shader source or binaries are bundled. The supplied preset was used only as a behavioral calibration reference.
+
+# v0.20.0-alpha.1 ELYSIUM Hotfix 11 - 2026-09-17
+
+`release-alpha.1.elysium-hotfix11`, ABI 141. Tester-derived D3D11 first-frame safety hotfix.
+
+- Fixes a PCSX2 x64 / D3D11 black-screen case where `PRESENT_PATCH_OK` was followed by one Present attempt, zero successful Presents, no advancing presentation stream and 0 FPS.
+- Makes direct D3D11 startup fail open: native `Present` / `Present1` gets the first three presentation opportunities before UNCANNY image processing or in-frame HOME composition can run.
+- Defers D3D11 Feature-18/DLSS5 initialization until at least 8 successful recent native Presents are advancing.
+- Keeps the live source visible while neural startup is deferred; no stale neural result is reused.
+- Adds exact Present-stage diagnostics: `PRESENT_PREPROCESS`, `PRESENT_NATIVE_CALL`, `PRESENT1_PREPROCESS`, `PRESENT1_NATIVE_CALL`, and `PRESENT_SUCCEEDED`.
+- Correctly treats `Host64LaunchAttempted=0` as normal for the native x64 in-process D3D11 route instead of assuming the helper failed.
+- Preserves the tester's working REVENANT path; the triggering report completed 38/38 texture jobs independently of the Present failure.
+- Replaces the public top-level `UNCANNY.cmd` entry point with native **`UNCANNY.exe`**. Maintenance CMD tools remain only for install/diagnostics where appropriate.
+- Preserves Hotfix 10 ELYSIUM pass/slider wiring, PCSX2 wrapper behavior, engine switching, provider policy, updater/install/rollback and protected shader resources.
+
+The same PCSX2/GPU setup still requires final hardware retest after the exact release binaries are built.
+
+# v0.20.0-alpha.1 ELYSIUM - 2026-09-17
+
+- UNCANNY 4 ELYSIUM promoted to the current ABI 140 engine.
+- Final launcher/install/manual-add/PCSX2 discovery polish.
+- ELYSIUM/Lucid engine selector fixed to the current ABI and made per-game/transactional.
+- Release branding, Control Deck diagnostics and public package identity unified.
+- Existing working rendering, REVENANT, provider and rollback paths preserved.
+
+# Alpha RC2 Hotfix 2 — 2026-09-16
+
+`release-alpha.rc2.hotfix.2`, ABI 140, helper protocol 2. No new compatibility certification.
+
+- Acknowledge helper entry/IPC before explicit System32 DXGI/D3D12 loading; remove those graphics DLLs from the helper's loader import table.
+- Write a capped helper bootstrap journal for failures before shared-state initialization; decode early exit/loader errors without reusing the parent's starting message as child evidence.
+- Monitor helper wall-clock startup/request deadlines outside Present, using existing ownership locks; retain explicit closed-session evidence and trace ages.
+- Latch D3D9 lost-device cleanup once per device and clear it after successful Reset/Present, instead of repeated teardown on every lost-device Present.
+- Add CPU-only startup fixtures for 32-/64-bit parents with exact helper IPC and invalid-header/parent rejection. No provider counters may increase in this test.
+- Independently query reported helper PID/image/parent in saved diagnostics and include the matching bootstrap journal where available.
+- Preserve HF1 shared-resource ownership fallback, protected shaders, provider policy, REVENANT safety/inference evidence, deep-neural processing and historical engine bytes.
+- Windows/GPU execution remains NOT RUN. The supplied RE4 report still has zero actual Feature-18 and asset inference success; no finished official release is claimed.
+
+# Alpha RC2 Hotfix 1 — 2026-09-15
+
+`release-alpha.rc2.hotfix.1`, ABI 140. Targeted hardware-derived legacy neural startup repair.
+
+- Preserves the D3D12-owned D3D11 interop route when accepted.
+- If `OpenSharedResource1` rejects that transport, reverses only transport ownership: D3D11 creates an NT-shared RT/SRV texture and D3D12 opens it on the same adapter.
+- Keeps neural output work on a private D3D12 UAV; rejected/failed neural work never overwrites the last accepted shared output.
+- Adds a focused `RUN-LEGACY-SHARING-CHECK.cmd` transport-only hardware fixture.
+- Preserves RC2 bounded host diagnostics, REVENANT repair path and honest 1–3 neural-stage accounting.
+- Windows/NVIDIA legacy Feature-18 success and PCSX2 visible REVENANT use remain hardware acceptance gates.
+
+# Alpha RC2 — 2026-09-15
+
+`release-alpha.rc2`, ABI 140. Continues the verified RC1 private/public pair.
+
+- Replaced masked legacy waiting status with actual process/provider/resource/fence transitions, numeric failures, request receipts and bounded timeouts. Added compatible SDR format cases; no claim of universal legacy success.
+- Repaired PCSX2 growing/fragmented-log identity handling and pending reload retention. Preserved actual inference errors and independently hashed source/input/raw output/commit evidence. Checker confirmation no longer certifies neural reconstruction.
+- Added original independent full-frame source-detail and source-tone neural refinements, real per-stage GPU query recording and an adaptive motion/cost/VRAM policy. Extra-stage execution and quality remain unverified on GPU.
+- Updated one-click saved diagnostics, current acceptance entry points, ABI/provenance/public-private packaging. Preserved prior protection and historical engine bytes.
+
+## Historical Alpha RC1 notes
+
+# Alpha RC1 — 2026-09-15
+
+`release-alpha.rc1`, ABI 139. Continues Repair 8 Hotfix 1; real historical Lucid remains ABI 136.
+
+Added native D3D9 fallback and D3D10/10.1 Feeder/image routes, D3D10 Home compositor, same-adapter x64-helper isolation, current-frame/timeout policy and explicit transfer telemetry. Preserved working native D3D11/12 processing and first-choice On12 behavior.
+
+Added PCSX2 worker supervision and startup errors, pending-request recovery, current-session paired game identity, captured-original cyan proof and journaled exact-absence recovery. Fixed AI-core repair so a failed rollback cannot delete its backup; verified all pinned engine/model hashes before promotion and bounded download time.
+
+Refreshed current Control Deck status/layout and listed existing hotkeys. Added authenticated shader-resource encryption, protected release flags and local Windows decryption/proof fixtures. No screenshot/clip/updater extras. Hardware acceptance remains required; no exact-revision game certification is claimed.
+
+---
+
+## Preserved historical notes
+
+## Repair 8 Hotfix 1
+
+Provider-setup trailing-backslash argument fix; helper stage diagnostics; focus-aware panel fallback and in-game retry. No hardware certification.
+
 # Changelog
 
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.4
+## Repair 8 — release-repair.8 — ABI 138
 
-- Fixed the HF18.3 no-launch regression on Restricted/AllSigned PowerShell policy.
-- Native `UNCANNY.exe` now uses process-scoped `ExecutionPolicy Bypass` only for its child bootstrap; persistent machine/user policy is not changed.
-- Packaged `UNCANNY.exe` normal startup smoke: **PASS**.
-- Packaged `UNCANNY.exe` under AllSigned policy: **PASS**.
-- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
-- Preserved installed/cache/manual StrictMode path hardening and the official cropped silver UNCANNY U PNG.
-- Preserved stale-Lucid migration, PCSX2, REVENANT, Universal API Bridge, rollback, and HF18 rendering behavior.
-- Fixed updater hotfix serial ordering: HF18.3 → 1830; HF18.4 → 1840.
-- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35399115389
-- Source: `b865fab000762e7e3015484945d1f1af5d96fe52`
-- SHA-256: `c874239bbd41cfa6c271db10e364f97c241bdc5d5d55c2ff50542d12c6b8f417`
-- Signing status: **unsigned**; SmartScreen/Unknown Publisher may remain until trusted Authenticode signing is configured.
+Test candidate, not official. Continues the saved Repair 8 source checkpoint and Repair 7 runtime, not a baseline rewrite.
 
----
+### Asset safety and recovery
+- Fixed WIC encoder pixel-format negotiation; convert into the actual negotiated format and verify exact decoded BGRA/alpha before atomically publishing PNG output.
+- Added stable-source settling and isolated inference input snapshots.
+- Reject significant source identity/alpha disagreement and unsupported micro-pattern variance before commit. These are conservative heuristics, not semantic correctness guarantees.
+- Audit previous receipt-owned replacements during processing; quarantine rejected files after verified backup.
+- Added confirmed, receipt-scoped restoration of original PCSX2 textures. Generation pauses; unknown/user-edited/busy files are retained.
+- Batch automatic reload input and defer it while the panel is visible.
 
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.3
+### Rendering and controls
+- Select a GPU-completed D3D12 recording slot independently of current swap-chain buffer index; fence safety remains mandatory. Keep a safe bypass if every slot is busy.
+- Return the actual submission fence through D3D9On12.
+- Try another available D3D11 neural recording slot rather than unnecessarily skipping a frame.
+- Added an integrated Home engine selector for actual current/Lucid builds; full runtime switch remains next-launch.
+- Preserve cursor, scrolling/drag/resize, provider-discovery, x64-helper and Ghosting Guard work from Repair 7.
 
-- Fixed launcher startup/ShowDialog crashes caused by missing legacy discovery properties under StrictMode.
-- Hardened startup/selection/action event callbacks so malformed cached/discovery entries are skipped and logged.
-- Replaced the synthetic vector-style launcher badge with the official tightly cropped silver UNCANNY U emblem PNG.
-- Added explicit engine-choice tracking via `UserSelected=1`.
-- Migrated stale unmarked `release-fix.5` preferences to Automatic/ELYSIUM during install and launch.
-- Prevents a successful current update from silently restoring the old Lucid HOME menu unless Lucid was explicitly selected.
-- Hardened cached/manual/installed-game path normalization so missing `.Path`/schema properties cannot crash the launcher.
-- Removed `-ExecutionPolicy Bypass` from the native desktop EXE bootstrap; launch remains hidden/non-interactive.
-- Added Windows stale-Lucid migration regression and final packaged-launcher startup survival smoke test.
-- Preserved HF18.2 clean package layout and HF18 rendering/Universal API Bridge behavior.
-- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35393751767
-- Source: `47841050ac5fbb04ffaa90823e2d0adc5c9236da`
-- SHA-256: `9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21`
-- Defender final ZIP + extracted tree: **PASS / 0 detections**
+### Evidence
+- Windows production binaries rebuilt from the current source with recorded hashes.
+- Portable safety/slot tests executed on the build host; WIC/owned-restore regression compiled for Windows.
+- Windows gameplay, GPU inference, fullscreen quality, performance and external compatibility have not been executed here.
 
----
+Not included: universal scene/PBR remodeling, generic D3D12 REVENANT, native inputs across all games, all named historical generations, or instantaneous whole-runtime engine swapping.
 
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1
+## Prior releases
 
-- Fixed install/update preflight that could appear stuck at 2%.
-- Replaced repeated full WMI process enumeration with bounded local target-folder process inspection.
-- Added granular 3/4/5/6/7% preflight progress.
-- Fixed updater status-button clipping with a wider compact control and shorter status labels.
-- Replaced launcher monochrome badge with the current full-color ELYSIUM emblem.
-- Preserved HF18 rendering and Universal API Bridge behavior.
-- Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35383983512
-- x86/x64 production builds: **PASS**
-- HLSL + WARP rendered-quality gate: **PASS**
-- Windows installer/rollback/manual-add: **PASS**
-- ZIP integrity/hash: **PASS**
-- Microsoft Defender ZIP + extracted tree: **PASS / 0 detections**
-- Source revision: `458dc5820beb9322c7ee115ed98fd07a7b1b0c77`
-- SHA-256: `82257f00d4c323853fef1b5576578d6b0b025b44829c17027c46019ece726777`
-
----
-
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18
-
-- Generalized D3D11 native-Present startup stabilization to require 120 successful native Presents before optional preprocessing joins a new swapchain.
-- Expanded the Universal API Bridge with deterministic capability, ownership, route-group, processing-source and fail-open handling across legacy and modern graphics routes.
-- Added creation-captured D3D12 queue/backbuffer/state evidence; ambiguous ownership is never guessed.
-- Preserved conservative Vulkan/OpenGL/legacy presentation and lifecycle observation without claiming unsupported full ELYSIUM/neural parity.
-- Added visible Control Deck info/help metadata for live image controls.
-- Strengthened source-backed facial reconstruction, source-hue/color recovery, material definition, edge recovery and Microtexture response.
-- Fixed Motion Protection Strength being masked by Ghosting Guard; both now remain independently effective.
-- Added clean-room local exposure fusion, source-radiance recovery, depth-proven relighting/contact shaping, contrast-adaptive clarity/sharpening and source-directed subpixel edge resolve.
-- Improved installer verification diagnostics, updater release-name matching and ownership-safe uninstall cleanup.
-- Added D3D11 WARP rendered visual-quality acceptance: all 42 exposed floating image controls must change rendered output above the meaningful response floor, with targeted face/color/denoise/edge/reference-quality checks.
-- Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35377702421
-- x86/x64 production + legacy + acceptance builds: **PASS**.
-- Windows HLSL compile: **PASS**.
-- WARP rendered visual-quality gate: **PASS**.
-- Manual Add / installer / rollback regressions: **PASS**.
-- ZIP integrity/hash verification: **PASS**.
-- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
-- Source revision: `0c5de983a400dd77d85992c6a5c1d37bcc3139eb`.
-- Runtime revision: `release-alpha.1.elysium-engine45-hf18`.
-- BuildId: `elysium45-hf18`; updateSerial: `1800`.
-- ZIP SHA-256: `21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489`.
-
-Real-game visual, motion and performance acceptance remains title/GPU/driver specific. No proprietary restricted shader implementation is bundled.
-
----
-
-
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF16
-
-- Added bounded post-FX fault backoff that preserves native Present during repeated rendering/device instability.
-- Added staged session-local ELYSIUM recovery: safer Adaptive Realism/Performance Guard first, then reduced Reference Stack/pass depth/optional DLSS 5 cost if instability persists.
-- Saved user settings are not overwritten by recovery.
-- Added sustained-clean-frame requirement before restoring higher-cost rendering to prevent oscillation.
-- Added diagnostics: `PostFxRecoveryFaults`, `PostFxRecoveryCleanFrames`, `PostFxRecoveryBackoffMs`.
-- Preserved all HF15 launcher/library/rollback/Adaptive Realism/Motion Guard/PCSX2/REVENANT work.
-- Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35305423361
-- x86/x64 production + acceptance builds: **PASS**.
-- Windows HLSL compile: **PASS**.
-- Manual Add game persistence: **PASS**.
-- Dynamic install/remove rollback: **PASS**.
-- ZIP integrity/hash verification: **PASS**.
-- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
-- Source revision: `6c7ee4675a110fceb3c2c5bdddf82eb4d2745471`.
-- ZIP SHA-256: `fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`.
-
----
-
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF15
-
-- Added persisted **Scan on startup** control; disabling it prevents discovery at boot while preserving cached/manual entries.
-- Fixed **Add game** persistence so manual entries survive reboot independently of scanning.
-- Canonicalized Windows short/long path aliases before manual-library deduplication.
-- Added a Windows manual-library preflight to fail release validation before expensive build/package work.
-- Preserved per-target BuildId update detection, full-stack Remove, rollback, PCSX2, REVENANT and DLSS 5 routing.
-- Expanded Adaptive Realism with Shared Scene Evidence Bus, split contact/diffuse lighting, Emissive Bounce Guard, Black Floor Intelligence, asymmetric local contrast, Legacy Cinema Reconstruction v2 and High/Insane Depth Material Sculpt.
-- Motion Guard, Ghosting Guard and X2.5 clean-motion behavior remain protected.
-- Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35302273751
-- Windows manual Add game persistence: **PASS**.
-- Windows install/remove rollback: **PASS**.
-- x86/x64 production builds and Engine 4.5 compiled acceptance: **PASS**.
-- HLSL compilation and PowerShell parse: **PASS**.
-- Package/restricted-shader audits and ZIP integrity/hash verification: **PASS**.
-- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
-- Source revision: `b253880333ce2b8e4036cd5e53a6dcaf3bc69f8d`.
-- ZIP SHA-256: `8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`.
-
----
-
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 Hotfix 13
-
-- Remove now unwinds every recorded UNCANNY install layer for the exact selected target.
-- Generated ReShade/OptiScaler/dlss5-feed logs no longer block restore.
-- Original/user-file conflict protection remains strict.
-- Restored the UNCANNY launcher emblem as an inline vector.
-- Adaptive Realism now exposes OFF / LOW / BALANCED / HIGH / INSANE in the live Control Deck.
-- New installs seed INSANE + Reference Stack.
-- Strengthened source/evidence-bounded AO, indirect diffuse/specular response, exposure adaptation, local contrast and meso clarity.
-- Regenerated protected shader resources and passed authentication/tamper checks.
-- Windows dynamic two-layer rollback and changed-ReShade.log regressions: PASS.
-- Windows HLSL compile: PASS.
-- Microsoft Defender: PASS / 0 detections.
-- Source revision: `16ee9cb8ef9cdb9f038577884bb023909743d1e1`.
-- ZIP SHA-256: `843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811`.
-
----
-
-All notable public UNCANNY alpha changes are documented here.
-
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Adaptive Realism
-
-Runtime revision: `release-alpha.1.elysium-engine45`  
-ABI: `143`
-
-### Adaptive Realism
-
-- Added five live quality levels: **OFF / LOW / BALANCED / HIGH / INSANE**.
-- Added capability-tiered scene handling instead of assuming identical data on every API.
-- Tier A uses trustworthy depth + native motion.
-- Tier B uses trustworthy depth + UNCANNY optical flow.
-- Tier C uses trustworthy depth with conservative spatial lighting and no temporal history.
-- Tier D uses tonal/spatial enhancement only when trustworthy scene depth is unavailable.
-- Added scene-adaptive exposure, highlight/shadow response, local contrast, clarity and bounded saturation correction.
-- Added depth-aware contact occlusion and bounded screen-space diffuse/specular support where the scene evidence is trustworthy.
-- Added performance-guard degradation that reduces samples/intensity before disabling the feature.
-
-### Motion / temporal behavior
-
-- Motion Guard and Ghosting Guard remain authoritative.
-- Temporal history is reduced/rejected when motion confidence is low, depth disagrees, source/history structure disagrees or disocclusion is detected.
-- X2.5 now deliberately carries the lowest temporal-history weight for the cleanest motion behavior.
-- `ENABLE UNCANNY OFF` remains the master bypass.
-- UNCANNY pass depth remains separate from DLSS 5 pass depth.
-
-### API behavior
-
-- D3D11 can use capability-scored discovered depth plus UNCANNY optical flow and is the strongest current Adaptive Realism route.
-- D3D12 preserves runtime support but does not claim generic trustworthy scene depth where the route cannot establish it; Adaptive Realism falls back accordingly.
-- D3D9 preserves the legacy runtime path and uses conservative fallback when trustworthy depth is unavailable.
-- D3D10/10.1 remain compatibility paths with behavior determined by available evidence.
-
-### Preserved
-
-- Hotfix 11 D3D11 fail-open startup behavior.
-- native root-level `UNCANNY.exe` launcher.
-- launcher/game scanning and exact-path handling.
-- install/update/rollback.
-- PCSX2 integration.
-- Control Deck.
-- REVENANT.
-- provider handling and DLSS 5 cooperation.
-- protected runtime/package model.
-
-### Release checks
-
-- Full Python regression suite: PASS.
-- Engine 4.5 compiled acceptance: **22 checks PASS**.
-- Adaptive Realism compiled tests: **x86 PASS / x64 PASS**.
-- x86/x64 production builds: PASS.
-- protected-resource verification: PASS.
-- Hotfix 11/12 regressions: PASS.
-- dynamic Windows install + rollback regression: PASS.
-- strict public-package audit: PASS.
-- final ZIP CRC/member-hash verification: PASS.
-- restricted third-party shader source/package audit: PASS.
-- Microsoft Defender extracted-package scan: **0 detections**.
-- Microsoft Defender completed-ZIP scan: **0 detections**.
-
-Release ZIP SHA-256: `f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
-
-No paid/restricted Marty McFly / Pascal Gilcher shader source or binaries are bundled. Real-game visual/performance acceptance remains a hardware/title-specific test requirement.
-
----
-
-## v0.20.0-alpha.1 — ELYSIUM Hotfix 11
-
-Runtime revision: `release-alpha.1.elysium-hotfix11`  
-ABI: `141`
-
-### Tester-derived D3D11 repair
-
-- Fixed a PCSX2 x64 / D3D11 first-frame black-screen failure class where `PRESENT_PATCH_OK` was followed by one Present attempt, zero successful Presents, no advancing Present stream and 0 FPS.
-- Direct D3D11 startup now fails open: native `Present` / `Present1` receives the initial presentation opportunities before optional UNCANNY image processing or in-frame Control Deck composition can run.
-- D3D11 Feature-18 / DLSS 5 interop now waits for a healthy Present stream instead of becoming part of first-frame startup.
-- While neural startup is deferred, the current live source frame remains authoritative; stale neural output is not substituted.
-- Added `PRESENT_PREPROCESS`, `PRESENT_NATIVE_CALL`, `PRESENT1_PREPROCESS`, `PRESENT1_NATIVE_CALL` and `PRESENT_SUCCEEDED` diagnostic stages.
-- Corrected the interpretation of `Host64LaunchAttempted=0` for the normal native x64 D3D11 route: a separate helper process is not required for every x64 session.
-- Preserved the independent REVENANT path; the triggering tester report completed 38/38 texture jobs while the swapchain presentation path was stalled.
-
-### Security / packaging correction
-
-- Removed the public `diagnostics/` executable payload.
-- Removed `revenant-commit32.exe` and `revenant-commit64.exe` from public distribution. These are internal acceptance-test harnesses, not runtime requirements.
-- Internal diagnostic/test binaries remain available to CI but are no longer part of the user-facing release ZIP.
-- Added a Microsoft Defender release gate on a fresh GitHub-hosted Windows runner.
-- Cleaned runtime tree scan: **PASS / 0 detections**.
-- Final completed ZIP scan: **PASS / 0 detections**.
-
-### Launcher / package
-
-- Added native root-level **`UNCANNY.exe`** as the normal public launcher.
-- Removed the old top-level `UNCANNY.cmd` from the normal user launch path.
-- Preserved the already-published UNCANNY 2.5 Lucid ABI 136 engine bundle by its existing manifest hashes.
-
----
-
-## v0.20.0-alpha.1 — ELYSIUM Hotfix 10
-
-Runtime revision: `release-alpha.1.elysium-hotfix10`  
-ABI: `141`
-
-### Fixed
-
-- HOME-page **UNCANNY PASSES** now controls the native ELYSIUM reconstruction stack instead of accidentally writing the DLSS 5 pass-depth control.
-- **DLSS 5 PASSES** remains independent on the DLSS 5 page.
-- ELYSIUM structural, surface, face, material, depth/form, color, edge, distant-detail and texture-relief controls are exposed through the live Control Deck and persisted control registry.
-- Generated and protected shader-control layouts are synchronized to the current ELYSIUM layout.
-
-### Preserved
-
-- Existing v0.20 launcher UI and game scanning.
-- Install/update/rollback flow.
-- PCSX2 wrapper behavior.
-- REVENANT behavior and provider routing.
-- Engine selection and source-protection model.
-
----
-
-## v0.19.0-alpha.1 — RC2 Hotfix 2
-
-- Improved legacy DLSS 5/Feature-18 helper startup evidence and monitoring.
-- Improved D3D9 reset/device-loss behavior.
-- Preserved deeper reconstruction scheduling, Motion Guard/Ghosting Guard and REVENANT compatibility work.
+Preserved private history and the Lucid bundle remain unchanged. Old reports are historical evidence, not certification of Repair 8.

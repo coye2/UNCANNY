@@ -4,15 +4,17 @@
 
 - Fixed launcher startup/ShowDialog crashes caused by missing legacy discovery properties under StrictMode.
 - Hardened startup/selection/action event callbacks so malformed cached/discovery entries are skipped and logged.
-- Replaced raster/poster badge handling with a native vector ELYSIUM emblem.
+- Replaced the synthetic vector-style launcher badge with the official tightly cropped silver UNCANNY U emblem PNG.
 - Added explicit engine-choice tracking via `UserSelected=1`.
 - Migrated stale unmarked `release-fix.5` preferences to Automatic/ELYSIUM during install and launch.
 - Prevents a successful current update from silently restoring the old Lucid HOME menu unless Lucid was explicitly selected.
+- Hardened cached/manual/installed-game path normalization so missing `.Path`/schema properties cannot crash the launcher.
+- Removed `-ExecutionPolicy Bypass` from the native desktop EXE bootstrap; launch remains hidden/non-interactive.
 - Added Windows stale-Lucid migration regression and final packaged-launcher startup survival smoke test.
 - Preserved HF18.2 clean package layout and HF18 rendering/Universal API Bridge behavior.
-- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35391373976
-- Source: `75e8d346bea6fb30d2a20e50dd8e7e0170b77760`
-- SHA-256: `4f252c9c21891ecab2f7ecc37f95a0149854f4a2d18f2300402366f515169428`
+- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35393751767
+- Source: `47841050ac5fbb04ffaa90823e2d0adc5c9236da`
+- SHA-256: `9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21`
 - Defender final ZIP + extracted tree: **PASS / 0 detections**
 
 ---

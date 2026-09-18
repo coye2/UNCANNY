@@ -10,33 +10,23 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18**  
-Runtime: `release-alpha.1.elysium-engine45-hf18` · BuildId `elysium45-hf18` · updateSerial `1800` · ABI `143`
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1**  
+Runtime: `release-alpha.1.elysium-engine45-hf18` · BuildId `elysium45-hf18.1` · updateSerial `1810` · ABI `143`
 
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18  
-Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip`  
-SHA-256: `21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489`
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.1  
+Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.1.zip`  
+SHA-256: `82257f00d4c323853fef1b5576578d6b0b025b44829c17027c46019ece726777`
 
-HF18 closes the current Universal API Bridge and tester-feedback push while preserving the proven HF17 fail-open baseline.
+## HF18.1
 
-## HF18
+- Fixes install/update preflight that could appear frozen at 2%.
+- Replaces repeated full WMI process enumeration with bounded local target-folder process inspection.
+- Adds real 3/4/5/6/7% preflight progress.
+- Fixes updater status-button clipping.
+- Uses the current full-color ELYSIUM launcher emblem.
+- Preserves HF18 rendering and Universal API Bridge behavior.
 
-- Universal D3D11 startup stabilization waits for **120 successful native Presents** before optional preprocessing joins the path, reducing first-frame/black-screen risk without title guessing.
-- Universal API Bridge routing now separates presentation ownership from processing-source evidence and fails open instead of guessing unsupported ownership/capability state.
-- D3D12 queue/backbuffer/state evidence is captured from creation/lifecycle events rather than inferred.
-- Vulkan/OpenGL and legacy API support remains conservative: UNCANNY records compatible lifecycle/presentation evidence without claiming full ELYSIUM/neural parity where it is not proven.
-- Facial reconstruction, source-hue/color recovery, material/edge reconstruction and Microtexture have materially stronger source-backed response.
-- Motion Protection Strength and Ghosting Guard now remain independently effective instead of one masking the other.
-- Added clean-room local exposure fusion, source-radiance recovery, depth-proven relighting/contact shaping, contrast-adaptive clarity and source-directed subpixel edge resolve.
-- Every live Control Deck image control has visible info/help text.
-- Installer verification reports exact failure causes without asking users to disable security software; updater naming and ownership-safe uninstall residue cleanup are fixed.
-- All **42 exposed floating image controls** are rendered through the D3D11 WARP visual-quality matrix and must clear a meaningful response floor.
-- Exact HF18 candidate passed x86/x64 production builds, HLSL, WARP visual-quality gates, installer/rollback/manual-add, ZIP integrity and Microsoft Defender scans with 0 detections.
-
-Source revision: `0c5de983a400dd77d85992c6a5c1d37bcc3139eb`.  
-Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35377702421
-
-Real-game visual quality, motion behavior and performance still require title/GPU/driver-specific testing.
+Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35383983512
 
 ## Adaptive Realism
 
@@ -99,7 +89,7 @@ REVENANT is UNCANNY's experimental persistent asset-reconstruction system. PCSX2
 
 ## Install
 
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip` from the latest release.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.1.zip` from the latest release.
 2. Extract the ZIP completely.
 3. Run **`UNCANNY.exe`** from the root of the extracted folder.
 4. Let UNCANNY scan, or add the real game/emulator executable manually.

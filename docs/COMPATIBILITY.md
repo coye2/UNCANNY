@@ -4,6 +4,20 @@ UNCANNY is under active alpha development. Compatibility claims are separated by
 
 Current public runtime: `release-alpha.1.elysium-engine45` · ABI `143`.
 
+## HF18 Universal API Bridge status
+
+HF18 uses a capability/evidence model rather than assuming every graphics API exposes equivalent scene data or ownership.
+
+- **D3D11:** optional preprocessing waits for 120 successful native Presents on a new swapchain before joining the path. Native Present remains the fail-open baseline.
+- **D3D12:** queue/backbuffer/state evidence is captured from actual creation/lifecycle events; UNCANNY does not guess an unrelated queue or processing source.
+- **D3D9 / D3D8 / D3D10-family:** legacy routes are normalized through the bridge and remain capability-tiered.
+- **Vulkan / OpenGL:** lifecycle/presentation compatibility observation is present, but HF18 does **not** claim full ELYSIUM/neural-processing parity on these APIs.
+- **AMD / Intel:** the ELYSIUM image-processing path is vendor-neutral where the API route is available. DLSS 5 remains NVIDIA/provider-specific. CI's D3D11 WARP validation is not an AMD or Intel hardware test.
+- **Protected/anti-cheat-sensitive titles:** UNCANNY disables optional processing conservatively rather than attempting to evade protection mechanisms.
+
+The exact HF18 candidate passed D3D11 WARP rendered validation for all 42 exposed floating image controls plus x86/x64 production, HLSL, installer/rollback, package-integrity and Defender gates. Real-game compatibility and performance still require title/GPU/driver-specific testing.
+
+
 ## Evidence terminology
 
 - **Detected** — an API, provider or file was found.

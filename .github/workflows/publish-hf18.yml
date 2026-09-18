@@ -19,13 +19,19 @@ jobs:
           $meta=Get-Content -LiteralPath '.release-staging/HF18-SOURCE.json' -Raw | ConvertFrom-Json
           if(-not $meta.url -or -not $meta.sha256){ throw 'HF18 source metadata missing URL or SHA-256.' }
           New-Item -ItemType Directory -Path payload -Force | Out-Null
+          $outer=Join-Path $PWD 'payload/HF18-VALIDATED-ARTIFACT.zip'
+          Invoke-WebRequest -Uri $meta.url -OutFile $outer -UseBasicParsing
+          New-Item -ItemType Directory -Path 'payload/artifact' -Force | Out-Null
+          Expand-Archive -LiteralPath $outer -DestinationPath 'payload/artifact' -Force
+          $inner=Get-ChildItem -LiteralPath 'payload/artifact' -Filter 'UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip' -Recurse -File | Select-Object -First 1
+          if(-not $inner){ throw 'Validated artifact did not contain the HF18 public ZIP.' }
           $zip=Join-Path $PWD 'payload/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip'
-          Invoke-WebRequest -Uri $meta.url -OutFile $zip -UseBasicParsing
+          Copy-Item -LiteralPath $inner.FullName -Destination $zip -Force
           $actual=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
           $expected=([string]$meta.sha256).ToLowerInvariant()
-          if($actual -ne $expected){ throw "HF18 artifact SHA-256 mismatch: $actual != $expected" }
+          if($actual -ne $expected){ throw "HF18 inner ZIP SHA-256 mismatch: $actual != $expected" }
           "$actual  UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip" | Set-Content -LiteralPath ($zip+'.sha256') -NoNewline
-          Write-Host "PASS: exact HF18 artifact hash $actual"
+          Write-Host "PASS: extracted exact validated HF18 public ZIP $actual"
 
       - name: Verify closed-source public package boundary
         shell: pwsh

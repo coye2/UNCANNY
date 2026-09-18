@@ -1,19 +1,21 @@
 # Latest UNCANNY public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13.1**
 
 - Runtime: `release-alpha.1.elysium-engine45`
 - ABI: `143`
-- Source revision: `16ee9cb8ef9cdb9f038577884bb023909743d1e1`
+- Source revision: `6d9b367bb4ef6506ff33be7023c05634019e78f2`
 - Published: 2026-09-17
 - Latest release: https://github.com/coye2/UNCANNY/releases/latest
 - Tagged release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
 - Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-- SHA-256: `843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811`
+- SHA-256: `69face793720c1d832afb6d8ea7d69091e5475ce231c7c62f84beef02c96675a`
 
-## Hotfix 13
+## Hotfix 13.1
 
-Hotfix 13 fixes the tester-reported remove/restore failures and pushes Adaptive Realism harder.
+The launcher startup crash from the inline logo XAML `Path.FillRule` member is fixed in the current package.
+
+Hotfix 13.1 fixes the tester-reported remove/restore failures and pushes Adaptive Realism harder.
 
 - Remove restores the complete recorded UNCANNY install stack for the selected target.
 - Runtime-generated graphics logs such as `ReShade.log` may change without blocking uninstall.

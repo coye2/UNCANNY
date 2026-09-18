@@ -15,12 +15,24 @@ UNCANNY is a Windows real-time reconstruction/remaster runtime for games and emu
 
 - Fixes packaged **Scan PC** using the wrong root. Public PowerShell lives under `runtime\`; the scanner now resolves `UNCANNY-InstallCommon.ps1` and `UNCANNY-Library.ps1` beside itself instead of looking in the clean ZIP root.
 - Cache/manual/scan records are canonicalized through guarded property access before WPF binding. Legacy records with `Path`, `Exe`, missing optional fields, or stale schemas can no longer blank the library.
+- **Manual Add Game targets are authoritative through later scans** instead of being dropped by heuristic helper filtering.
 - The official silver UNCANNY U PNG is still the real asset. The launcher re-encodes it through a **32-bit ARGB** surface before WPF loads it, fixing the tester-reproduced “image format is unrecognized” failure.
 - Recovered launcher failures now log the PowerShell stack and invocation position instead of only the exception name.
 - HF18.4’s process-scoped startup recovery is preserved. UNCANNY does not change persistent machine/user execution policy and does not disable Defender or SmartScreen.
 - Installed-game path hardening, updater ordering, stale-Lucid migration, PCSX2, REVENANT, rollback, Universal API Bridge, Motion Guard/Ghosting Guard and the HF18 rendering stack are preserved.
 
 The release gate now executes the **packaged** launcher with malformed/legacy cache records, verifies the logo actually loads, invokes the **packaged scanner**, checks the library render log, then runs normal startup, AllSigned startup, WARP, ZIP/hash and Defender gates.
+
+## Verified release
+
+- Source: `8414a99010fff395c117baaadb77d63dbde946bf`
+- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35404395219
+- Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip`
+- SHA-256: `bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9`
+- Official Library logo decode: **PASS**
+- Packaged scanner + manual-target retention: **PASS**
+- Normal + AllSigned startup: **PASS**
+- Defender: **PASS / 0 detections**
 
 ## Status
 

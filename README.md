@@ -10,23 +10,24 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.2**  
-Runtime: `release-alpha.1.elysium-engine45-hf18.2` · BuildId `elysium45-hf18.2` · updateSerial `1820` · ABI `143`
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.3**  
+Runtime: `release-alpha.1.elysium-engine45-hf18.3` · BuildId `elysium45-hf18.3` · updateSerial `1830` · ABI `143`
 
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.2  
-Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.2.zip`  
-SHA-256: `2cc50a82e5e30b206e7de2a307f3fb70c31895f088de85edc332dea3fb60b1e4`
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.3  
+Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip`  
+SHA-256: `4f252c9c21891ecab2f7ecc37f95a0149854f4a2d18f2300402366f515169428`
 
-## HF18.2
+## HF18.3
 
-- Fixes launcher post-install/update refresh when older or fresh scan objects do not already contain `InstalledBuildId`.
-- Normalizes cache/manual/scan records to one launcher schema.
-- Uses direct PE-table target inspection instead of loading an entire game EXE into memory.
-- Corrects the full-color ELYSIUM emblem crop/centering.
-- Cleans the release root: implementation PowerShell is under **runtime**, maintenance commands under **Tools**, and **UNCANNY.exe** stays at root.
-- Preserves HF18 rendering and Universal API Bridge behavior.
+- Fixes the launcher startup crash caused by missing legacy/discovery object properties under PowerShell StrictMode.
+- Startup, selection and action callbacks recover/log malformed records instead of tearing down WPF `ShowDialog()`.
+- Uses a native vector purple/green ELYSIUM emblem in the launcher.
+- Migrates stale unmarked Lucid engine preferences back to Automatic/ELYSIUM.
+- Only explicit current `UserSelected=1` Lucid choices may preserve the legacy engine.
+- Adds a packaged-launcher survival smoke test against the final ZIP.
+- Preserves the HF18.2 clean `runtime\` / `Tools\` package layout and HF18 rendering stack.
 
-Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35387436459
+Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35391373976
 
 ## Adaptive Realism
 

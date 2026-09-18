@@ -90,7 +90,7 @@ REVENANT is UNCANNY's experimental persistent asset-reconstruction system. PCSX2
 
 ## Install
 
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.2.zip` from the latest release.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip` from the latest release.
 2. Extract the ZIP completely.
 3. Run **`UNCANNY.exe`** from the root of the extracted folder.
 4. Let UNCANNY scan, or add the real game/emulator executable manually.

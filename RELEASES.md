@@ -2,20 +2,23 @@
 
 ## Current public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF15**
 
 - Runtime revision: `release-alpha.1.elysium-engine45`
+- BuildId: `elysium45-hf15`
 - ABI: `143`
-- Source revision: `16ee9cb8ef9cdb9f038577884bb023909743d1e1`
+- Source revision: `b253880333ce2b8e4036cd5e53a6dcaf3bc69f8d`
 - Windows package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`
-- SHA-256: `843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811`
+- SHA-256: `8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`
 - Release: https://github.com/coye2/UNCANNY/releases/latest
 
-Hotfix 13 fixes full-stack Remove/restore, mutable generated-log conflicts, restores the launcher logo, and pushes Adaptive Realism harder with OFF / LOW / BALANCED / HIGH / INSANE plus INSANE + Reference Stack defaults.
+HF15 adds persistent optional startup scanning, authoritative manual-game persistence with Windows path canonicalization, and the completed ELYSIUM 4.5 flagship Adaptive Realism stack.
 
-Dynamic Windows rollback, changed-ReShade.log restore, HLSL compile, package audit and Defender all passed.
+The exact candidate passed Windows manual-add persistence, install/remove rollback, HLSL compilation, PowerShell parsing, x86/x64 production builds, package audits, ZIP integrity/hash verification and Microsoft Defender scans with 0 detections.
 
 ## Previous release history
+
+Earlier ELYSIUM Hotfix 13/13.1, Hotfix 11 and v0.19 alpha releases remain available in GitHub Releases for historical testing.
 
 ## Private source/workspace
 

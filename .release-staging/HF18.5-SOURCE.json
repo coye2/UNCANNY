@@ -1,0 +1,9 @@
+{
+  "format": "UNCANNY-HF18.5-PUBLIC-HANDOFF-1",
+  "url": "https://sdmntprcentralus.oaiusercontent.com/files/00000000-9f84-81f5-9c6a-ff23bdeac24d/raw?se=2026-09-18T23%3A17%3A02Z&sp=r&sv=2026-02-06&sr=b&scid=b03dceaf-9ef3-5899-bff3-85c1ab4c8a11&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-18T20%3A18%3A15Z&ske=2026-09-19T20%3A18%3A15Z&sks=b&skv=2026-02-06&sig=HFEE3/hJ//YcmyMqtb3AfraU0b0MyK9NWIiRP8t3%2BY0%3D",
+  "artifact_id": 10572001719,
+  "sha256": "bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9",
+  "package": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip",
+  "source_revision": "8414a99010fff395c117baaadb77d63dbde946bf",
+  "validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35404395219"
+}

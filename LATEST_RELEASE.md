@@ -1,32 +1,17 @@
 # Latest UNCANNY public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF16**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF17**
 
-- Runtime: `release-alpha.1.elysium-engine45`
-- BuildId: `elysium45-hf16`
+- BuildId: `elysium45-hf17`
 - ABI: `143`
-- Source revision: `6c7ee4675a110fceb3c2c5bdddf82eb4d2745471`
-- Published: 2026-09-18
-- Latest release: https://github.com/coye2/UNCANNY/releases/latest
-- Tagged release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45
+- Source revision: `192d0c652b2ef3dee8dcb542a93ed816cc6cea9f`
 - Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
-- SHA-256: `fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`
+- SHA-256: `cef5daff98e611e9da27f9365a660f14f82208238ce3d277db3f1088ba1a304e`
 
-## HF16
+HF17 fixes the post-install/update launcher crash caused by legacy or malformed library/cache entries, adds fail-open post-install UI refresh, adds a Fallout 4 D3D11 safe startup route, and changes the Control Deck to HOME-only lazy startup with automatic visible fallback.
 
-HF16 adds a bounded ELYSIUM runtime recovery path for repeated post-FX/device faults.
+Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35308356045
 
-- Native Present remains alive during recovery backoff.
-- Recovery first reduces Adaptive Realism / Performance Guard cost.
-- Continued instability locally cuts Reference Stack, pass depth and optional DLSS 5 cost.
-- Saved user settings are not overwritten.
-- Higher-cost rendering returns only after a sustained clean run.
-- HF15 launcher/library, rollback, Adaptive Realism, Motion Guard/Ghosting Guard, PCSX2 and REVENANT work is preserved.
+The exact candidate passed Windows library regressions, x86/x64 production builds, shipped HLSL compilation, PowerShell parsing, install/remove rollback, exact ZIP verification and Microsoft Defender scans with 0 detections.
 
-## Verification
-
-Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35305423361
-
-Static/resource gates, x86/x64 production builds, Windows HLSL compilation, PowerShell parsing, manual Add game persistence, dynamic install/remove rollback, exact ZIP hash verification and Microsoft Defender ZIP/extracted-tree scans all passed with **0 detections**.
-
-Real-game visual/performance acceptance remains title/GPU/driver specific.
+Fallout 4 still requires real-machine retesting on the affected PC.

@@ -10,23 +10,23 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1**  
-Runtime: `release-alpha.1.elysium-engine45-hf18` · BuildId `elysium45-hf18.1` · updateSerial `1810` · ABI `143`
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.2**  
+Runtime: `release-alpha.1.elysium-engine45-hf18.2` · BuildId `elysium45-hf18.2` · updateSerial `1820` · ABI `143`
 
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.1  
-Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.1.zip`  
-SHA-256: `82257f00d4c323853fef1b5576578d6b0b025b44829c17027c46019ece726777`
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.2  
+Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.2.zip`  
+SHA-256: `2cc50a82e5e30b206e7de2a307f3fb70c31895f088de85edc332dea3fb60b1e4`
 
-## HF18.1
+## HF18.2
 
-- Fixes install/update preflight that could appear frozen at 2%.
-- Replaces repeated full WMI process enumeration with bounded local target-folder process inspection.
-- Adds real 3/4/5/6/7% preflight progress.
-- Fixes updater status-button clipping.
-- Uses the current full-color ELYSIUM launcher emblem.
+- Fixes launcher post-install/update refresh when older or fresh scan objects do not already contain `InstalledBuildId`.
+- Normalizes cache/manual/scan records to one launcher schema.
+- Uses direct PE-table target inspection instead of loading an entire game EXE into memory.
+- Corrects the full-color ELYSIUM emblem crop/centering.
+- Cleans the release root: implementation PowerShell is under **runtime**, maintenance commands under **Tools**, and **UNCANNY.exe** stays at root.
 - Preserves HF18 rendering and Universal API Bridge behavior.
 
-Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35383983512
+Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35387436459
 
 ## Adaptive Realism
 
@@ -89,7 +89,7 @@ REVENANT is UNCANNY's experimental persistent asset-reconstruction system. PCSX2
 
 ## Install
 
-1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.1.zip` from the latest release.
+1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.2.zip` from the latest release.
 2. Extract the ZIP completely.
 3. Run **`UNCANNY.exe`** from the root of the extracted folder.
 4. Let UNCANNY scan, or add the real game/emulator executable manually.

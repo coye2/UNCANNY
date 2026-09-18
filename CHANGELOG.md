@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.3
+
+- Fixed launcher startup/ShowDialog crashes caused by missing legacy discovery properties under StrictMode.
+- Hardened startup/selection/action event callbacks so malformed cached/discovery entries are skipped and logged.
+- Replaced raster/poster badge handling with a native vector ELYSIUM emblem.
+- Added explicit engine-choice tracking via `UserSelected=1`.
+- Migrated stale unmarked `release-fix.5` preferences to Automatic/ELYSIUM during install and launch.
+- Prevents a successful current update from silently restoring the old Lucid HOME menu unless Lucid was explicitly selected.
+- Added Windows stale-Lucid migration regression and final packaged-launcher startup survival smoke test.
+- Preserved HF18.2 clean package layout and HF18 rendering/Universal API Bridge behavior.
+- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35391373976
+- Source: `75e8d346bea6fb30d2a20e50dd8e7e0170b77760`
+- SHA-256: `4f252c9c21891ecab2f7ecc37f95a0149854f4a2d18f2300402366f515169428`
+- Defender final ZIP + extracted tree: **PASS / 0 detections**
+
+---
+
 ## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1
 
 - Fixed install/update preflight that could appear stuck at 2%.

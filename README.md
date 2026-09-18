@@ -10,27 +10,28 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF15**  
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF16**  
 Runtime: `release-alpha.1.elysium-engine45` · ABI `143`
 
 Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45  
 Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`  
-SHA-256: `8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`
+SHA-256: `fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`
 
-HF15 is the completed ELYSIUM 4.5 flagship closure: stronger Adaptive Realism, persistent optional startup scanning, reliable manual game entries, and a stricter exact-candidate release gate.
+HF16 is the emergency ELYSIUM 4.5 runtime-resilience update. It preserves HF15 and adds a bounded recovery circuit breaker so repeated post-FX/device faults back off and degrade safely instead of hammering the failing path every Present.
 
-## HF15
+## HF16
 
-- **Scan on startup** is now a persisted option. Turn it off and UNCANNY opens from cached/manual library data without running discovery.
-- **Add game** is authoritative and remains available after reboot even when startup scanning is disabled.
-- Windows short/long path aliases are canonicalized before manual-library deduplication, preventing duplicate entries for the same executable.
-- Per-game BuildId update detection, full-stack Remove, ownership-safe rollback, PCSX2 support, REVENANT and DLSS 5 routing are preserved.
-- Adaptive Realism now uses shared scene evidence, split contact-vs-diffuse lighting, bounded emissive bounce, Black Floor Intelligence, asymmetric local contrast, Legacy Cinema Reconstruction v2 and High/Insane Depth Material Sculpt.
-- Motion Guard / Ghosting Guard remain authoritative, and X2.5 retains the lowest temporal-history weight.
-- The exact HF15 package passed Windows manual-add persistence, install/remove rollback, HLSL compilation, PowerShell parsing, x86/x64 production builds, package audits, ZIP hash verification and Microsoft Defender scans.
+- Added bounded **post-FX recovery backoff** so repeated advanced-rendering/device faults preserve native Present instead of repeatedly retrying the failing path.
+- Recovery first retries ELYSIUM at safer Adaptive Realism / Performance Guard settings.
+- Continued instability locally reduces Reference Stack, pass depth and optional DLSS 5 cost.
+- Recovery is session-local and does **not** overwrite the user's saved settings.
+- Higher-cost rendering returns only after a sustained clean run to avoid fallback/retry oscillation.
+- New diagnostics expose `PostFxRecoveryFaults`, `PostFxRecoveryCleanFrames` and `PostFxRecoveryBackoffMs`.
+- HF15 startup-scan, manual-game, rollback, Adaptive Realism, Motion Guard/Ghosting Guard, PCSX2 and REVENANT work is preserved.
+- Exact HF16 candidate passed static gates, x86/x64 production builds, Windows HLSL, manual Add game persistence, dynamic install/remove rollback, exact ZIP hash verification and Microsoft Defender scans.
 
-Source revision: `b253880333ce2b8e4036cd5e53a6dcaf3bc69f8d`.  
-BuildId: `elysium45-hf15`.
+Source revision: `6c7ee4675a110fceb3c2c5bdddf82eb4d2745471`.  
+BuildId: `elysium45-hf16`.
 
 ## Adaptive Realism
 

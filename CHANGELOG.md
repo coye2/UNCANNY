@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1
+
+- Fixed install/update preflight that could appear stuck at 2%.
+- Replaced repeated full WMI process enumeration with bounded local target-folder process inspection.
+- Added granular 3/4/5/6/7% preflight progress.
+- Fixed updater status-button clipping with a wider compact control and shorter status labels.
+- Replaced launcher monochrome badge with the current full-color ELYSIUM emblem.
+- Preserved HF18 rendering and Universal API Bridge behavior.
+- Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35383983512
+- x86/x64 production builds: **PASS**
+- HLSL + WARP rendered-quality gate: **PASS**
+- Windows installer/rollback/manual-add: **PASS**
+- ZIP integrity/hash: **PASS**
+- Microsoft Defender ZIP + extracted tree: **PASS / 0 detections**
+- Source revision: `458dc5820beb9322c7ee115ed98fd07a7b1b0c77`
+- SHA-256: `82257f00d4c323853fef1b5576578d6b0b025b44829c17027c46019ece726777`
+
+---
+
 ## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18
 
 - Generalized D3D11 native-Present startup stabilization to require 120 successful native Presents before optional preprocessing joins a new swapchain.

@@ -14,10 +14,10 @@
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip",
     "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.3/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip",
-    "sha256": "4f252c9c21891ecab2f7ecc37f95a0149854f4a2d18f2300402366f515169428",
-    "size_bytes": 8732419
+    "sha256": "9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21",
+    "size_bytes": 8733350
   },
-  "source_revision": "75e8d346bea6fb30d2a20e50dd8e7e0170b77760",
+  "source_revision": "47841050ac5fbb04ffaa90823e2d0adc5c9236da",
   "features": {
     "universal_d3d11_native_present_stabilization": true,
     "universal_api_bridge": true,
@@ -61,11 +61,14 @@
     "packaged_launcher_showdialog_smoke": true,
     "stale_lucid_preference_migration": true,
     "explicit_engine_choice_tracking": true,
-    "vector_elysium_badge": true,
-    "current_deck_identity_marker": true
+    "vector_elysium_badge": false,
+    "current_deck_identity_marker": true,
+    "official_png_launcher_logo": true,
+    "installed_click_path_hardening": true,
+    "clean_standard_policy_exe_bootstrap": true
   },
   "verification": {
-    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35391373976",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35393751767",
     "python_regression_suite": "PASS",
     "production_builds_x86_x64": "PASS",
     "engine45_compiled_acceptance": "PASS",
@@ -84,7 +87,9 @@
     "public_package_clean_root": "PASS",
     "packaged_powershell_parse": "PASS",
     "packaged_launcher_showdialog_smoke": "PASS",
-    "stale_lucid_migration": "PASS"
+    "stale_lucid_migration": "PASS",
+    "installed_click_cache_path_regression": "PASS",
+    "clean_standard_policy_exe_bootstrap": "PASS"
   },
   "limitations": [
     "Real-game visual, motion and performance acceptance remains title/GPU/driver specific.",

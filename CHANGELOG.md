@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.4
+
+- Fixed the HF18.3 no-launch regression on Restricted/AllSigned PowerShell policy.
+- Native `UNCANNY.exe` now uses process-scoped `ExecutionPolicy Bypass` only for its child bootstrap; persistent machine/user policy is not changed.
+- Packaged `UNCANNY.exe` normal startup smoke: **PASS**.
+- Packaged `UNCANNY.exe` under AllSigned policy: **PASS**.
+- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
+- Preserved installed/cache/manual StrictMode path hardening and the official cropped silver UNCANNY U PNG.
+- Preserved stale-Lucid migration, PCSX2, REVENANT, Universal API Bridge, rollback, and HF18 rendering behavior.
+- Fixed updater hotfix serial ordering: HF18.3 → 1830; HF18.4 → 1840.
+- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35399115389
+- Source: `b865fab000762e7e3015484945d1f1af5d96fe52`
+- SHA-256: `c874239bbd41cfa6c271db10e364f97c241bdc5d5d55c2ff50542d12c6b8f417`
+- Signing status: **unsigned**; SmartScreen/Unknown Publisher may remain until trusted Authenticode signing is configured.
+
+---
+
 ## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.3
 
 - Fixed launcher startup/ShowDialog crashes caused by missing legacy discovery properties under StrictMode.

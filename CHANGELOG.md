@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18
+
+- Generalized D3D11 native-Present startup stabilization to require 120 successful native Presents before optional preprocessing joins a new swapchain.
+- Expanded the Universal API Bridge with deterministic capability, ownership, route-group, processing-source and fail-open handling across legacy and modern graphics routes.
+- Added creation-captured D3D12 queue/backbuffer/state evidence; ambiguous ownership is never guessed.
+- Preserved conservative Vulkan/OpenGL/legacy presentation and lifecycle observation without claiming unsupported full ELYSIUM/neural parity.
+- Added visible Control Deck info/help metadata for live image controls.
+- Strengthened source-backed facial reconstruction, source-hue/color recovery, material definition, edge recovery and Microtexture response.
+- Fixed Motion Protection Strength being masked by Ghosting Guard; both now remain independently effective.
+- Added clean-room local exposure fusion, source-radiance recovery, depth-proven relighting/contact shaping, contrast-adaptive clarity/sharpening and source-directed subpixel edge resolve.
+- Improved installer verification diagnostics, updater release-name matching and ownership-safe uninstall cleanup.
+- Added D3D11 WARP rendered visual-quality acceptance: all 42 exposed floating image controls must change rendered output above the meaningful response floor, with targeted face/color/denoise/edge/reference-quality checks.
+- Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35377702421
+- x86/x64 production + legacy + acceptance builds: **PASS**.
+- Windows HLSL compile: **PASS**.
+- WARP rendered visual-quality gate: **PASS**.
+- Manual Add / installer / rollback regressions: **PASS**.
+- ZIP integrity/hash verification: **PASS**.
+- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
+- Source revision: `0c5de983a400dd77d85992c6a5c1d37bcc3139eb`.
+- Runtime revision: `release-alpha.1.elysium-engine45-hf18`.
+- BuildId: `elysium45-hf18`; updateSerial: `1800`.
+- ZIP SHA-256: `21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489`.
+
+Real-game visual, motion and performance acceptance remains title/GPU/driver specific. No proprietary restricted shader implementation is bundled.
+
+---
+
+
 ## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF16
 
 - Added bounded post-FX fault backoff that preserves native Present during repeated rendering/device instability.

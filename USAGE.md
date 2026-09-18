@@ -27,13 +27,19 @@ Official Engine 4.5 ZIP:
 
 SHA-256:
 
-`8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`
+`fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`
 
 The release also includes the `.sha256` file and `MALWARE-VERIFICATION-ENGINE45.json`.
 
 The exact final package passed Microsoft Defender scans of the extracted release and the completed ZIP with **0 detections**. No Defender exclusion, threat restoration, allowlisting or antivirus bypass is required.
 
 See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md).
+
+## HF16 runtime recovery
+
+HF16 adds a bounded recovery path for repeated advanced-rendering/device faults. If post-FX becomes unstable, UNCANNY temporarily backs off while native Present continues. It retries ELYSIUM at safer in-session settings before reducing Reference Stack, pass depth or optional DLSS 5 cost. Saved settings are not overwritten.
+
+For diagnostics, `UNCANNY-STATUS.cmd` now reports `PostFxRecoveryFaults`, `PostFxRecoveryCleanFrames` and `PostFxRecoveryBackoffMs`.
 
 ## Adaptive Realism
 

@@ -40,18 +40,24 @@ jobs:
           Expand-Archive -LiteralPath $zip.Path -DestinationPath verify-tree -Force
           $root=Get-ChildItem verify-tree -Directory | Select-Object -First 1
           if(-not $root){ throw 'HF18.2 package root missing.' }
-          foreach($required in @('UNCANNY.exe','USAGE.md','CURRENT_RELEASE.json','VERSION.json','PACKAGE-REVISION.json','docs/RELEASE-NOTES.md','runtime/UNCANNY-BOOTSTRAP.ps1','Tools/UNCANNY-STATUS.cmd')){
+          foreach($required in @('UNCANNY.exe','USAGE.md','CURRENT_RELEASE.json','VERSION.json','PACKAGE-REVISION.json','docs/RELEASE-NOTES.md','assets/UNCANNY-ELYSIUM-logo-launcher.png','runtime/UNCANNY-BOOTSTRAP.ps1','runtime/UNCANNY-LAUNCHER.ps1','Tools/UNCANNY-STATUS.cmd')){
             if(-not (Test-Path -LiteralPath (Join-Path $root.FullName $required))){ throw "Required public file missing: $required" }
           }
-          $rootScripts=@(Get-ChildItem -LiteralPath $root.FullName -File | Where-Object { $_.Extension -in @('.ps1','.cmd') })
-          if($rootScripts.Count){ throw ('Root maintenance scripts leaked: '+(($rootScripts.Name)-join ', ')) }
           foreach($forbidden in @('src','tests','development','diagnostics')){
             if(Test-Path -LiteralPath (Join-Path $root.FullName $forbidden)){ throw "Private/internal directory leaked into public package: $forbidden" }
+          }
+          $rootScripts=@(Get-ChildItem -LiteralPath $root.FullName -File | Where-Object { $_.Extension -in @('.ps1','.cmd') })
+          if($rootScripts.Count){ throw ('Root maintenance scripts leaked: '+(($rootScripts.Name) -join ', ')) }
+          foreach($file in @(Get-ChildItem -LiteralPath (Join-Path $root.FullName 'runtime') -Filter '*.ps1' -File)){
+            $tokens=$null;$errors=$null
+            [System.Management.Automation.Language.Parser]::ParseFile($file.FullName,[ref]$tokens,[ref]$errors)|Out-Null
+            if($errors.Count){ throw "Packaged PowerShell parse failed: $($file.Name)" }
           }
           $current=Get-Content -LiteralPath (Join-Path $root.FullName 'CURRENT_RELEASE.json') -Raw | ConvertFrom-Json
           $package=Get-Content -LiteralPath (Join-Path $root.FullName 'PACKAGE-REVISION.json') -Raw | ConvertFrom-Json
           if($current.buildId -ne 'elysium45-hf18.2' -or [int]$current.updateSerial -ne 1820){ throw 'Embedded CURRENT_RELEASE identity is not HF18.2/1820.' }
           if($package.buildId -ne 'elysium45-hf18.2' -or [int]$package.updateSerial -ne 1820){ throw 'Embedded PACKAGE-REVISION identity is not HF18.2/1820.' }
+          Write-Host 'PASS: clean HF18.2 public root, runtime/Tools split, and embedded identity verified.'
 
       - name: Microsoft Defender HF18.2 gate
         shell: pwsh
@@ -78,6 +84,8 @@ jobs:
             detections=0
             extracted_tree='PASS'
             completed_zip='PASS'
+            clean_root='PASS'
+            packaged_powershell_parse='PASS'
           } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath 'payload/MALWARE-VERIFICATION-ENGINE45-HF18.2.json'
 
       - name: Create HF18.2 public release

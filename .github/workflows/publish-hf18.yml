@@ -4,8 +4,6 @@ on:
     branches: [release-staging-hf18]
     paths:
       - .release-staging/HF18-SOURCE.json
-      - .release-staging/HF18-RELEASE-NOTES.md
-      - .github/workflows/publish-hf18.yml
 permissions:
   contents: write
 jobs:

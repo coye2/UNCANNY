@@ -15,19 +15,21 @@ Runtime: `release-alpha.1.elysium-engine45-hf18.3` · BuildId `elysium45-hf18.3`
 
 Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.3  
 Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip`  
-SHA-256: `4f252c9c21891ecab2f7ecc37f95a0149854f4a2d18f2300402366f515169428`
+SHA-256: `9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21`
 
 ## HF18.3
 
 - Fixes the launcher startup crash caused by missing legacy/discovery object properties under PowerShell StrictMode.
 - Startup, selection and action callbacks recover/log malformed records instead of tearing down WPF `ShowDialog()`.
-- Uses a native vector purple/green ELYSIUM emblem in the launcher.
+- Replaces the synthetic vector-style badge with the official cropped silver UNCANNY U emblem PNG.
 - Migrates stale unmarked Lucid engine preferences back to Automatic/ELYSIUM.
 - Only explicit current `UserSelected=1` Lucid choices may preserve the legacy engine.
 - Adds a packaged-launcher survival smoke test against the final ZIP.
+- Hardens installed-game/cache path handling so missing `.Path`/schema fields cannot crash the launcher.
+- Removes `-ExecutionPolicy Bypass` from the native EXE bootstrap while keeping the launch hidden/non-interactive.
 - Preserves the HF18.2 clean `runtime\` / `Tools\` package layout and HF18 rendering stack.
 
-Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35391373976
+Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35393751767
 
 ## Adaptive Realism
 

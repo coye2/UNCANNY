@@ -38,8 +38,9 @@ jobs:
           $ErrorActionPreference='Stop'
           $stage=Join-Path $env:RUNNER_TEMP 'stage'
           Expand-Archive -LiteralPath (Join-Path $env:RUNNER_TEMP 'original.zip') -DestinationPath $stage -Force
-          $launcher=Join-Path $stage 'UNCANNY-LAUNCHER.ps1'
-          if(!(Test-Path -LiteralPath $launcher)){throw 'UNCANNY-LAUNCHER.ps1 missing.'}
+          $matches=@(Get-ChildItem -LiteralPath $stage -Recurse -File -Filter 'UNCANNY-LAUNCHER.ps1')
+          if($matches.Count -ne 1){throw ('Expected one UNCANNY-LAUNCHER.ps1 in package, found '+$matches.Count)}
+          $launcher=$matches[0].FullName
           $text=[IO.File]::ReadAllText($launcher)
           $needle=' FillRule="EvenOdd"'
           $count=([regex]::Matches($text,[regex]::Escape($needle))).Count
@@ -58,7 +59,9 @@ jobs:
           Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $out -CompressionLevel Optimal -Force
           $verify=Join-Path $env:RUNNER_TEMP 'verify'
           Expand-Archive -LiteralPath $out -DestinationPath $verify -Force
-          $check=Get-Content -LiteralPath (Join-Path $verify 'UNCANNY-LAUNCHER.ps1') -Raw
+          $checks=@(Get-ChildItem -LiteralPath $verify -Recurse -File -Filter 'UNCANNY-LAUNCHER.ps1')
+          if($checks.Count -ne 1){throw ('Expected one launcher after repack, found '+$checks.Count)}
+          $check=Get-Content -LiteralPath $checks[0].FullName -Raw
           if($check.Contains('FillRule="EvenOdd"')){throw 'Repacked ZIP still has invalid XAML.'}
 
       - name: Microsoft Defender gate

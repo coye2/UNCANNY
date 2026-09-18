@@ -27,13 +27,17 @@ Official Engine 4.5 ZIP:
 
 SHA-256:
 
-`fb9a49e68ef11ba8b6e5932e37eee01b4875d7fb782249b92965601dc93e381a`
+`cef5daff98e611e9da27f9365a660f14f82208238ce3d277db3f1088ba1a304e`
 
 The release also includes the `.sha256` file and `MALWARE-VERIFICATION-ENGINE45.json`.
 
 The exact final package passed Microsoft Defender scans of the extracted release and the completed ZIP with **0 detections**. No Defender exclusion, threat restoration, allowlisting or antivirus bypass is required.
 
 See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md).
+
+## Fallout 4 HF17 compatibility
+
+HF17 detects `Fallout4.exe` and uses a conservative D3D11 compatibility route: extended native-Present warmup, no D3D11 neural interop, and current-frame ELYSIUM behavior. Press HOME only after the game reaches a stable visible state; the Control Deck now starts on demand and automatically exposes a desktop fallback if in-frame connection fails.
 
 ## HF16 runtime recovery
 

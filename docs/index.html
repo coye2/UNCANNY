@@ -7,7 +7,7 @@
   <meta name="description" content="UNCANNY is an independent real-time remaster engine for Windows PC games and emulators. ELYSIUM Engine 4.5 adds Adaptive Realism, multi-pass reconstruction, Motion Guard, Ghosting Guard, REVENANT and optional DLSS 5 integration.">
   <link rel="canonical" href="https://coye2.github.io/UNCANNY/">
   <meta property="og:title" content="UNCANNY — ELYSIUM Engine 4.5">
-  <meta property="og:description" content="UNCANNY v0.20 ELYSIUM Engine 4.5 Hotfix 13 with Adaptive Realism, multi-pass reconstruction, Motion Guard, Ghosting Guard, REVENANT and a Defender-verified public package.">
+  <meta property="og:description" content="UNCANNY v0.20 ELYSIUM Engine 4.5 HF18 with Universal API Bridge closure, Adaptive Realism, rendered control validation, Motion Guard, Ghosting Guard, REVENANT and a Defender-verified public package.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://coye2.github.io/UNCANNY/">
   <meta name="twitter:card" content="summary">
@@ -20,7 +20,7 @@
     "applicationCategory": "GameApplication",
     "operatingSystem": "Windows",
     "description": "Independent real-time remaster engine for PC games and emulators with Adaptive Realism, ELYSIUM reconstruction, Motion Guard, Ghosting Guard, REVENANT and optional DLSS 5 integration.",
-    "softwareVersion": "v0.20.0-alpha.1 / release-alpha.1.elysium-engine45",
+    "softwareVersion": "v0.20.0-alpha.1 HF18 / release-alpha.1.elysium-engine45-hf18",
     "url": "https://github.com/coye2/UNCANNY",
     "downloadUrl": "https://github.com/coye2/UNCANNY/releases/latest",
     "isAccessibleForFree": true,
@@ -38,9 +38,9 @@
 
   <div class="card">
     <strong>Current public release</strong><br>
-    <code>v0.20.0-alpha.1</code> · <code>release-alpha.1.elysium-engine45</code> · ABI 143<br>
-    <code>UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip</code><br>
-    SHA-256: <code>843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811</code><br><br>
+    <code>v0.20.0-alpha.1 HF18</code> · <code>release-alpha.1.elysium-engine45-hf18</code> · ABI 143<br>
+    <code>UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip</code><br>
+    SHA-256: <code>21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489</code><br><br>
     <a href="https://github.com/coye2/UNCANNY/releases/latest"><strong>Download latest release</strong></a>
   </div>
 
@@ -48,7 +48,9 @@
     <span class="tag">ELYSIUM 4.5</span><span class="tag">Adaptive Realism</span><span class="tag">Motion Guard</span><span class="tag">Ghosting Guard</span><span class="tag">PCSX2</span><span class="tag">D3D9</span><span class="tag">D3D11</span><span class="tag">D3D12</span><span class="tag">REVENANT</span><span class="tag">DLSS 5</span>
   </p>
 
-  <h2>Hotfix 13</h2><p>Full-stack Remove/restore, mutable log-safe rollback, launcher logo restoration, and a stronger Adaptive Realism reference stack.</p><h2>Adaptive Realism</h2>
+  <h2>HF18</h2>
+  <p>HF18 closes the Universal API Bridge and tester-feedback push with universal D3D11 native-Present stabilization, deterministic fail-open ownership/capability routing, stronger source-backed face/color/detail reconstruction, independent Motion/Ghosting controls, Control Deck help, updater/install/uninstall fixes, and rendered D3D11 WARP validation for all 42 exposed floating image controls.</p>
+  <h2>Adaptive Realism</h2>
   <p>Engine 4.5 introduces a scene-aware UNCANNY-native remaster layer with five live levels: <strong>OFF / LOW / BALANCED / HIGH / INSANE</strong>. Adaptive Realism is separate from the DLSS 5 provider path and can run without DLSS 5.</p>
 
   <div class="grid">
@@ -84,7 +86,7 @@
   <p>The package does not bundle paid/restricted Marty McFly / Pascal Gilcher shader source or binaries.</p>
 
   <h2>Compatibility</h2>
-  <p>D3D11 is the strongest current Adaptive Realism path. D3D12, D3D10/10.1 and D3D9 remain supported to different capability levels. PCSX2 is the primary emulator acceptance target. Vulkan/OpenGL are not yet at DirectX parity.</p>
+  <p>D3D11 is the strongest current Adaptive Realism path. D3D12, D3D10/10.1 and D3D9 remain supported to different capability levels. PCSX2 is the primary emulator acceptance target. Vulkan/OpenGL have conservative lifecycle/presentation compatibility observation; full ELYSIUM/neural parity is not claimed.</p>
   <p>Build/CI validation does not replace real-game visual/performance testing across specific NVIDIA, AMD and Intel GPUs.</p>
 
   <h2>Project links</h2>

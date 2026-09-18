@@ -10,29 +10,27 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13.1**  
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF15**  
 Runtime: `release-alpha.1.elysium-engine45` · ABI `143`
 
 Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45  
 Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`  
-SHA-256: `69face793720c1d832afb6d8ea7d69091e5475ce231c7c62f84beef02c96675a`
+SHA-256: `8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`
 
-Hotfix 13.1 keeps the Engine 4.5 runtime and adds tester-driven remove/restore repairs, restores the launcher logo, and pushes **Adaptive Realism** materially harder.
+HF15 is the completed ELYSIUM 4.5 flagship closure: stronger Adaptive Realism, persistent optional startup scanning, reliable manual game entries, and a stricter exact-candidate release gate.
 
-## Hotfix 13.1
+## HF15
 
-- Fixed the launcher startup crash caused by the inline logo XAML using unsupported `Path.FillRule`.
+- **Scan on startup** is now a persisted option. Turn it off and UNCANNY opens from cached/manual library data without running discovery.
+- **Add game** is authoritative and remains available after reboot even when startup scanning is disabled.
+- Windows short/long path aliases are canonicalized before manual-library deduplication, preventing duplicate entries for the same executable.
+- Per-game BuildId update detection, full-stack Remove, ownership-safe rollback, PCSX2 support, REVENANT and DLSS 5 routing are preserved.
+- Adaptive Realism now uses shared scene evidence, split contact-vs-diffuse lighting, bounded emissive bounce, Black Floor Intelligence, asymmetric local contrast, Legacy Cinema Reconstruction v2 and High/Insane Depth Material Sculpt.
+- Motion Guard / Ghosting Guard remain authoritative, and X2.5 retains the lowest temporal-history weight.
+- The exact HF15 package passed Windows manual-add persistence, install/remove rollback, HLSL compilation, PowerShell parsing, x86/x64 production builds, package audits, ZIP hash verification and Microsoft Defender scans.
 
-- **Remove now unwinds every recorded UNCANNY install layer** for the exact selected game instead of exposing an older install underneath.
-- Changed generated logs such as `ReShade.log`, OptiScaler logs and dlss5-feed logs no longer block restore.
-- Actual original/user files remain conflict-protected.
-- The official UNCANNY emblem is back in the launcher UI as an inline vector.
-- New installs seed **INSANE + Reference Stack**.
-- Adaptive Realism now drives the full source-bounded reference-look stack; **OFF is a true bypass**.
-- Depth-aware contact occlusion, bounded diffuse/specular response, exposure adaptation, local contrast and meso clarity were all strengthened.
-- Motion Guard / Ghosting Guard remain authoritative, with X2.5 retaining the lowest temporal-history weight.
-
-Source revision: `6d9b367bb4ef6506ff33be7023c05634019e78f2`.
+Source revision: `b253880333ce2b8e4036cd5e53a6dcaf3bc69f8d`.  
+BuildId: `elysium45-hf15`.
 
 ## Adaptive Realism
 

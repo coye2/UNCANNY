@@ -92,8 +92,8 @@
     "packaged_launcher_showdialog_smoke": "PASS",
     "stale_lucid_migration": "PASS",
     "installed_click_cache_path_regression": "PASS",
-    "clean_standard_policy_exe_bootstrap": "PASS",
-    "packaged_allsigned_startup_smoke": "PASS"
+    "packaged_allsigned_startup_smoke": "PASS",
+    "process_scoped_policy_independent_bootstrap": "PASS"
   },
   "limitations": [
     "Real-game visual, motion and performance acceptance remains title/GPU/driver specific.",

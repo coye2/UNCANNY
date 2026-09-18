@@ -5,5 +5,7 @@
   "sha256": "bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9",
   "package": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip",
   "source_revision": "8414a99010fff395c117baaadb77d63dbde946bf",
-  "validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35404395219"
+  "validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35404395219",
+  "notes_revision": 2,
+  "public_manifest_revision": "788249e1831aa706e57a573fea843cc96acaa2c9"
 }

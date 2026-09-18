@@ -1,0 +1,101 @@
+name: Publish UNCANNY HF18 public release
+on:
+  push:
+    branches: [release-staging-hf18]
+    paths:
+      - .release-staging/HF18-SOURCE.json
+      - .release-staging/HF18-RELEASE-NOTES.md
+      - .github/workflows/publish-hf18.yml
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download exact validated HF18 public artifact
+        shell: pwsh
+        run: |
+          $meta=Get-Content -LiteralPath '.release-staging/HF18-SOURCE.json' -Raw | ConvertFrom-Json
+          if(-not $meta.url -or -not $meta.sha256){ throw 'HF18 source metadata missing URL or SHA-256.' }
+          New-Item -ItemType Directory -Path payload -Force | Out-Null
+          $zip=Join-Path $PWD 'payload/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip'
+          Invoke-WebRequest -Uri $meta.url -OutFile $zip -UseBasicParsing
+          $actual=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expected=([string]$meta.sha256).ToLowerInvariant()
+          if($actual -ne $expected){ throw "HF18 artifact SHA-256 mismatch: $actual != $expected" }
+          "$actual  UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip" | Set-Content -LiteralPath ($zip+'.sha256') -NoNewline
+          Write-Host "PASS: exact HF18 artifact hash $actual"
+
+      - name: Verify closed-source public package boundary
+        shell: pwsh
+        run: |
+          $zip=Resolve-Path 'payload/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip'
+          New-Item -ItemType Directory -Path verify-tree -Force | Out-Null
+          Expand-Archive -LiteralPath $zip.Path -DestinationPath verify-tree -Force
+          $root=Get-ChildItem verify-tree -Directory | Select-Object -First 1
+          if(-not $root){ throw 'HF18 package root missing.' }
+          foreach($required in @('UNCANNY.exe','USAGE.md','CURRENT_RELEASE.json','VERSION.json','PACKAGE-REVISION.json','docs/RELEASE-NOTES.md')){
+            if(-not (Test-Path -LiteralPath (Join-Path $root.FullName $required))){ throw "Required public file missing: $required" }
+          }
+          foreach($forbidden in @('src','tests','development','diagnostics')){
+            if(Test-Path -LiteralPath (Join-Path $root.FullName $forbidden)){ throw "Private/internal directory leaked into public package: $forbidden" }
+          }
+          $blocked=@('revenant-commit32.exe','revenant-commit64.exe','neural-host-startup32.exe','neural-host-startup64.exe','protected-resources32.exe','protected-resources64.exe','proof-journal32.exe','proof-journal64.exe','gpu-acceptance32.exe','gpu-acceptance64.exe','neural-host-transport32.exe','neural-host-transport64.exe')
+          $leaks=@(Get-ChildItem -LiteralPath $root.FullName -Recurse -File | Where-Object { $_.Name -in $blocked })
+          if($leaks.Count){ throw ('Internal acceptance executable leaked: '+(($leaks.FullName) -join ', ')) }
+          $current=Get-Content -LiteralPath (Join-Path $root.FullName 'CURRENT_RELEASE.json') -Raw | ConvertFrom-Json
+          $package=Get-Content -LiteralPath (Join-Path $root.FullName 'PACKAGE-REVISION.json') -Raw | ConvertFrom-Json
+          if($current.buildId -ne 'elysium45-hf18' -or [int]$current.updateSerial -ne 1800){ throw 'Embedded CURRENT_RELEASE identity is not HF18/1800.' }
+          if($package.buildId -ne 'elysium45-hf18' -or [int]$package.updateSerial -ne 1800){ throw 'Embedded PACKAGE-REVISION identity is not HF18/1800.' }
+          Write-Host 'PASS: public-package boundary and HF18 embedded identity verified.'
+
+      - name: Microsoft Defender HF18 release gate
+        shell: pwsh
+        run: |
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          if(-not $status.AMServiceEnabled -or -not $status.AntivirusEnabled){ throw 'Microsoft Defender unavailable; HF18 publication blocked.' }
+          Update-MpSignature -ErrorAction Stop
+          $root=(Get-ChildItem verify-tree -Directory | Select-Object -First 1).FullName
+          $zip=(Resolve-Path 'payload/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip').Path
+          Start-MpScan -ScanType CustomScan -ScanPath $root -ErrorAction Stop
+          Start-MpScan -ScanType CustomScan -ScanPath $zip -ErrorAction Stop
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object { $_.Resources -match 'verify-tree|ELYSIUM-ENGINE45-HF18' })
+          if($hits.Count){ $hits | Format-List * | Out-String | Write-Host; throw 'Microsoft Defender detected a threat; HF18 publication blocked.' }
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          $meta=Get-Content -LiteralPath '.release-staging/HF18-SOURCE.json' -Raw | ConvertFrom-Json
+          $verification=[ordered]@{
+            format='UNCANNY-MALWARE-VERIFICATION-1'
+            release='UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18'
+            package='UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip'
+            sha256=$meta.sha256
+            source_revision=$meta.source_revision
+            validation_run=$meta.validation_run
+            defender_engine=$status.AMEngineVersion
+            defender_signatures=$status.AntivirusSignatureVersion
+            detections=0
+            extracted_tree='PASS'
+            completed_zip='PASS'
+          }
+          $verification | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath 'payload/MALWARE-VERIFICATION-ENGINE45-HF18.json'
+          Write-Host ('PASS: Defender 0 detections; engine '+$status.AMEngineVersion+'; signatures '+$status.AntivirusSignatureVersion)
+
+      - name: Create or replace HF18 public release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v0.20.0-alpha.1-elysium-engine45-hf18
+        shell: pwsh
+        run: |
+          $zip='payload/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip'
+          $sum=$zip+'.sha256'
+          $verify='payload/MALWARE-VERIFICATION-ENGINE45-HF18.json'
+          $notes='.release-staging/HF18-RELEASE-NOTES.md'
+          gh release view $env:TAG --repo $env:GITHUB_REPOSITORY 2>$null | Out-Null
+          if($LASTEXITCODE -eq 0){
+            gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18' --notes-file $notes --latest --repo $env:GITHUB_REPOSITORY
+            gh release upload $env:TAG $zip $sum $verify --clobber --repo $env:GITHUB_REPOSITORY
+          } else {
+            gh release create $env:TAG $zip $sum $verify --target main --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18' --notes-file $notes --latest --repo $env:GITHUB_REPOSITORY
+          }

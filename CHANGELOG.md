@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF15
+
+- Added persisted **Scan on startup** control; disabling it prevents discovery at boot while preserving cached/manual entries.
+- Fixed **Add game** persistence so manual entries survive reboot independently of scanning.
+- Canonicalized Windows short/long path aliases before manual-library deduplication.
+- Added a Windows manual-library preflight to fail release validation before expensive build/package work.
+- Preserved per-target BuildId update detection, full-stack Remove, rollback, PCSX2, REVENANT and DLSS 5 routing.
+- Expanded Adaptive Realism with Shared Scene Evidence Bus, split contact/diffuse lighting, Emissive Bounce Guard, Black Floor Intelligence, asymmetric local contrast, Legacy Cinema Reconstruction v2 and High/Insane Depth Material Sculpt.
+- Motion Guard, Ghosting Guard and X2.5 clean-motion behavior remain protected.
+- Exact candidate run: https://github.com/coye2/uncanny-dev/actions/runs/35302273751
+- Windows manual Add game persistence: **PASS**.
+- Windows install/remove rollback: **PASS**.
+- x86/x64 production builds and Engine 4.5 compiled acceptance: **PASS**.
+- HLSL compilation and PowerShell parse: **PASS**.
+- Package/restricted-shader audits and ZIP integrity/hash verification: **PASS**.
+- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
+- Source revision: `b253880333ce2b8e4036cd5e53a6dcaf3bc69f8d`.
+- ZIP SHA-256: `8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`.
+
+---
+
 ## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 Hotfix 13
 
 - Remove now unwinds every recorded UNCANNY install layer for the exact selected target.

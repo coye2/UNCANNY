@@ -7,7 +7,12 @@
   "buildId": "elysium45-hf18.5",
   "updateSerial": 1850,
   "abi": 143,
-  "package": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5",
+  "package": {
+    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip",
+    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.5/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip",
+    "sha256": "bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9",
+    "size_bytes": 8735528
+  },
   "channel": "public-alpha",
   "highlights": [
     "packaged UNCANNY scanner now resolves UNCANNY-InstallCommon.ps1 and UNCANNY-Library.ps1 from its runtime directory instead of the clean ZIP root",
@@ -21,5 +26,33 @@
     "Universal API Bridge, D3D11 native-Present stabilization, PCSX2, REVENANT, rollback, Motion Guard/Ghosting Guard and HF18 rendering behavior are preserved"
   ],
   "validation": "HF18.5 candidate; exact packaged cache/render/logo, real packaged scan invocation, normal startup, AllSigned startup, WARP, ZIP/hash and Defender gates required before publication.",
-  "restrictedShaderImplementationsBundled": false
+  "restrictedShaderImplementationsBundled": false,
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.5",
+  "tag": "v0.20.0-alpha.1-elysium-engine45-hf18.5",
+  "runtime_revision": "release-alpha.1.elysium-engine45-hf18.5",
+  "published": "2026-09-18",
+  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.5",
+  "source_revision": "8414a99010fff395c117baaadb77d63dbde946bf",
+  "features": {
+    "packaged_scanner_runtime_root_fixed": true,
+    "heterogeneous_cache_scan_normalization": true,
+    "authoritative_manual_targets_survive_scan": true,
+    "official_library_logo_source": true,
+    "official_png_launcher_logo": true,
+    "official_png_wpf_decode_gate": true,
+    "packaged_scan_execution_gate": true
+  },
+  "verification": {
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35404395219",
+    "packaged_logo_wpf_decode": "PASS",
+    "packaged_cache_normalization": "PASS",
+    "packaged_scanner_execution": "PASS",
+    "packaged_manual_target_retention": "PASS",
+    "packaged_launcher_showdialog_smoke": "PASS",
+    "packaged_allsigned_startup_smoke": "PASS",
+    "defender_zip_scan": "PASS",
+    "defender_extracted_tree_scan": "PASS",
+    "defender_detections": 0
+  },
+  "hotfix": "HF18.5"
 }

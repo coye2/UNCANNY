@@ -12,8 +12,6 @@ Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-e
 Latest: https://github.com/coye2/UNCANNY/releases/latest
 Validation: https://github.com/coye2/uncanny-dev/actions/runs/35391373976
 
-HF18.3 fixes launcher startup/ShowDialog crashes caused by malformed legacy discovery objects under StrictMode and prevents stale unmarked Lucid preferences from silently replacing freshly installed ELYSIUM binaries. Explicit current user engine selections remain honored. A packaged UNCANNY.exe launcher survival smoke test is part of the Windows release gate.
+HF18.3 fixes launcher StrictMode/ShowDialog crashes, adds guarded event recovery, uses a vector ELYSIUM badge, and prevents stale unmarked Lucid preferences from silently replacing the freshly installed ELYSIUM runtime/deck. Only explicit current UserSelected=1 choices preserve Lucid.
 
-HF18 rendering, Universal API Bridge behavior, WARP quality contracts, PCSX2, REVENANT, and the clean runtime/Tools public package layout are preserved.
-
-Real-game behavior remains title/GPU/driver specific.
+The exact package passed build/package/Windows/WARP/launcher-smoke/hash/Defender validation with 0 Defender detections. Real-game behavior remains title/GPU/driver specific.

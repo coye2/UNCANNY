@@ -2,22 +2,22 @@
   "project": "UNCANNY",
   "version": "0.20.0-alpha.1",
   "engine": "ELYSIUM Engine 4.5",
-  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.3",
-  "tag": "v0.20.0-alpha.1-elysium-engine45-hf18.3",
-  "runtime_revision": "release-alpha.1.elysium-engine45-hf18.3",
-  "buildId": "elysium45-hf18.3",
-  "updateSerial": 1830,
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.4",
+  "tag": "v0.20.0-alpha.1-elysium-engine45-hf18.4",
+  "runtime_revision": "release-alpha.1.elysium-engine45-hf18.4",
+  "buildId": "elysium45-hf18.4",
+  "updateSerial": 1840,
   "abi": 143,
   "published": "2026-09-18",
   "latest_release_url": "https://github.com/coye2/UNCANNY/releases/latest",
-  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.3",
+  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.4",
   "package": {
-    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip",
-    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.3/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip",
-    "sha256": "9748039fefcbbe941ea3d67cb54b731798d35b7332643677a3a28b4398fbcb21",
-    "size_bytes": 8733350
+    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.4.zip",
+    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.4/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.4.zip",
+    "sha256": "c874239bbd41cfa6c271db10e364f97c241bdc5d5d55c2ff50542d12c6b8f417",
+    "size_bytes": 8734991
   },
-  "source_revision": "47841050ac5fbb04ffaa90823e2d0adc5c9236da",
+  "source_revision": "b865fab000762e7e3015484945d1f1af5d96fe52",
   "features": {
     "universal_d3d11_native_present_stabilization": true,
     "universal_api_bridge": true,
@@ -65,10 +65,13 @@
     "current_deck_identity_marker": true,
     "official_png_launcher_logo": true,
     "installed_click_path_hardening": true,
-    "clean_standard_policy_exe_bootstrap": true
+    "clean_standard_policy_exe_bootstrap": false,
+    "process_scoped_policy_independent_bootstrap": true,
+    "packaged_allsigned_startup_smoke": true,
+    "updater_hotfix_serial_ordering_fixed": true
   },
   "verification": {
-    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35393751767",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35399115389",
     "python_regression_suite": "PASS",
     "production_builds_x86_x64": "PASS",
     "engine45_compiled_acceptance": "PASS",
@@ -89,14 +92,16 @@
     "packaged_launcher_showdialog_smoke": "PASS",
     "stale_lucid_migration": "PASS",
     "installed_click_cache_path_regression": "PASS",
-    "clean_standard_policy_exe_bootstrap": "PASS"
+    "clean_standard_policy_exe_bootstrap": "PASS",
+    "packaged_allsigned_startup_smoke": "PASS"
   },
   "limitations": [
     "Real-game visual, motion and performance acceptance remains title/GPU/driver specific.",
     "Vulkan and OpenGL compatibility observation is not claimed as full ELYSIUM/neural processing parity.",
     "D3D12 and legacy APIs fail open when trustworthy ownership or scene evidence is unavailable.",
     "Native-PC-game REVENANT asset replacement remains experimental.",
-    "DLSS 5 remains NVIDIA/provider-specific even though the ELYSIUM image path is vendor-neutral."
+    "DLSS 5 remains NVIDIA/provider-specific even though the ELYSIUM image path is vendor-neutral.",
+    "UNCANNY.exe is currently unsigned; Windows SmartScreen/Unknown Publisher warnings may continue until trusted Authenticode signing is configured."
   ],
-  "hotfix": "HF18.3"
+  "hotfix": "HF18.4"
 }

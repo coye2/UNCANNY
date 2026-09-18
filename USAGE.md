@@ -9,12 +9,15 @@ UNCANNY is experimental Windows remastering middleware for PC games and emulator
 1. Download `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip` from the latest GitHub release.
 2. Extract the entire ZIP. Do not run UNCANNY from inside the archive.
 3. Run **`UNCANNY.exe`** from the package root.
-4. Let UNCANNY scan for games/emulators, or use **Add game** and select the real rendering executable.
-5. Select the title and choose **Install UNCANNY**.
-6. Launch from UNCANNY or normally from the selected executable.
-7. Reach gameplay and press **HOME** to open the Control Deck.
+4. Leave **Scan on startup** enabled for automatic discovery, or disable it if you want UNCANNY to open only from cached/manual entries.
+5. Use **Scan PC** whenever you want an explicit discovery refresh, or use **Add game** to select the real rendering executable manually. Manual entries persist independently of startup scanning.
+6. Select the title and choose **Install UNCANNY**.
+7. Launch from UNCANNY or normally from the selected executable.
+8. Reach gameplay and press **HOME** to open the Control Deck.
 
 Do not mix DLLs or EXEs from older UNCANNY packages.
+
+Manual library entries use Windows path canonicalization so short-path and long-path aliases for the same executable do not become duplicate games.
 
 ## Verify your download
 
@@ -24,7 +27,7 @@ Official Engine 4.5 ZIP:
 
 SHA-256:
 
-`f8b13f51cacd96b1b375b566c675d17661f66bb4bb2673cd34edf8e7f5859512`
+`8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d`
 
 The release also includes the `.sha256` file and `MALWARE-VERIFICATION-ENGINE45.json`.
 

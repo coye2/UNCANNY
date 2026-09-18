@@ -1,0 +1,108 @@
+name: Patch Hotfix 13 launcher startup
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/patch-hotfix13-launcher.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-release:
+    runs-on: windows-2025
+    timeout-minutes: 12
+    env:
+      TAG: v0.20.0-alpha.1-elysium-engine45
+      ZIP_NAME: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download current release ZIP
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference='Stop'
+          $download=Join-Path $env:RUNNER_TEMP 'download'
+          New-Item -ItemType Directory -Path $download -Force | Out-Null
+          gh release download $env:TAG --repo $env:GITHUB_REPOSITORY --pattern $env:ZIP_NAME --dir $download
+          $src=Join-Path $download $env:ZIP_NAME
+          if(!(Test-Path -LiteralPath $src)){throw 'Release ZIP missing.'}
+          Copy-Item -LiteralPath $src -Destination (Join-Path $env:RUNNER_TEMP 'original.zip') -Force
+
+      - name: Patch invalid inline logo XAML only
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $stage=Join-Path $env:RUNNER_TEMP 'stage'
+          Expand-Archive -LiteralPath (Join-Path $env:RUNNER_TEMP 'original.zip') -DestinationPath $stage -Force
+          $launcher=Join-Path $stage 'UNCANNY-LAUNCHER.ps1'
+          if(!(Test-Path -LiteralPath $launcher)){throw 'UNCANNY-LAUNCHER.ps1 missing.'}
+          $text=[IO.File]::ReadAllText($launcher)
+          $needle=' FillRule="EvenOdd"'
+          $count=([regex]::Matches($text,[regex]::Escape($needle))).Count
+          if($count -ne 1){throw ('Expected one invalid FillRule attribute, found '+$count)}
+          $text=$text.Replace($needle,'')
+          [IO.File]::WriteAllText($launcher,$text,[Text.UTF8Encoding]::new($false))
+          if([IO.File]::ReadAllText($launcher).Contains($needle)){throw 'FillRule attribute still present.'}
+          Write-Host 'PASS: removed only the unsupported Path.FillRule attribute.'
+
+      - name: Repack and verify
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $stage=Join-Path $env:RUNNER_TEMP 'stage'
+          $out=Join-Path $env:RUNNER_TEMP $env:ZIP_NAME
+          Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $out -CompressionLevel Optimal -Force
+          $verify=Join-Path $env:RUNNER_TEMP 'verify'
+          Expand-Archive -LiteralPath $out -DestinationPath $verify -Force
+          $check=Get-Content -LiteralPath (Join-Path $verify 'UNCANNY-LAUNCHER.ps1') -Raw
+          if($check.Contains('FillRule="EvenOdd"')){throw 'Repacked ZIP still has invalid XAML.'}
+
+      - name: Microsoft Defender gate
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $scanStart=Get-Date
+          try{Update-MpSignature -ErrorAction Stop}catch{Write-Warning $_}
+          $verify=Join-Path $env:RUNNER_TEMP 'verify'
+          $zip=Join-Path $env:RUNNER_TEMP $env:ZIP_NAME
+          Start-MpScan -ScanType CustomScan -ScanPath $verify
+          Start-MpScan -ScanType CustomScan -ScanPath $zip
+          $detections=@(Get-MpThreatDetection -ErrorAction SilentlyContinue | Where-Object {$_.InitialDetectionTime -ge $scanStart.AddMinutes(-1)})
+          if($detections.Count){throw ('Defender found '+$detections.Count+' detection(s).')}
+          $status=Get-MpComputerStatus
+          $record=[ordered]@{
+            schema='UNCANNY-MALWARE-VERIFICATION-ENGINE45-HF13-1';
+            status='PASS';
+            release='UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Hotfix 13.1';
+            patch='Launcher startup XAML: removed unsupported System.Windows.Shapes.Path.FillRule member';
+            source_fix_commit='6d9b367bb4ef6506ff33be7023c05634019e78f2';
+            defender_engine=[string]$status.AMEngineVersion;
+            defender_signatures=[string]$status.AntivirusSignatureVersion;
+            defender_product=[string]$status.AMProductVersion;
+            extracted_package_detections=0;
+            final_zip_detections=0;
+            checked_at=(Get-Date).ToUniversalTime().ToString('o')
+          }
+          $record|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'MALWARE-VERIFICATION-ENGINE45.json') -Encoding utf8
+
+      - name: Replace release assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference='Stop'
+          $zip=Join-Path $env:RUNNER_TEMP $env:ZIP_NAME
+          $hash=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          $shaFile=Join-Path $env:RUNNER_TEMP ($env:ZIP_NAME+'.sha256')
+          [IO.File]::WriteAllText($shaFile,($hash+'  '+$env:ZIP_NAME+[Environment]::NewLine),[Text.UTF8Encoding]::new($false))
+          $verification=Join-Path $env:RUNNER_TEMP 'MALWARE-VERIFICATION-ENGINE45.json'
+          $v=Get-Content -LiteralPath $verification -Raw|ConvertFrom-Json
+          $v | Add-Member -NotePropertyName zip_sha256 -NotePropertyValue $hash -Force
+          $v|ConvertTo-Json -Depth 5|Set-Content -LiteralPath $verification -Encoding utf8
+          gh release upload $env:TAG $zip $shaFile $verification --clobber --repo $env:GITHUB_REPOSITORY
+          gh release edit $env:TAG --repo $env:GITHUB_REPOSITORY --title 'UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Hotfix 13.1'
+          Write-Host ('PATCHED_ZIP_SHA256='+$hash)

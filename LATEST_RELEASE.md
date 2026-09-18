@@ -1,21 +1,17 @@
 # Latest UNCANNY public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1**
 
-- BuildId: `elysium45-hf18`
-- updateSerial: `1800`
+- BuildId: `elysium45-hf18.1`
+- updateSerial: `1810`
 - Runtime revision: `release-alpha.1.elysium-engine45-hf18`
 - ABI: `143`
-- Source revision: `0c5de983a400dd77d85992c6a5c1d37bcc3139eb`
-- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.zip
-- SHA-256: `21f654c3260a3c258f7121574edef56c44a718449c16f51aa20d7695bc925489`
+- Source revision: `458dc5820beb9322c7ee115ed98fd07a7b1b0c77`
+- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.1/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.1.zip
+- SHA-256: `82257f00d4c323853fef1b5576578d6b0b025b44829c17027c46019ece726777`
 
-HF18 closes the current Universal API Bridge and tester-feedback push. D3D11 startup now uses a universal native-Present stabilization floor before optional preprocessing, API routing/ownership evidence fails open instead of guessing, Control Deck controls expose visible help, and the ELYSIUM perceptual path receives stronger source-backed face, color, edge and microtexture reconstruction.
+HF18.1 fixes the installer/update preflight that could appear stuck at 2%, adds real 3/4/5/6/7% preflight stages, fixes the updater-button text layout, and replaces the monochrome launcher badge with the current full-color ELYSIUM emblem.
 
-Motion Protection Strength and Ghosting Guard are independently effective. The package also includes clean-room local exposure fusion, source-radiance recovery, depth-proven relighting/contact shaping, adaptive clarity/sharpening and source-directed subpixel edge resolve.
+Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35383983512
 
-Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35377702421
-
-The exact HF18 candidate passed static/generated-resource regressions, x86/x64 production and legacy builds, Windows HLSL compilation, a real D3D11 WARP rendered visual-quality matrix across all 42 exposed floating image controls, installer/rollback/manual-add regressions, exact ZIP verification and Microsoft Defender scans with 0 detections.
-
-Real-game visual, motion and performance acceptance remains title/GPU/driver specific.
+The exact candidate passed static regressions, x86/x64 production builds, HLSL, D3D11 WARP rendered-quality validation, Windows install/rollback/manual-add regressions, ZIP verification and Microsoft Defender with 0 detections.

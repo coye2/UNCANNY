@@ -1,17 +1,19 @@
 # UNCANNY — current public release
 
-UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.1
-Runtime revision: release-alpha.1.elysium-engine45-hf18
-BuildId: elysium45-hf18.1
-updateSerial: 1810
+UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.3
+Runtime revision: release-alpha.1.elysium-engine45-hf18.3
+BuildId: elysium45-hf18.3
+updateSerial: 1830
 ABI: 143
-Source revision: 458dc5820beb9322c7ee115ed98fd07a7b1b0c77
-Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.1.zip
-SHA-256: 82257f00d4c323853fef1b5576578d6b0b025b44829c17027c46019ece726777
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.1
+Source revision: 75e8d346bea6fb30d2a20e50dd8e7e0170b77760
+Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.3.zip
+SHA-256: 4f252c9c21891ecab2f7ecc37f95a0149854f4a2d18f2300402366f515169428
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.3
 Latest: https://github.com/coye2/UNCANNY/releases/latest
-Validation: https://github.com/coye2/uncanny-dev/actions/runs/35383983512
+Validation: https://github.com/coye2/uncanny-dev/actions/runs/35391373976
 
-HF18.1 fixes the launcher/install update path that could appear frozen at 2%, adds granular preflight progress, fixes the updater-button layout, and uses the current full-color ELYSIUM emblem. HF18 rendering and Universal API Bridge behavior is preserved.
+HF18.3 fixes launcher startup/ShowDialog crashes caused by malformed legacy discovery objects under StrictMode and prevents stale unmarked Lucid preferences from silently replacing freshly installed ELYSIUM binaries. Explicit current user engine selections remain honored. A packaged UNCANNY.exe launcher survival smoke test is part of the Windows release gate.
 
-The exact final package passed build/package/Windows/WARP/hash/Defender validation with 0 Defender detections. Real-game behavior remains title/GPU/driver specific.
+HF18 rendering, Universal API Bridge behavior, WARP quality contracts, PCSX2, REVENANT, and the clean runtime/Tools public package layout are preserved.
+
+Real-game behavior remains title/GPU/driver specific.

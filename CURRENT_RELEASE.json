@@ -2,9 +2,11 @@
   "project": "UNCANNY",
   "version": "0.20.0-alpha.1",
   "engine": "ELYSIUM Engine 4.5",
-  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - Hotfix 13.1",
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF15",
   "tag": "v0.20.0-alpha.1-elysium-engine45",
   "runtime_revision": "release-alpha.1.elysium-engine45",
+  "buildId": "elysium45-hf15",
+  "updateSerial": 1500,
   "abi": 143,
   "published": "2026-09-17",
   "latest_release_url": "https://github.com/coye2/UNCANNY/releases/latest",
@@ -12,10 +14,16 @@
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
     "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip",
-    "sha256": "69face793720c1d832afb6d8ea7d69091e5475ce231c7c62f84beef02c96675a"
+    "sha256": "8ea0f3742fc52595eb1b95597ab3112d50be5867abfa6193fb4d5f5465e6460d",
+    "size_bytes": 8653815
   },
-  "source_revision": "6d9b367bb4ef6506ff33be7023c05634019e78f2",
+  "source_revision": "b253880333ce2b8e4036cd5e53a6dcaf3bc69f8d",
   "features": {
+    "scan_on_startup_persisted": true,
+    "manual_add_persists_without_scan": true,
+    "windows_path_alias_canonicalization": true,
+    "per_target_build_id_updates": true,
+    "full_stack_remove": true,
     "adaptive_realism_levels": [
       "OFF",
       "LOW",
@@ -23,54 +31,36 @@
       "HIGH",
       "INSANE"
     ],
-    "uncanny_passes": [
-      1,
-      1.5,
-      2,
-      2.5,
-      3
-    ],
-    "adaptive_realism_vendor_neutral": true,
-    "dlss5_separate_optional_route": true,
+    "shared_scene_evidence_bus": true,
+    "split_contact_diffuse_lighting": true,
+    "emissive_bounce_guard": true,
+    "black_floor_intelligence": true,
+    "asymmetric_local_contrast": true,
+    "legacy_cinema_reconstruction_v2": true,
+    "depth_material_sculpt_high_insane": true,
     "motion_guard": true,
     "ghosting_guard": true,
+    "x25_clean_motion": true,
     "revenant": "experimental",
-    "full_stack_remove": true,
-    "mutable_generated_logs_do_not_block_restore": true,
-    "launcher_logo_inline": true,
-    "reference_stack_default": "INSANE",
-    "launcher_xaml_startup_fix": true
-  },
-  "adaptive_realism_tiers": {
-    "A": "trustworthy depth + native motion",
-    "B": "trustworthy depth + UNCANNY optical flow",
-    "C": "trustworthy depth only; conservative spatial lighting; no temporal history",
-    "D": "no trustworthy depth; tonal/spatial fallback only"
-  },
-  "api_notes": {
-    "d3d11": "strongest current Adaptive Realism route; capability-scored depth and optical flow where available",
-    "d3d12": "supported; conservative fallback when trustworthy generic scene depth is unavailable",
-    "d3d10_10_1": "compatibility route; capability depends on available evidence",
-    "d3d9": "supported legacy route; conservative fallback when trustworthy depth is unavailable",
-    "vulkan_opengl": "not at DirectX parity"
+    "dlss5_separate_optional_route": true
   },
   "verification": {
-    "python_regression_suite": "PASS",
-    "engine45_compiled_acceptance_checks": 22,
-    "adaptive_realism_x86": "PASS",
-    "adaptive_realism_x64": "PASS",
-    "production_builds": "PASS",
-    "public_package_audit": "PASS",
-    "zip_integrity": "PASS",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35302273751",
+    "windows_manual_add_persistence": "PASS",
     "windows_install_rollback": "PASS",
-    "restricted_third_party_shader_audit": "PASS",
-    "defender_extracted_package_detections": 0,
-    "defender_final_zip_detections": 0,
-    "windows_dynamic_stacked_remove": "PASS",
-    "windows_dynamic_changed_reshade_log_restore": "PASS",
+    "python_regression_suite": "PASS",
+    "production_builds_x86_x64": "PASS",
+    "engine45_compiled_acceptance": "PASS",
     "windows_hlsl_compile": "PASS",
-    "launcher_xaml_startup_patch": "PASS",
-    "public_patch_defender_scan": "PASS"
+    "powershell_parse": "PASS",
+    "public_package_audit": "PASS",
+    "restricted_third_party_shader_audit": "PASS",
+    "zip_integrity_and_hash": "PASS",
+    "defender_zip_scan": "PASS",
+    "defender_extracted_tree_scan": "PASS",
+    "defender_detections": 0,
+    "defender_engine": "1.1.26080.3",
+    "defender_signatures": "1.459.263.0"
   },
   "malware_verification_url": "https://github.com/coye2/UNCANNY/blob/main/docs/MALWARE-VERIFICATION.md",
   "limitations": [
@@ -79,5 +69,5 @@
     "Native-PC-game REVENANT asset replacement remains experimental.",
     "DLSS 5 is NVIDIA-specific even though Adaptive Realism itself is vendor-neutral."
   ],
-  "hotfix": "13.1"
+  "hotfix": "HF15"
 }

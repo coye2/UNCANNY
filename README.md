@@ -10,16 +10,18 @@ Real-time remastering middleware for Windows PC games and emulators.
 
 ## Latest release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13**  
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — Hotfix 13.1**  
 Runtime: `release-alpha.1.elysium-engine45` · ABI `143`
 
 Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45  
 Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45.zip`  
-SHA-256: `843e8a37b32b81c58035cd2d6c70c7288489a5fc1e221527ca7b36767d1e0811`
+SHA-256: `69face793720c1d832afb6d8ea7d69091e5475ce231c7c62f84beef02c96675a`
 
-Hotfix 13 keeps the Engine 4.5 runtime and adds tester-driven remove/restore repairs, restores the launcher logo, and pushes **Adaptive Realism** materially harder.
+Hotfix 13.1 keeps the Engine 4.5 runtime and adds tester-driven remove/restore repairs, restores the launcher logo, and pushes **Adaptive Realism** materially harder.
 
-## Hotfix 13
+## Hotfix 13.1
+
+- Fixed the launcher startup crash caused by the inline logo XAML using unsupported `Path.FillRule`.
 
 - **Remove now unwinds every recorded UNCANNY install layer** for the exact selected game instead of exposing an older install underneath.
 - Changed generated logs such as `ReShade.log`, OptiScaler logs and dlss5-feed logs no longer block restore.
@@ -30,7 +32,7 @@ Hotfix 13 keeps the Engine 4.5 runtime and adds tester-driven remove/restore rep
 - Depth-aware contact occlusion, bounded diffuse/specular response, exposure adaptation, local contrast and meso clarity were all strengthened.
 - Motion Guard / Ghosting Guard remain authoritative, with X2.5 retaining the lowest temporal-history weight.
 
-Source revision: `16ee9cb8ef9cdb9f038577884bb023909743d1e1`.
+Source revision: `6d9b367bb4ef6506ff33be7023c05634019e78f2`.
 
 ## Adaptive Realism
 

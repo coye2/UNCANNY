@@ -14,10 +14,10 @@
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.12.zip",
     "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.12/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.12.zip",
-    "sha256": "8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41",
-    "size_bytes": 8767002
+    "sha256": "9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6",
+    "size_bytes": 8767085
   },
-  "source_revision": "0d5da5599b8dd10c0de0a54ad4a47e2210487944",
+  "source_revision": "fa7b150b172afb6c3de1e9e7f86e94e0afda3722",
   "features": {
     "universal_d3d11_native_present_stabilization": true,
     "universal_api_bridge": true,
@@ -113,9 +113,9 @@
     "stale_sidecar_session_recovery": true
   },
   "verification": {
-    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35430147608",
-    "exact_candidate_sha": "0d5da5599b8dd10c0de0a54ad4a47e2210487944",
-    "dev_main_merge": "5915b7f5d4cc84c5eb93466c0b8d6122c97071b2",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35454458252",
+    "exact_candidate_sha": "fa7b150b172afb6c3de1e9e7f86e94e0afda3722",
+    "dev_main_merge": "3e12d2a93e262362ddb07114e64f0a49d9d5b2ef",
     "python_regression_suite": "PASS",
     "hf18_11_d3d11_neural_promotion_regression": "PASS",
     "hf18_10_d3d12_startup_resize_regression": "PASS",
@@ -140,8 +140,10 @@
     "defender_extracted_tree_scan": "PASS",
     "defender_detections": 0,
     "hf18_12_runtime_launch_recovery_regression": "PASS",
-    "publication_run": "https://github.com/coye2/UNCANNY/actions/runs/35454243517",
-    "publication_defender_scan": "PASS"
+    "publication_run": "https://github.com/coye2/UNCANNY/actions/runs/35454757251",
+    "publication_defender_scan": "PASS",
+    "runtime_fix_candidate_sha": "0d5da5599b8dd10c0de0a54ad4a47e2210487944",
+    "runtime_fix_validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35430147608"
   },
   "limitations": [
     "Real-game visual, motion, performance, and provider acceptance remains title/GPU/driver specific.",
@@ -157,6 +159,6 @@
   "format": "UNCANNY-CURRENT-RELEASE-1",
   "name": "UNCANNY",
   "displayVersion": "v0.20 ELYSIUM Engine 4.5 HF18.12",
-  "validation": "PASS — exact HF18.12 candidate 0d5da5599b8dd10c0de0a54ad4a47e2210487944 passed static/regression, x86/x64 production, Windows HLSL/WARP, packaged install/update/rollback/scanner, packaged PCSX2 + generic sidecar launch, AllSigned, ZIP/hash, package audit and Microsoft Defender gates. Public publication run 35454243517 reverified the exact ZIP identity/hash and Defender-scanned it again. Real PCSX2/Cyberpunk/Spider-Man hardware acceptance remains separate.",
-  "merged_source_revision": "5915b7f5d4cc84c5eb93466c0b8d6122c97071b2"
+  "validation": "PASS — final clean HF18.12 repack fa7b150b172afb6c3de1e9e7f86e94e0afda3722 passed static/regression, x86/x64 production, Windows HLSL/WARP, packaged install/update/rollback/scanner, packaged PCSX2 + generic sidecar launch, AllSigned, ZIP/hash, package audit and Microsoft Defender gates in run 35454458252. Public publication run 35454757251 reverified the exact repack hash/identity, Defender-scanned it again, and replaced the release assets. Runtime code is unchanged from the originally validated HF18.12 functional fix. Real PCSX2/Cyberpunk/Spider-Man hardware acceptance remains separate.",
+  "merged_source_revision": "3e12d2a93e262362ddb07114e64f0a49d9d5b2ef"
 }

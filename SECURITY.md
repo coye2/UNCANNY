@@ -1,37 +1,30 @@
 # Security
 
-UNCANNY is experimental graphics middleware that installs runtime components into game directories. Treat alpha builds like any other low-level modding/injection software: preserve backups, use complete packages, and do not mix DLLs from unrelated revisions.
+UNCANNY installs low-level runtime components into game folders, so treat alpha builds like any other graphics injection/modding tool: use official packages, keep backups and do not mix files between releases.
 
-## Public vs private packages
+## Official builds
 
-Only public Windows packages are intended for redistribution.
+Use releases from:
+https://github.com/coye2/UNCANNY/releases
 
-Private workspace-recovery archives contain proprietary source, development material and internal recovery data. They are not public release artifacts and should not be mirrored or redistributed.
+The full development workspace is private and is not a redistributable release package.
 
-## Reporting a security issue
+## Antivirus
 
-Do not publish exploit details, private source material, secrets, personal paths or sensitive diagnostic data in a public GitHub issue.
+HF18.11 was scanned with Microsoft Defender as part of publication. The released ZIP and extracted tree returned 0 detections.
 
-Contact the project owner through the GitHub account/repository first and share only the minimum information needed to establish the problem. A sanitized public issue can be created later when disclosure is appropriate.
+That result applies to the exact published package/hash. It is not a promise that antivirus signatures will never change.
 
-## Runtime hardening
+UNCANNY does not require users to disable Defender or add broad exclusions.
 
-Current public candidates use compiled-code hardening and authenticated encrypted runtime resources. This is tamper resistance and source protection, not a claim that client-side software is impossible to reverse engineer.
+See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md).
 
-## Antivirus / signing
+## Reporting a security problem
 
-Current alpha binaries are unsigned. Public packaging now treats a Microsoft Defender detection as a release blocker, and internal CI/test executables are not part of the public runtime payload.
+Do not post exploit details, private source, secrets or sensitive diagnostic data in a public issue.
 
-The AV-clean Hotfix 11 package was scanned on a GitHub-hosted Windows Server 2025 runner after Microsoft Defender signatures were updated. Both the cleaned runtime tree and the completed ZIP returned **0 detections**.
+Contact the project owner through the GitHub account/repository first with the minimum information needed to reproduce the problem.
 
-- Microsoft Defender engine: `1.1.26080.3`
-- Defender signatures: `1.459.256.0`
-- Defender product: `4.18.26080.3`
-- Defender exclusions used: **none**
-- Defender disabled/bypassed: **no**
-- Threat restoration/allowlisting used: **none**
-- Release ZIP SHA-256: `a523db2ec0149f139a24c70aba36f68222cba057369b97864615b07c9c356e69`
+## Signing
 
-The exact verification record is published in [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md), is included inside the release ZIP, and is attached to the Hotfix 11 GitHub release as `MALWARE-VERIFICATION-HOTFIX11.json`.
-
-A clean scan is evidence for that exact build and Defender signature snapshot, not a permanent guarantee against future antivirus signature changes. Any future warning should still be investigated rather than automatically ignored or suppressed.
+The current alpha binaries are unsigned, so SmartScreen / Unknown Publisher warnings are expected until code signing is set up.

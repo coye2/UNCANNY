@@ -1,50 +1,71 @@
-# UNCANNY v0.20 ELYSIUM — HF18.11
+# UNCANNY
 
-UNCANNY is a Windows real-time reconstruction/remaster runtime for games and emulators.
+UNCANNY is a real-time graphics remastering project for Windows games and emulators.
 
-**HF18.11 is the current public stabilization release.** It restores a staged direct-D3D11 neural path without removing the universal hard-lock safety floor.
+The goal is pretty simple: make games look cleaner and more modern without turning setup into a project of its own. ELYSIUM handles the live image work, REVENANT handles experimental asset reconstruction, and the launcher takes care of installs, updates, rollback, profiles and diagnostics.
 
-## Start
+**Current release:** v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.11
 
-1. Extract the ZIP completely.
-2. Double-click **`UNCANNY.exe`**.
-3. Select or manually add a game/emulator.
-4. Choose **Install UNCANNY** or **Update UNCANNY**.
-5. Launch from UNCANNY and press **HOME** for the Control Deck.
+## Quick start
 
-## HF18.11 — direct-D3D11 neural promotion
+1. Download the latest release ZIP.
+2. Extract the whole folder.
+3. Run `UNCANNY.exe`.
+4. Pick a detected game, or use **Add game**.
+5. Click **Install UNCANNY**.
+6. Launch the game and press **HOME** for the Control Deck.
 
-HF18.9 fixed the Fallout/Stray-class D3D11 hard-lock problem by making the conservative current-frame path universal. Review of the current runtime found that this safety floor was also permanently forcing DLSS5/Feature-18 off on every direct-D3D11 frame.
+If UNCANNY is already installed for that game, use **Update UNCANNY** instead.
 
-HF18.11 separates those two concerns:
+## What it does
 
-- The universal direct-D3D11 current-frame/fail-open safety floor remains active.
-- Neural promotion requires **240 successful ELYSIUM frames**, an advancing/recent native Present stream, and at least **9 seconds** since the active DXGI transition.
-- Neural/shared-resource warmup stays on the maintenance thread; Present never waits behind it.
-- Native depth, optical-flow temporal history, and the advanced temporal route remain deferred on the direct safe path even after neural becomes eligible.
-- If neural output is unavailable, busy, broken, or still warming, the live source frame is retained.
-- Resize, fullscreen, target-mode, and color-space transitions revoke promotion and re-arm stabilization.
-- The policy is route-wide with no Fallout 4, Stray, or other executable-name exception.
+- ELYSIUM real-time reconstruction and detail recovery
+- 1 / 1.5 / 2 / 2.5 / 3 pass modes
+- Motion Guard and Ghosting Guard
+- Adaptive Realism scene tuning
+- optional neural / DLSS 5 integration where the route is available
+- REVENANT experimental asset reconstruction
+- D3D9, D3D10, D3D11 and D3D12 compatibility work
+- per-game settings, diagnostics, rollback and uninstall
 
-## Preserved HF18.10 / PCSX2 behavior
+The native ELYSIUM path and the optional neural path are separate. A game can be using ELYSIUM correctly even if the neural provider is unavailable.
 
-- HF18.10's universal direct-D3D12 startup and resize protection is unchanged.
-- PCSX2 remains explicitly on **Direct3D 12** with `Renderer=15`.
-- Verified `UNCANNY.Launch.exe` sidecar launch remains authoritative; selected target executables keep their original names/bytes.
-- OneDrive/Cloud Files-aware PCSX2 configuration, legacy-wrapper migration, installer fast paths, rollback, scanner/library fixes, REVENANT, Motion Guard, Ghosting Guard, and X2.5 clean-motion behavior remain preserved.
+## HF18.11
 
-## Exact validation
+HF18.11 fixes a D3D11 logic bug that kept the neural path disabled forever after the earlier stability work.
 
-Exact tested candidate: `131560b87608e34fd0ede99dc2e16f9c1472d39e`  
-Dev-main merge: `a86bc309ea697b4928493f58c16596ad18ef235d`  
-Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35424918011  
-Public release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.11  
-ZIP SHA-256: `7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800`
+Direct D3D11 still starts conservatively so the game gets a healthy native Present stream first. Once the route has been stable long enough, neural resources can warm up and the neural path can become eligible without re-enabling the riskier depth/temporal behavior that caused earlier lockups.
 
-The exact candidate passed the static/regression suite, x86/x64 production and Engine 4.5 builds, Windows HLSL, D3D11 WARP visual-quality matrix, packaged install/update/rollback/scanner/PCSX2 sidecar tests, normal and AllSigned launcher startup, exact ZIP integrity, and Microsoft Defender with 0 detections. The public release pipeline independently re-downloaded, hash-verified, identity-checked, and Defender-scanned the artifact before publication.
+HF18.10's D3D12 startup/resize fix is still in place, and PCSX2 remains on the D3D12 `Renderer=15` route.
 
-CI proves the packaged/runtime contracts above. Current Fallout/Stray D3D11 neural output, PCSX2 gameplay, REVENANT visible use, and Feature-18 rendered output still require real target-machine/GPU evidence.
+## Current status
 
-## Windows trust
+D3D11 and D3D12 are the main active paths. PCSX2 is the main emulator test target. Older DirectX routes exist but get less capability when the game does not expose enough reliable frame data.
 
-UNCANNY is currently unsigned. Windows SmartScreen / Unknown Publisher may appear until trusted Authenticode signing is configured.
+Vulkan and OpenGL are not at DirectX parity yet.
+
+REVENANT is still experimental, especially for native PC games.
+
+UNCANNY is alpha software. CI catches a lot, but real game/GPU behavior still has to be tested on real hardware.
+
+## Download
+
+Latest release:
+https://github.com/coye2/UNCANNY/releases/latest
+
+HF18.11 ZIP SHA-256:
+
+`7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800`
+
+More:
+- [Usage](USAGE.md)
+- [Compatibility](docs/COMPATIBILITY.md)
+- [FAQ](docs/FAQ.md)
+- [Release notes](docs/RELEASE-NOTES.md)
+- [Security](SECURITY.md)
+
+## Windows note
+
+The current alpha build is unsigned, so Windows may show SmartScreen / Unknown Publisher. The published HF18.11 package was scanned with Microsoft Defender before release. See [malware verification](docs/MALWARE-VERIFICATION.md).
+
+UNCANNY is independent and is not affiliated with or endorsed by NVIDIA.

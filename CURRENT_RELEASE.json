@@ -14,10 +14,10 @@
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.6.zip",
     "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.6/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.6.zip",
-    "sha256": "4cc88f35a53130c464671305cba3b8478f51a90149880fbafb19d86e956a9a13",
-    "size_bytes": 8736540
+    "sha256": "3f9bbe8eb520918df9e23a84f879bce8079b197f2e194326430b3be4930be111",
+    "size_bytes": 8741801
   },
-  "source_revision": "f14d29b1c321ee3b651511420993deab99af2062",
+  "source_revision": "852e617c003a8672ead6bd7607e24163a99b8fc5",
   "features": {
     "universal_d3d11_native_present_stabilization": true,
     "universal_api_bridge": true,
@@ -79,10 +79,17 @@
     "streaming_pe_architecture_checks": true,
     "unchanged_file_pruning": true,
     "changed_files_only_rollback_transaction": true,
-    "provider_discovery_state_reuse": true
+    "provider_discovery_state_reuse": true,
+    "verified_same_build_noop_update": true,
+    "verified_neural_core_reuse": true,
+    "bounded_provider_discovery_fast_path": true,
+    "pcsx2_fail_open_prelaunch": true,
+    "pcsx2_bounded_revenant_recovery": true,
+    "pcsx2_bounded_runtime_attach": true,
+    "packaged_pcsx2_wrapper_launch_gate": true
   },
   "verification": {
-    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35409019931",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35412014280",
     "python_regression_suite": "PASS",
     "production_builds_x86_x64": "PASS",
     "engine45_compiled_acceptance": "PASS",
@@ -110,10 +117,12 @@
     "packaged_scanner_execution": "PASS",
     "packaged_manual_target_retention": "PASS",
     "packaged_install_update_speed": "PASS",
-    "second_pass_update_ms": 59659,
-    "planned_files": 46,
-    "changed_files": 2,
-    "unchanged_files_skipped": 44
+    "second_pass_update_ms": 3884,
+    "same_build_zero_file_transaction": "PASS",
+    "packaged_pcsx2_wrapper_launch": "PASS",
+    "pcsx2_runtime_load": "PASS",
+    "pcsx2_runtime_initialization": "PASS",
+    "pcsx2_verified_original_spawned": "PASS"
   },
   "limitations": [
     "Real-game visual, motion and performance acceptance remains title/GPU/driver specific.",
@@ -127,5 +136,5 @@
   "format": "UNCANNY-CURRENT-RELEASE-1",
   "name": "UNCANNY",
   "displayVersion": "v0.20 ELYSIUM Engine 4.5 HF18.6",
-  "validation": "PASS — exact HF18.6 candidate completed build/package, packaged install/update speed, logo/cache, scanner, normal startup, AllSigned startup, WARP, ZIP/hash, and Microsoft Defender gates."
+  "validation": "PASS — exact HF18.6 source 852e617c003a8672ead6bd7607e24163a99b8fc5 completed build/package, packaged install/update speed (verified same-build second pass 3884 ms with zero file transaction), logo/cache, scanner, packaged PCSX2 wrapper → verified original/runtime launch, normal startup, AllSigned startup, WARP, ZIP/hash, and Microsoft Defender gates."
 }

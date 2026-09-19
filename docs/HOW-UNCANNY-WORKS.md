@@ -6,7 +6,7 @@ i'm still not dumping the repo.
 
 what i can do is show real parts of the current code and explain what they do without giving out the whole tree, build system, full shader source, provider work and everything around it.
 
-this is from the current HF18.12 line.
+this is from the current HF18.13 line.
 
 # the basic setup
 
@@ -127,6 +127,58 @@ that's why it uses `try_to_lock`.
 dropping UNCANNY for one frame is fine. making the game wait on my maintenance thread is not.
 
 this is also why provider and neural setup are kept off Present when possible.
+
+## D3D12 warmup and resize
+
+HF18.13 fixed a real ordering problem here.
+
+HF18.12 moved the expensive D3D12 setup off Present, which was the right direction, but the game could hit ResizeBuffers while that same swapchain was being prepared.
+
+Present still does not wait on UNCANNY. the resize boundary is different because the game is changing the resources UNCANNY owns.
+
+trimmed from the current path:
+
+```cpp
+auto route = g_swapRoutes.find(s);
+
+if(route != g_swapRoutes.end() &&
+   route->second.api == 12)
+{
+    std::lock_guard<std::recursive_mutex> frameLock(
+        g_presentMutex
+    );
+
+    if(!release_postfx_for_resize(s))
+        return DXGI_ERROR_WAS_STILL_DRAWING;
+
+    auto hr = g_realResizeBuffers(
+        s, count, w, h, fmt, flags
+    );
+
+    if(SUCCEEDED(hr))
+        mark_dxgi_transition(
+            s,
+            L"D3D12 resize completed; native Present stabilization re-armed"
+        );
+
+    return hr;
+}
+```
+
+the important part is that this lock is at the rare resize transition. it is not put around normal Present.
+
+the current runtime also tracks the swapchain being warmed off Present so that exact swapchain cannot slip through the native startup passthrough and resize underneath the resource build.
+
+so the rule is:
+
+```text
+Present busy       native frame keeps going
+D3D12 warmup       maintenance thread
+owned resize       bounded serialized handoff
+startup resize     native passthrough until UNCANNY owns it
+```
+
+that is the HF18.13 change that targets the PCSX2 "a few seconds into gameplay then freeze" regression.
 
 ## the sliders actually hit the renderer
 
@@ -415,7 +467,7 @@ keep the game authoritative. prove the route is healthy. do advanced work only w
 
 D3D11 has the current frame safety floor and staged neural promotion.
 
-D3D12 has its own startup, resize and resource retirement logic.
+D3D12 has its own startup, off-Present warmup, transactional resize and resource-retirement logic.
 
 PCSX2 is currently kept on D3D12 with `Renderer=15`.
 
@@ -464,19 +516,21 @@ this page is just here because people asked to see how the engine actually works
 
 ## current build proof
 
-this is based on HF18.12.
+this is based on HF18.13.
 
-the final clean repack is buildId `elysium45-hf18.12`, updateSerial `1920`.
+the current public build is buildId `elysium45-hf18.13`, updateSerial `1930`.
 
-the exact repack source was `fa7b150b172afb6c3de1e9e7f86e94e0afda3722`.
+the exact validated candidate was `982baa13dd2612e8368921ade4322bc99d6d6578`.
 
-validation run `35454458252` passed x86 and x64 production builds, HLSL compile, static regressions, D3D11 WARP testing, install/update/rollback tests, scanner and sidecar tests, packaged PCSX2 + generic sidecar launch tests, launcher checks, AllSigned startup, ZIP integrity and Defender scanning.
+validation run `35459233640` passed the production build, Windows HLSL/WARP, the D3D12/PCSX2 regression, verified headless-session recovery, packaged PCSX2 + generic sidecar launch, launcher startup, AllSigned and Defender gates.
 
-the public publisher then pulled that exact repack, checked the package identity and hash again, Defender scanned it again, and published it in run `35454757251`.
+that candidate was merged to dev main as `7d1087276c4eac9b0e4ddfdf64ff8d23d439cd96`.
+
+the public publisher then published the verified HF18.13 package in run `35459735287`.
 
 final public ZIP SHA-256:
 
-`9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6`
+`c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522`
 
 that proves the package i released passed those checks.
 

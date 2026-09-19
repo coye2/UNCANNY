@@ -32,11 +32,11 @@ The native ELYSIUM path and the optional neural path are separate. A game can be
 
 ## How the source actually works
 
-people kept asking me to show source, so i wrote up the parts that actually matter instead of dumping the whole private repo.
+people kept asking me to show source. i'm not opening the whole repo, but i did post real current code and explain what it is doing.
 
-there's real current code in there too, including the D3D11 promotion gate, fail-open Present path, Adaptive Realism gating and REVENANT replacement logic.
+D3D11 promotion, Present safety, ELYSIUM, Adaptive Realism, REVENANT, the Deck, launch state. the useful stuff.
 
-[How UNCANNY actually works — including "Where the Magic Happens"](docs/HOW-UNCANNY-WORKS.md)
+[how UNCANNY works. including "where the magic happens"](docs/HOW-UNCANNY-WORKS.md)
 
 ## HF18.11
 

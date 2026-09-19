@@ -39,9 +39,17 @@ X2.5 uses less temporal history than the other deep modes and is meant to favor 
 
 PCSX2 currently uses the Direct3D 12 route. UNCANNY writes `Renderer=15` and keeps the original `pcsx2-qt.exe` intact.
 
+HF18.12 specifically changes the D3D12 handoff that could let PCSX2 reach gameplay and then hard-freeze a few seconds later. First-use D3D12 setup now warms off Present and resize/resource retirement is nonblocking.
+
 If an older UNCANNY build replaced or wrapped PCSX2 incorrectly, running **Update UNCANNY** should migrate it back to the current sidecar layout.
 
 Cloud/OneDrive PCSX2 profile folders are supported, but real symlinks/junctions are handled conservatively.
+
+## Modern startup failures
+
+HF18.12 can use deferred startup attach for non-PCSX2 targets with no static graphics API import. Native process startup happens first, then UNCANNY attempts attachment.
+
+If that optional attach cannot be confirmed, the game should remain running rather than being terminated by UNCANNY.
 
 ## REVENANT
 
@@ -72,13 +80,13 @@ For a useful bug report, include the game, executable, graphics API, x86/x64, GP
 
 ## Current package
 
-Release: **HF18.11**  
-BuildId: `elysium45-hf18.11`  
-updateSerial: `1910`  
+Release: **HF18.12**  
+BuildId: `elysium45-hf18.12`  
+updateSerial: `1920`  
 ABI: `143`
 
 ZIP:
-`UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.11.zip`
+`UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.12.zip`
 
 SHA-256:
-`7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800`
+`9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6`

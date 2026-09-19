@@ -128,66 +128,124 @@ dropping UNCANNY for one frame is fine. making the game wait on my maintenance t
 
 this is also why provider and neural setup are kept off Present when possible.
 
-## what ELYSIUM is actually doing
+## the sliders actually hit the renderer
 
-ELYSIUM is not just one sharpen value getting pushed harder.
+this is probably better proof than dumping a huge shader block.
 
-a lot of the stronger work gets scaled by what the frame is telling the engine.
+when you move something in Control Deck it writes straight into the mapped runtime state. it is not changing some fake UI copy.
 
-this is from Adaptive Realism:
+trimmed from the live control path:
 
-```hlsl
-float arStable =
-    lerp(.48, 1.0, arFlowConf) *
-    (1.0 - arDisocclusion * .86);
+```cpp
+static void set_value(const Hit& h, int x, int direction = 0){
+    if(!h.enabled || !h.spec || !connected())
+        return;
 
-float arAo =
-    arContact *
-    lerp(.085, .36, arQ) *
-    arTierScale *
-    arPerf *
-    arStable;
+    auto& c = *h.spec;
 
-arAo *=
-    lerp(.55, 1.0, saturate(arDepthSpread * 52.0)) *
-    lerp(1.0, .55, warmMidCue * saturate(skinProtect));
+    UncannyControlEdit edit(*rt);
+    if(!edit.acquired)
+        return;
 
-p *= 1.0 - saturate(arAo);
+    double current = UncannyReadControl(*rt, c);
+    double v = current;
 
-float3 arDiffuse = clamp(arBounce - oc, -.12, .18);
+    // slider / toggle / stepped control math lives here
 
-float arDiffuseGate =
-    saturate(.35 + directionalSupport * .65) *
-    (1.0 - noiseRisk) *
-    sourceAgreement;
+    if(std::wstring(c.key) == L"quality_mode")
+        UncannyQuality(*rt, int(v));
+    else
+        UncannyWriteControl(*rt, c, v);
 
-p += arDiffuse *
-     arDiffuseGate *
-     lerp(.060, .30, arQ) *
-     arTierScale *
-     arPerf *
-     arStable;
+    edit.commit();
+    changed();
+}
 ```
 
-the important part is not the numbers.
+that write is bounded and versioned. while a Deck edit is happening the render side does not read half old and half new settings.
 
-`arFlowConf` is motion confidence.
+the renderer takes a clean snapshot:
 
-`arDisocclusion` catches areas where history stops being trustworthy.
+```cpp
+UncannyNativeState controls;
 
-`arDepthSpread` helps decide how much depth response makes sense.
+if(!UncannyReadSettingsSnapshot(*g_state, controls)){
+    g_state->postfx_active = 0;
+    g_state->dlss5_active = 0;
+    return false;
+}
+```
 
-`skinProtect` pulls it back on skin.
+then those controls get packed into the actual render constants and uploaded:
 
-`noiseRisk` pulls it back when the source looks unstable.
+```cpp
+auto constants = UncannyMakeConstants(
+    controls,
+    x.width,
+    x.height,
+    x.historyValid,
+    neural != nullptr,
+    nativeDepth.usable,
+    false,
+    g_state->temporal_flow_active != 0
+);
 
-`sourceAgreement` makes the effect lose strength when the current source does not support it.
+x.context->UpdateSubresource(
+    x.constants.Get(),
+    0,
+    nullptr,
+    &constants,
+    0,
+    0
+);
+```
 
-so yeah, higher settings make it stronger. but the guards still get the final say.
+so the path is literally:
 
-if the route does not have trustworthy depth, UNCANNY should not act like it does.
+```text
+Control Deck
+    |
+shared runtime state
+    |
+clean settings snapshot
+    |
+render constants
+    |
+ELYSIUM shader
+```
 
-same thing with motion. same thing with neural.
+that is also why the UI shows requested state vs image consumed state. i wanted a way to tell if the runtime actually saw the edit instead of assuming it did.
+
+## a smaller piece of ELYSIUM
+
+this is a better example of the image side than posting half the shader.
+
+```hlsl
+float sharp =
+    ((structure - 1.0) * 1.05 +
+     fineStructure * .31 +
+     (clarity - 1.0) * 1.12 +
+     sharpenV * .56 +
+     microtexture * .36 +
+     detailRecovery * .42) *
+    styleK * photoK * guard * contentSharp;
+
+sharp *= lerp(.65, 1.0, saturate(edgePreserve)) * edgeK;
+sharp *= lerp(1.0, .66, saturate(skinProtect) * warmMidCue);
+sharp *= evidenceGate *
+         lerp(.10, 1.0, directionalSupport) *
+         (1.0 - noiseRisk * .92);
+
+sharp = clamp(sharp, -.25, .70);
+
+p += edge * sharp;
+```
+
+that is one small part of the finishing stack.
+
+the user controls feed it, but so do the guards. edge protection, skin protection, scene evidence, directional support and noise risk all change how much of that requested strength actually makes it to the frame.
+
+so a slider can absolutely ask for more. it still does not get to ignore the protection logic.
 
 ## motion and ghosting
 

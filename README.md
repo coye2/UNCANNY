@@ -1,39 +1,32 @@
-# UNCANNY v0.20 ELYSIUM — HF18.5
+# UNCANNY v0.20 ELYSIUM — HF18.6
 
-UNCANNY is a Windows real-time reconstruction/remaster runtime for games and emulators. **HF18.5** is a launcher/library repair release driven by a real tester log: the launcher opened, but its official logo failed WPF decoding and cached/scanned games never reached the UI.
+UNCANNY is a Windows real-time reconstruction/remaster runtime for games and emulators.
+
+**HF18.6 is an installer/update performance hotfix.** It focuses on the tester-reproduced stalls at 7%, the opaque 24–48% staging phase, and the 70% verified rollback backup phase.
 
 ## Start
 
 1. Extract the ZIP completely.
 2. Double-click **`UNCANNY.exe`**.
-3. Let the launcher load cached/manual games immediately, or use **Scan PC**.
-4. Use **Add game** for any title/emulator discovery misses.
-5. Select the real game/emulator EXE and choose **Install UNCANNY** or **Update UNCANNY**.
-6. Launch normally and press **HOME** for the Control Deck.
+3. Select a game/emulator.
+4. Choose **Install UNCANNY** or **Update UNCANNY**.
+5. Launch normally and press **HOME** for the Control Deck.
 
-## HF18.5
+## HF18.6 installer/update changes
 
-- Fixes packaged **Scan PC** using the wrong root. Public PowerShell lives under `runtime\`; the scanner now resolves `UNCANNY-InstallCommon.ps1` and `UNCANNY-Library.ps1` beside itself instead of looking in the clean ZIP root.
-- Cache/manual/scan records are canonicalized through guarded property access before WPF binding. Legacy records with `Path`, `Exe`, missing optional fields, or stale schemas can no longer blank the library.
-- **Manual Add Game targets are authoritative through later scans** instead of being dropped by heuristic helper filtering.
-- The official silver UNCANNY U PNG is still the real asset. The launcher re-encodes it through a **32-bit ARGB** surface before WPF loads it, fixing the tester-reproduced “image format is unrecognized” failure.
-- Recovered launcher failures now log the PowerShell stack and invocation position instead of only the exception name.
-- HF18.4’s process-scoped startup recovery is preserved. UNCANNY does not change persistent machine/user execution policy and does not disable Defender or SmartScreen.
-- Installed-game path hardening, updater ordering, stale-Lucid migration, PCSX2, REVENANT, rollback, Universal API Bridge, Motion Guard/Ghosting Guard and the HF18 rendering stack are preserved.
+- Release binaries are verified once for the selected architecture instead of repeating the same full verification.
+- PE architecture checks use bounded streaming header/import reads instead of loading entire binaries into memory.
+- 32-bit game installs validate the required x64 neural helper/bridge route directly instead of re-validating the entire x64 runtime set.
+- The verified original-game digest is carried forward through the transaction so the same large EXE is not repeatedly hashed.
+- Update planning compares installed bytes against the new package and **skips byte-identical files completely** instead of backing them up, rewriting them and flushing them again.
+- Only files that actually change enter the rollback transaction.
+- The changed files still receive verified backup, staged-temp integrity, current-destination verification and committed-destination verification.
+- Progress from 24–95% now reports real sub-stages instead of appearing frozen at one percentage.
 
-The release gate now executes the **packaged** launcher with malformed/legacy cache records, verifies the logo actually loads, invokes the **packaged scanner**, checks the library render log, then runs normal startup, AllSigned startup, WARP, ZIP/hash and Defender gates.
+## Preserved
 
-## Verified release
+HF18.5's Scan PC/runtime-root fix, cache/manual/scan normalization, authoritative Add Game retention and official Library logo remain intact. HF18 rendering, Universal API Bridge, PCSX2, REVENANT, rollback, Motion Guard/Ghosting Guard and startup-policy recovery are unchanged.
 
-- Source: `8414a99010fff395c117baaadb77d63dbde946bf`
-- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35404395219
-- Package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip`
-- SHA-256: `bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9`
-- Official Library logo decode: **PASS**
-- Packaged scanner + manual-target retention: **PASS**
-- Normal + AllSigned startup: **PASS**
-- Defender: **PASS / 0 detections**
+## Windows trust
 
-## Status
-
-This is public alpha software. Build/package validation does not replace real-game GPU/driver/title acceptance. The executable remains unsigned, so SmartScreen/Unknown Publisher may still appear until trusted Authenticode signing is configured.
+UNCANNY is still unsigned. Windows SmartScreen / Unknown Publisher may appear until trusted Authenticode signing is configured.

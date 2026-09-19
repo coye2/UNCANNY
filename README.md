@@ -30,6 +30,16 @@ If UNCANNY is already installed for that game, use **Update UNCANNY** instead.
 
 The native ELYSIUM path and the optional neural path are separate. A game can be using ELYSIUM correctly even if the neural provider is unavailable.
 
+## How the source actually works
+
+I am not publishing the private source tree, but I did publish a real technical breakdown of the runtime and selected current implementation excerpts.
+
+It covers the frame path, D3D11/D3D12 safety model, ELYSIUM, Adaptive Realism, neural promotion, Motion/Ghosting Guard, REVENANT replacement logic, Control Deck state, sidecar launching and the main failure/fallback rules.
+
+It also has a **Where the Magic Happens** section with real source chunks instead of fake pseudocode.
+
+[Read: How UNCANNY actually works](docs/HOW-UNCANNY-WORKS.md)
+
 ## HF18.11
 
 HF18.11 fixes a D3D11 logic bug that kept the neural path disabled forever after the earlier stability work.
@@ -59,6 +69,7 @@ HF18.11 ZIP SHA-256:
 
 More:
 - [Usage](USAGE.md)
+- [How UNCANNY actually works](docs/HOW-UNCANNY-WORKS.md)
 - [Compatibility](docs/COMPATIBILITY.md)
 - [FAQ](docs/FAQ.md)
 - [Release notes](docs/RELEASE-NOTES.md)

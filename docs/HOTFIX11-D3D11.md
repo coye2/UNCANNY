@@ -17,6 +17,6 @@ That design became the base for the later HF18 D3D11 stability work.
 
 HF18.11 was the release that fixed the opposite problem: the safety floor had become so conservative that neural promotion could never happen.
 
-HF18.12 keeps that staged D3D11 promotion behavior and adds the newer D3D12/runtime startup recovery work.
+HF18.13 keeps that staged D3D11 promotion behavior and adds the newer D3D12 resize/warmup and launch-session recovery work.
 
 For current behavior, see [Compatibility](COMPATIBILITY.md) and the [current release notes](RELEASE-NOTES.md).

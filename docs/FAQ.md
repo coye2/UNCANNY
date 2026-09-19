@@ -2,7 +2,9 @@
 
 ## What is UNCANNY?
 
-A Windows real-time remastering runtime for games and emulators. It combines ELYSIUM live reconstruction, motion protection, optional neural processing, compatibility work and the experimental REVENANT asset system.
+A Windows real-time graphics remastering runtime for games and emulators.
+
+It combines ELYSIUM live reconstruction, motion protection, optional neural processing, compatibility work and the experimental REVENANT asset system.
 
 ## What is the current release?
 
@@ -23,15 +25,15 @@ No. UNCANNY uses native runtime components, its own controls, install/rollback t
 
 No.
 
-ELYSIUM is UNCANNY's native image-processing path. The DLSS 5 route is optional and provider-specific.
+ELYSIUM is UNCANNY's native image-processing path. DLSS 5 is a separate optional provider route.
 
 ## What are 1 / 1.5 / 2 / 2.5 / 3?
 
 Those are ELYSIUM pass depths.
 
-X2.5 is intentionally tuned to use less temporal history and favor cleaner motion.
+X2.5 intentionally uses less temporal history and is meant to favor cleaner motion.
 
-## What are Motion Guard and Ghosting Guard?
+## What do Motion Guard and Ghosting Guard do?
 
 They reduce unstable history when motion, disocclusion or current/history disagreement makes temporal reconstruction unsafe.
 
@@ -39,7 +41,7 @@ They reduce unstable history when motion, disocclusion or current/history disagr
 
 A scene-aware layer that adjusts supported ELYSIUM processing based on the frame data UNCANNY can actually trust.
 
-If reliable depth/motion data is missing, it falls back instead of pretending those features are available.
+If reliable depth or motion data is missing, it falls back instead of pretending those features are available.
 
 ## What is REVENANT?
 
@@ -49,7 +51,7 @@ PCSX2 is the main test target. Native PC-game asset replacement is still experim
 
 ## Does it support PCSX2?
 
-Yes, it is one of the main targets. The current route uses Direct3D 12 / `Renderer=15`.
+Yes. It is one of the main test targets. The current route uses Direct3D 12 with `Renderer=15`.
 
 ## D3D11 and D3D12?
 
@@ -59,7 +61,7 @@ HF18.11 fixes staged neural promotion on D3D11. HF18.10 handles D3D12 startup/re
 
 ## D3D9 / D3D10?
 
-There are legacy/compatibility routes, but they can have reduced capability depending on the game and available frame data.
+There are legacy/compatibility routes, but capability depends on the game and what frame data is available.
 
 ## Vulkan / OpenGL?
 
@@ -69,7 +71,7 @@ Not at DirectX parity yet.
 
 No.
 
-If Defender flags an official current release, do not blindly whitelist it. Check the release hash and report the exact detection.
+If Defender flags an official current release, check the release hash and report the exact detection instead of blindly whitelisting it.
 
 ## Why does Windows say Unknown Publisher?
 
@@ -81,7 +83,7 @@ The full development workspace is private. This repository is the public release
 
 ## Does CI prove every game works?
 
-No. CI proves the code/package gates it actually runs. Game/GPU behavior still needs real hardware testing.
+No. CI proves the code/package checks it actually runs. Game and GPU behavior still needs real hardware testing.
 
 ## Is UNCANNY affiliated with NVIDIA?
 

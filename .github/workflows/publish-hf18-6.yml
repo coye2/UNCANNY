@@ -1,7 +1,7 @@
 name: Publish UNCANNY HF18.6 public release
 on:
   push:
-    branches: [release-staging-hf18-5]
+    branches: [release-staging-hf18-6]
     paths:
       - .release-staging/HF18.6-SOURCE.json
 permissions:

@@ -2,22 +2,22 @@
   "project": "UNCANNY",
   "version": "0.20.0-alpha.1",
   "engine": "UNCANNY Engine 4.5 — ELYSIUM",
-  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.5",
-  "tag": "v0.20.0-alpha.1-elysium-engine45-hf18.5",
-  "runtime_revision": "release-alpha.1.elysium-engine45-hf18.5",
-  "buildId": "elysium45-hf18.5",
-  "updateSerial": 1850,
+  "release_name": "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.6",
+  "tag": "v0.20.0-alpha.1-elysium-engine45-hf18.6",
+  "runtime_revision": "release-alpha.1.elysium-engine45-hf18.6",
+  "buildId": "elysium45-hf18.6",
+  "updateSerial": 1860,
   "abi": 143,
   "published": "2026-09-18",
   "latest_release_url": "https://github.com/coye2/UNCANNY/releases/latest",
-  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.5",
+  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.6",
   "package": {
-    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip",
-    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.5/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip",
-    "sha256": "bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9",
-    "size_bytes": 8735528
+    "name": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.6.zip",
+    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.6/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.6.zip",
+    "sha256": "4cc88f35a53130c464671305cba3b8478f51a90149880fbafb19d86e956a9a13",
+    "size_bytes": 8736540
   },
-  "source_revision": "8414a99010fff395c117baaadb77d63dbde946bf",
+  "source_revision": "f14d29b1c321ee3b651511420993deab99af2062",
   "features": {
     "universal_d3d11_native_present_stabilization": true,
     "universal_api_bridge": true,
@@ -74,10 +74,15 @@
     "authoritative_manual_targets_survive_scan": true,
     "official_library_logo_source": true,
     "official_png_wpf_decode_gate": true,
-    "packaged_scan_execution_gate": true
+    "packaged_scan_execution_gate": true,
+    "installer_single_pass_release_verification": true,
+    "streaming_pe_architecture_checks": true,
+    "unchanged_file_pruning": true,
+    "changed_files_only_rollback_transaction": true,
+    "provider_discovery_state_reuse": true
   },
   "verification": {
-    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35404395219",
+    "exact_candidate_run": "https://github.com/coye2/uncanny-dev/actions/runs/35409019931",
     "python_regression_suite": "PASS",
     "production_builds_x86_x64": "PASS",
     "engine45_compiled_acceptance": "PASS",
@@ -103,7 +108,12 @@
     "packaged_logo_wpf_decode": "PASS",
     "packaged_cache_normalization": "PASS",
     "packaged_scanner_execution": "PASS",
-    "packaged_manual_target_retention": "PASS"
+    "packaged_manual_target_retention": "PASS",
+    "packaged_install_update_speed": "PASS",
+    "second_pass_update_ms": 59659,
+    "planned_files": 46,
+    "changed_files": 2,
+    "unchanged_files_skipped": 44
   },
   "limitations": [
     "Real-game visual, motion and performance acceptance remains title/GPU/driver specific.",
@@ -113,9 +123,9 @@
     "DLSS 5 remains NVIDIA/provider-specific even though the ELYSIUM image path is vendor-neutral.",
     "UNCANNY.exe is currently unsigned; Windows SmartScreen/Unknown Publisher warnings may continue until trusted Authenticode signing is configured."
   ],
-  "hotfix": "HF18.5",
+  "hotfix": "HF18.6",
   "format": "UNCANNY-CURRENT-RELEASE-1",
   "name": "UNCANNY",
-  "displayVersion": "v0.20 ELYSIUM Engine 4.5 HF18.5",
-  "validation": "PASS — exact HF18.5 candidate completed build/package, packaged logo/cache, packaged scanner/manual retention, normal startup, AllSigned startup, WARP, ZIP/hash, and Defender gates."
+  "displayVersion": "v0.20 ELYSIUM Engine 4.5 HF18.6",
+  "validation": "PASS — exact HF18.6 candidate completed build/package, packaged install/update speed, logo/cache, scanner, normal startup, AllSigned startup, WARP, ZIP/hash, and Microsoft Defender gates."
 }

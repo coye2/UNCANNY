@@ -6,7 +6,7 @@ UNCANNY is still alpha, so this page describes what the runtime currently target
 |---|---|---|
 | D3D11 x64 | active | strongest generic ELYSIUM path; HF18.11 adds staged neural promotion |
 | D3D11 x86 | experimental | helper path where needed |
-| D3D12 x64 | active | HF18.10 startup/resize protection |
+| D3D12 x64 | active | HF18.13 fail-open Present + transactional resize/warmup serialization |
 | D3D10 / 10.1 | experimental | compatibility route |
 | D3D9 | legacy | supported with reduced capability when scene data is limited |
 | PCSX2 | active test target | current route uses Direct3D 12 / `Renderer=15` |
@@ -33,9 +33,9 @@ HF18.11 keeps the conservative safe path but allows neural promotion after a hea
 
 ## D3D12
 
-HF18.10 added the same general idea to D3D12 startup: let the game establish ownership and presentation first, then let UNCANNY take over only when it is safe to do so.
+HF18.10 added the D3D12 startup protection: let the game establish ownership and presentation first, then let UNCANNY take over only when it is safe.
 
-Early resize events pass through natively. Later resize handling waits for UNCANNY-owned resources to retire cleanly instead of forcing a broken transition.
+HF18.13 keeps Present fail-open and fixes the later transition. Early resize still passes through natively before UNCANNY owns the swapchain. After ownership, ResizeBuffers gets a bounded transactional handoff instead of immediately failing while maintenance is warming resources, and the same swapchain cannot resize underneath active off-Present warmup.
 
 ## PCSX2
 

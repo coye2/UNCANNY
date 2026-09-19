@@ -1,10 +1,10 @@
 {
   "format": "UNCANNY-HF18.6-PUBLIC-HANDOFF-1",
-  "url": "https://sdmntprcentralus.oaiusercontent.com/files/00000000-cdac-81f5-9ba7-35990517223a/raw?se=2026-09-19T00%3A34%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=3dfa9e4c-5489-51a1-b265-47a7b8212f74&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-18T20%3A29%3A46Z&ske=2026-09-19T20%3A29%3A46Z&sks=b&skv=2026-02-06&sig=cx9wMWA6dOGFanKB9i00NiewGvaRngNyMJvMihzO86Q%3D",
-  "artifact_id": 10573284294,
-  "sha256": "4cc88f35a53130c464671305cba3b8478f51a90149880fbafb19d86e956a9a13",
+  "url": "https://sdmntprcentralus.oaiusercontent.com/files/00000000-9278-81f5-bdec-eb3d0727c15e/raw?se=2026-09-19T01%3A24%3A28Z&sp=r&sv=2026-02-06&sr=b&scid=831afa77-e332-5199-87fa-9923c3296426&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-18T20%3A18%3A49Z&ske=2026-09-19T20%3A18%3A49Z&sks=b&skv=2026-02-06&sig=RPv%2BRCVRCJlDRwIyimBeIeQh8xAn4GoEaGWvRqzmBBk%3D",
+  "artifact_id": 10573808267,
+  "sha256": "3f9bbe8eb520918df9e23a84f879bce8079b197f2e194326430b3be4930be111",
   "package": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.6.zip",
-  "source_revision": "f14d29b1c321ee3b651511420993deab99af2062",
-  "validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35409019931",
-  "notes_revision": 1
+  "source_revision": "852e617c003a8672ead6bd7607e24163a99b8fc5",
+  "validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35412014280",
+  "notes_revision": 2
 }

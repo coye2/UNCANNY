@@ -36,7 +36,7 @@ people kept asking me to show source. i'm not opening the whole repo, but i did 
 
 D3D11 promotion, Present safety, ELYSIUM, Adaptive Realism, REVENANT, the Deck, launch state. the useful stuff.
 
-[how UNCANNY works. including "where the magic happens"](docs/HOW-UNCANNY-WORKS.md)
+[how UNCANNY works](docs/HOW-UNCANNY-WORKS.md)
 
 ## HF18.11
 

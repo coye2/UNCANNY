@@ -1,3 +1,32 @@
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.11 — 2026-09-19
+
+`release-alpha.1.elysium-engine45-hf18.11`, ABI 143, BuildId `elysium45-hf18.11`, updateSerial `1910`.
+
+- Fixes the universal direct-D3D11 compatibility floor permanently suppressing DLSS5/Feature-18.
+- Keeps the proven D3D11 current-frame/fail-open safety floor active.
+- Requires 240 successful ELYSIUM frames, recent/advancing native Present, and a 9-second post-transition window before neural promotion.
+- Keeps neural shared-resource/provider warmup off Present.
+- Keeps native depth, optical-flow temporal history, and the advanced temporal path deferred on direct-D3D11 safe routes.
+- DXGI ownership-changing transitions revoke promotion and re-arm stabilization.
+- Preserves HF18.10 D3D12 startup/resize protection and PCSX2 Direct3D 12 `Renderer=15`.
+- Exact tested candidate: `131560b87608e34fd0ede99dc2e16f9c1472d39e`.
+- Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35424918011 — **PASS**.
+- Dev-main merge: `a86bc309ea697b4928493f58c16596ad18ef235d`.
+- Public ZIP SHA-256: `7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800`.
+- CI validates package/runtime contracts; current real-game neural output remains hardware acceptance.
+
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.10 — 2026-09-19
+
+`release-alpha.1.elysium-engine45-hf18.10`, ABI 143, BuildId `elysium45-hf18.10`, updateSerial `1900`.
+
+- Extends the long native-only startup/transition floor to direct D3D12.
+- Passes D3D12 startup resize directly to native DXGI before UNCANNY owns swapchain resources.
+- Uses bounded owned-resource retirement for later D3D12 resize instead of synthetic busy failure.
+- Keeps the repair route-wide and preserves PCSX2 Direct3D 12 `Renderer=15`.
+- Exact tested candidate: `8d9aa23d56f775bd8109f3a6229f6b658c2712da`.
+- Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35423058024 — **PASS**.
+- Public ZIP SHA-256: `2518c47e36d1f392477a2a2cf7caa0bc44225152cad7bbbbecf65c95991eb11c`.
+
 # v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.9 — 2026-09-19
 
 `release-alpha.1.elysium-engine45-hf18.9`, ABI 143, BuildId `elysium45-hf18.9`, updateSerial `1890`.

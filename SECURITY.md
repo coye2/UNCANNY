@@ -11,7 +11,7 @@ The full development workspace is private and is not a redistributable release p
 
 ## Antivirus
 
-HF18.11 was scanned with Microsoft Defender as part of publication. The released ZIP and extracted tree returned 0 detections.
+HF18.13 was scanned with Microsoft Defender as part of its validated release/publication flow. The published release reports 0 detections.
 
 That result applies to the exact published package/hash. It is not a promise that antivirus signatures will never change.
 

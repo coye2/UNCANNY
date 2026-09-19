@@ -1,5 +1,20 @@
 # Changelog
 
+## HF18.13 — 2026-09-19
+
+- Fixed the HF18.12 D3D12 warmup/resize race reproduced by PCSX2 after a few seconds of gameplay.
+- Kept D3D12 Present fail-open and nonblocking.
+- Restored a bounded transactional handoff for owned D3D12 ResizeBuffers instead of immediately returning `DXGI_ERROR_WAS_STILL_DRAWING` during maintenance warmup.
+- Serialized off-Present D3D12 warmup against resize for the same swapchain.
+- Kept PCSX2 on Direct3D 12 `Renderer=15` and the existing preload route.
+- Hardened deferred startup attach for dynamically-bound non-PCSX2 games: stable visible-window proof before late attach.
+- Added verified stale/headless sidecar-session recovery while refusing to auto-terminate a visible target.
+- Preserved HF18.11 staged direct-D3D11 neural promotion.
+
+BuildId: `elysium45-hf18.13`  
+updateSerial: `1930`  
+ZIP SHA-256: `c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522`
+
 ## HF18.12 — 2026-09-19
 
 - Moved first-use D3D12 frame-processor setup off Present so native frames keep advancing while UNCANNY prepares resources.

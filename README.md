@@ -4,7 +4,7 @@ UNCANNY is a real-time graphics remastering project for Windows games and emulat
 
 The goal is pretty simple: make games look cleaner and more modern without turning setup into a project of its own. ELYSIUM handles the live image work, REVENANT handles experimental asset reconstruction, and the launcher takes care of installs, updates, rollback, profiles and diagnostics.
 
-**Current release:** v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.11
+**Current release:** v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.12
 
 ## Quick start
 
@@ -38,13 +38,15 @@ D3D11 promotion, Present safety, ELYSIUM, Adaptive Realism, REVENANT, the Deck, 
 
 [how UNCANNY works](docs/HOW-UNCANNY-WORKS.md)
 
-## HF18.11
+## HF18.12
 
-HF18.11 fixes a D3D11 logic bug that kept the neural path disabled forever after the earlier stability work.
+HF18.12 is aimed at the exact launch/runtime failures from the latest hardware tests.
 
-Direct D3D11 still starts conservatively so the game gets a healthy native Present stream first. Once the route has been stable long enough, neural resources can warm up and the neural path can become eligible without re-enabling the riskier depth/temporal behavior that caused earlier lockups.
+PCSX2 could reach gameplay, run for a few seconds, then freeze when the D3D12 path left startup protection. First-use D3D12 setup now happens off Present, and resize/resource cleanup no longer waits on UNCANNY from the game thread.
 
-HF18.10's D3D12 startup/resize fix is still in place, and PCSX2 remains on the D3D12 `Renderer=15` route.
+Cyberpunk and Spider-Man 2 were failing earlier in startup and could leave a stale sidecar session behind. Targets with no static graphics API import can now start natively first and attach UNCANNY afterward. A failed optional attach leaves the game running instead of blocking startup.
+
+HF18.11's staged D3D11 neural promotion is still in place, and PCSX2 remains on Direct3D 12 `Renderer=15`.
 
 ## Current status
 
@@ -61,9 +63,9 @@ UNCANNY is alpha software. CI catches a lot, but real game/GPU behavior still ha
 Latest release:
 https://github.com/coye2/UNCANNY/releases/latest
 
-HF18.11 ZIP SHA-256:
+HF18.12 ZIP SHA-256:
 
-`7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800`
+`8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41`
 
 More:
 - [Usage](USAGE.md)
@@ -75,6 +77,6 @@ More:
 
 ## Windows note
 
-The current alpha build is unsigned, so Windows may show SmartScreen / Unknown Publisher. The published HF18.11 package was scanned with Microsoft Defender before release. See [malware verification](docs/MALWARE-VERIFICATION.md).
+The current alpha build is unsigned, so Windows may show SmartScreen / Unknown Publisher. The published HF18.12 package was scanned with Microsoft Defender before release. See [malware verification](docs/MALWARE-VERIFICATION.md).
 
 UNCANNY is independent and is not affiliated with or endorsed by NVIDIA.

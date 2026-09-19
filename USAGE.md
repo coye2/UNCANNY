@@ -39,7 +39,7 @@ X2.5 uses less temporal history than the other deep modes and is meant to favor 
 
 PCSX2 currently uses the Direct3D 12 route. UNCANNY writes `Renderer=15` and keeps the original `pcsx2-qt.exe` intact.
 
-HF18.12 specifically changes the D3D12 handoff that could let PCSX2 reach gameplay and then hard-freeze a few seconds later. First-use D3D12 setup now warms off Present and resize/resource retirement is nonblocking.
+HF18.13 fixes the D3D12 handoff that could let PCSX2 reach gameplay and then hard-freeze a few seconds later. First-use D3D12 setup still warms off Present, but owned ResizeBuffers now gets a bounded transactional handoff and the same swapchain cannot resize underneath active warmup.
 
 If an older UNCANNY build replaced or wrapped PCSX2 incorrectly, running **Update UNCANNY** should migrate it back to the current sidecar layout.
 
@@ -47,9 +47,9 @@ Cloud/OneDrive PCSX2 profile folders are supported, but real symlinks/junctions 
 
 ## Modern startup failures
 
-HF18.12 can use deferred startup attach for non-PCSX2 targets with no static graphics API import. Native process startup happens first, then UNCANNY attempts attachment.
+HF18.13 keeps deferred startup attach for non-PCSX2 targets with no static graphics API import. Native process startup happens first, UNCANNY waits for a stable visible top-level game window, then it attempts attachment.
 
-If that optional attach cannot be confirmed, the game should remain running rather than being terminated by UNCANNY.
+If that optional attach cannot be confirmed, the game stays running. Verified stale/headless UNCANNY-owned sessions can be reclaimed, but a target with a visible main window is never auto-terminated by that cleanup.
 
 ## REVENANT
 
@@ -80,13 +80,13 @@ For a useful bug report, include the game, executable, graphics API, x86/x64, GP
 
 ## Current package
 
-Release: **HF18.12**  
-BuildId: `elysium45-hf18.12`  
-updateSerial: `1920`  
+Release: **HF18.13**  
+BuildId: `elysium45-hf18.13`  
+updateSerial: `1930`  
 ABI: `143`
 
 ZIP:
-`UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.12.zip`
+`UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.13.zip`
 
 SHA-256:
-`9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6`
+`c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522`

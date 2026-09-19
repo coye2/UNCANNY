@@ -1,172 +1,64 @@
-# Compatibility and Evidence Levels
+# Compatibility
 
-UNCANNY is under active alpha development. Compatibility claims are separated by evidence level so detection, compilation and real rendered use are not confused.
+UNCANNY is still alpha, so this page describes what the runtime currently targets rather than pretending every game is certified.
 
-Current public runtime: `release-alpha.1.elysium-engine45` · ABI `143`.
-
-## HF18 Universal API Bridge status
-
-HF18 uses a capability/evidence model rather than assuming every graphics API exposes equivalent scene data or ownership.
-
-- **D3D11:** optional preprocessing waits for 120 successful native Presents on a new swapchain before joining the path. Native Present remains the fail-open baseline.
-- **D3D12:** queue/backbuffer/state evidence is captured from actual creation/lifecycle events; UNCANNY does not guess an unrelated queue or processing source.
-- **D3D9 / D3D8 / D3D10-family:** legacy routes are normalized through the bridge and remain capability-tiered.
-- **Vulkan / OpenGL:** lifecycle/presentation compatibility observation is present, but HF18 does **not** claim full ELYSIUM/neural-processing parity on these APIs.
-- **AMD / Intel:** the ELYSIUM image-processing path is vendor-neutral where the API route is available. DLSS 5 remains NVIDIA/provider-specific. CI's D3D11 WARP validation is not an AMD or Intel hardware test.
-- **Protected/anti-cheat-sensitive titles:** UNCANNY disables optional processing conservatively rather than attempting to evade protection mechanisms.
-
-The exact HF18 candidate passed D3D11 WARP rendered validation for all 42 exposed floating image controls plus x86/x64 production, HLSL, installer/rollback, package-integrity and Defender gates. Real-game compatibility and performance still require title/GPU/driver-specific testing.
-
-
-## Evidence terminology
-
-- **Detected** — an API, provider or file was found.
-- **Implemented** — source contains the intended route.
-- **Compiled** — the relevant Windows component built successfully.
-- **Attached** — the UNCANNY runtime connected to the target process.
-- **Transport active** — frame/resource transport is operating.
-- **Feature created** — the neural provider successfully created the requested feature/context.
-- **Evaluated** — a real neural evaluation completed successfully.
-- **Returned** — current-frame neural output returned to the game-side runtime.
-- **Presented / certified** — the intended output was associated with a successful presentation event in the implemented certification scope.
-- **Visible rendered use** — the user or an instrumented render-binding path established that the intended result is actually visible/used by the running game.
-
-A copied frame, provider version, green overlay state, texture-worker success or replacement file on disk is not counted as visible remaster success by itself.
-
-## Engine 4.5 API matrix
-
-| API / environment | Core runtime | Adaptive Realism | Neural/DLSS 5 | Current alpha status |
-|---|---|---|---|---|
-| Direct3D 11 x64 | implemented | strongest current route; scored depth + native motion/flow where available | native/in-process interoperability | active primary test path |
-| Direct3D 11 x86 | implemented | capability-tiered | x64 helper where required | experimental hardware acceptance |
-| Direct3D 12 x64 | implemented | supported; conservative fallback when trustworthy scene depth is unavailable | native neural path | active PC path |
-| Direct3D 10 / 10.1 | compatibility path | capability depends on available scene evidence | helper/interop route | experimental hardware acceptance |
-| Direct3D 9 x86 | implemented legacy runtime | tonal/spatial fallback when trustworthy depth is unavailable | legacy x86→x64 helper route | supported legacy path; broad neural proof still in progress |
-| PCSX2 | established UNCANNY presentation path | strongest through its D3D11/D3D12 renderer routes as evidence allows | provider path depends on renderer/runtime | primary emulator acceptance target |
-| Vulkan | partial / roadmap | not at DirectX parity | not at DirectX parity | experimental/deferred |
-| OpenGL | partial / roadmap | not at DirectX parity | not at DirectX parity | experimental/deferred |
-
-## Adaptive Realism capability tiers
-
-Engine 4.5 does not assume every API/game exposes trustworthy depth or motion.
-
-### Tier A — trustworthy depth + native motion
-
-Highest available confidence path. Depth-aware work and temporal behavior can use native motion evidence.
-
-### Tier B — trustworthy depth + UNCANNY optical flow
-
-Depth-aware path with UNCANNY-reconstructed motion. Temporal confidence remains guarded by Motion Guard/Ghosting Guard and disocclusion checks.
-
-### Tier C — trustworthy depth only
-
-Conservative spatial lighting/detail behavior. Temporal history is disabled rather than fabricated.
-
-### Tier D — no trustworthy scene depth
-
-Adaptive exposure, tonal reconstruction, local contrast, clarity, color and other spatial enhancements can still run. Depth-aware GI/occlusion is disabled rather than faked.
-
-## D3D11 depth evidence
-
-D3D11 can score depth candidates using evidence such as:
-
-- full-resolution matching
-- draw-use evidence
-- precision
-- stable resource identity
-- multisample state
-
-A candidate that does not meet the confidence threshold is not treated as trustworthy depth.
-
-## Motion / temporal acceptance
-
-Motion Guard and Ghosting Guard remain authoritative in Engine 4.5.
-
-Temporal history is reduced or rejected when:
-
-- motion confidence drops
-- depth continuity fails
-- current/history structure disagrees
-- disocclusion is detected
-
-X2.5 deliberately uses the lowest temporal-history weight and is intended to be the clean-motion mode.
-
-## ELYSIUM pass status
-
-| Mode | Intended behavior | Validation state |
+| Route | Status | Notes |
 |---|---|---|
-| 1 | base native ELYSIUM reconstruction depth | routing/build validation complete; visual acceptance ongoing |
-| 1.5 | intermediate reconstruction depth | routing/build validation complete; visual/performance acceptance ongoing |
-| 2 | deeper reconstruction | routing/build validation complete; visual/performance acceptance ongoing |
-| 2.5 | motion-clean deep reconstruction with reduced history | compiled behavior verified; real-GPU motion/performance acceptance ongoing |
-| 3 | maximum exposed native reconstruction depth | routing/build validation complete; real-GPU quality/performance acceptance ongoing |
+| D3D11 x64 | active | strongest generic ELYSIUM path; HF18.11 adds staged neural promotion |
+| D3D11 x86 | experimental | helper path where needed |
+| D3D12 x64 | active | HF18.10 startup/resize protection |
+| D3D10 / 10.1 | experimental | compatibility route |
+| D3D9 | legacy | supported with reduced capability when scene data is limited |
+| PCSX2 | active test target | current route uses Direct3D 12 / `Renderer=15` |
+| Vulkan | early / partial | not at DirectX parity |
+| OpenGL | early / partial | not at DirectX parity |
 
-**UNCANNY PASSES**, **Adaptive Realism quality** and **DLSS 5 PASSES** are separate controls.
+## What “works” means here
 
-## D3D11 fail-open startup
+There are a few different milestones that are easy to mix up:
 
-The Hotfix 11 startup-safety contract remains preserved in Engine 4.5:
+- **attached** — UNCANNY loaded into the target
+- **presenting** — the game's frame stream is still advancing
+- **ELYSIUM active** — UNCANNY's native image path is actually processing
+- **neural active** — the provider created/evaluated work and current output returned
+- **visible result** — the intended output is actually on screen
 
-1. native Present is allowed to establish the base game image first
-2. initial optional UNCANNY/Deck work must not block the first visible frame
-3. DLSS 5 initialization waits for a healthy advancing Present stream where that route applies
-4. if optional neural startup is not ready, the current source remains visible
-5. foreground/Deck state must not become a prerequisite for base presentation
+A DLL on disk, a loaded provider, an overlay, or a completed worker job is not enough by itself to prove visible output.
 
-Historical details: [HOTFIX11-D3D11.md](HOTFIX11-D3D11.md).
+## D3D11
 
-## REVENANT status
+D3D11 starts fail-open. The game gets a stable native Present stream before optional work is allowed to become important.
 
-### PCSX2
+HF18.11 keeps the conservative safe path but allows neural promotion after a healthy stabilization window. The more aggressive direct-depth/temporal route is still deferred on that safe path.
 
-Implemented engineering includes game isolation, texture identity, capture/reconstruction worker paths, validation, receipts, backup/restore and reload handling.
+## D3D12
 
-A healthy REVENANT worker does not prove that the replacement is visibly bound or that the live Present stream is healthy. Visible replacement, persistence and exact restore remain the important acceptance gates.
+HF18.10 added the same general idea to D3D12 startup: let the game establish ownership and presentation first, then let UNCANNY take over only when it is safe to do so.
 
-### Native PC games
+Early resize events pass through natively. Later resize handling waits for UNCANNY-owned resources to retire cleanly instead of forcing a broken transition.
 
-Resource capture/replacement experiments exist, but native-game REVENANT remains experimental and should not be described as universal asset replacement.
+## PCSX2
 
-## Vendor notes
+PCSX2 is currently kept on Direct3D 12 using `Renderer=15`.
 
-Adaptive Realism is vendor-neutral and does not require DLSS 5.
+The launcher uses a sidecar instead of replacing `pcsx2-qt.exe`. Existing old wrapper installs are migrated during update.
 
-DLSS 5 is a separate NVIDIA-specific provider route. An AMD/Intel system may still use UNCANNY-native Adaptive Realism behavior where the DirectX/runtime path is supported, but that does not imply DLSS 5 availability.
+## Motion and passes
 
-## Engine 4.5 build evidence
+Motion Guard and Ghosting Guard reduce or reject unstable history when motion confidence drops or the current/history frames disagree.
 
-Before publication the exact Engine 4.5 package passed:
+X2.5 intentionally uses less temporal history than the other deep modes and is the clean-motion option.
 
-- full Python regression suite
-- 22 compiled Engine 4.5 acceptance checks
-- Adaptive Realism compiled tests on x86 and x64
-- x86/x64 production compilation
-- protected-resource verification
-- Hotfix 11/12 compatibility regressions
-- strict package/ZIP audit
-- dynamic Windows install + rollback regression
-- restricted third-party shader source/package audit
-- Microsoft Defender scan of extracted final package: 0 detections
-- Microsoft Defender scan of completed ZIP: 0 detections
+## Vendors
 
-These are build-host/package checks. They do not replace real Windows/GPU/game visual and performance acceptance.
+The native ELYSIUM image path is not NVIDIA-only.
 
-## Reporting a compatibility result
+The optional DLSS 5 route depends on NVIDIA/provider support. Running ELYSIUM on AMD or Intel does not imply DLSS 5 availability.
 
-For useful compatibility data include:
+## Anti-cheat / protected titles
 
-1. game/title and exact executable
-2. graphics API
-3. x86 or x64
-4. GPU and driver
-5. UNCANNY runtime/revision and ABI
-6. whether runtime attachment succeeds
-7. `PresentAttempts`, `Presents` and `PresentAdvancing`
-8. `AttachmentStage`
-9. Feature-18 create/evaluate counters if testing DLSS 5
-10. Adaptive Realism quality level and UNCANNY pass depth
-11. visible before/after evidence
-12. REVENANT evidence if tested
-13. saved `UNCANNY-STATUS.cmd` report
+UNCANNY is not designed to bypass anti-cheat or protected-process restrictions. If a title does not safely allow the runtime path, optional processing should fail closed/fail open rather than trying to evade the protection.
 
-Use the GitHub compatibility-report issue template so results become reproducible and searchable.
+## Reporting compatibility
+
+Useful reports include the game, executable, API, x86/x64, GPU/driver, UNCANNY version, what you saw, and the session's status/log output.

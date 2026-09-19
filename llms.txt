@@ -1,15 +1,19 @@
 # UNCANNY
 
-Current public release: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.11
-BuildId: elysium45-hf18.11
-updateSerial: 1910
+Current public release: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.13
+BuildId: elysium45-hf18.13
+updateSerial: 1930
 ABI: 143
-Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.11.zip
-SHA-256: 7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800
+Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.13.zip
+SHA-256: c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522
 Release: https://github.com/coye2/UNCANNY/releases/latest
 
 UNCANNY is a Windows real-time graphics remastering runtime for games and emulators.
 
-HF18.11 restores staged neural promotion on direct D3D11 while keeping the fail-open stability path. HF18.10 D3D12 startup/resize protection and the PCSX2 D3D12 Renderer=15 route remain in place.
+HF18.13 fixes the D3D12 warmup/resize regression reproduced by PCSX2 after a few seconds of gameplay. Present remains fail-open. Owned D3D12 resize gets a bounded transactional handoff and off-Present warmup is serialized against resize for the same swapchain.
+
+Modern dynamically-bound games start natively first, require a stable visible window before late attach, and can recover verified stale/headless UNCANNY sessions without auto-terminating a visible game.
+
+PCSX2 remains on Direct3D 12 Renderer=15. HF18.11 staged direct-D3D11 neural promotion remains in place.
 
 The native ELYSIUM path and optional neural/DLSS 5 route are separate. REVENANT asset replacement is experimental.

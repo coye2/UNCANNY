@@ -6,7 +6,7 @@ i'm still not dumping the repo.
 
 what i can do is show real parts of the current code and explain what they do without giving out the whole tree, build system, full shader source, provider work and everything around it.
 
-this is from the current HF18.11 line.
+this is from the current HF18.12 line.
 
 # the basic setup
 
@@ -464,13 +464,23 @@ this page is just here because people asked to see how the engine actually works
 
 ## current build proof
 
-this is based on HF18.11.
+this is based on HF18.12.
 
-the release candidate passed the normal build gate. x86 and x64 production builds, HLSL compile, static regressions, D3D11 WARP testing, install/update/rollback tests, scanner and sidecar tests, PCSX2 sidecar smoke, launcher checks, ZIP integrity and Defender scanning.
+the final clean repack is buildId `elysium45-hf18.12`, updateSerial `1920`.
+
+the exact repack source was `fa7b150b172afb6c3de1e9e7f86e94e0afda3722`.
+
+validation run `35454458252` passed x86 and x64 production builds, HLSL compile, static regressions, D3D11 WARP testing, install/update/rollback tests, scanner and sidecar tests, packaged PCSX2 + generic sidecar launch tests, launcher checks, AllSigned startup, ZIP integrity and Defender scanning.
+
+the public publisher then pulled that exact repack, checked the package identity and hash again, Defender scanned it again, and published it in run `35454757251`.
+
+final public ZIP SHA-256:
+
+`9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6`
 
 that proves the package i released passed those checks.
 
-it does not mean i am claiming every game on every GPU is perfect. real hardware testing is still real hardware testing.
+it does not mean i am claiming every game on every GPU is perfect. PCSX2, Cyberpunk and Spider-Man 2 still need the real machine test because CI cannot prove the exact hardware symptom is gone.
 
 that is pretty much UNCANNY rn.
 

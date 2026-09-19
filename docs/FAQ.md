@@ -8,10 +8,10 @@ It combines ELYSIUM live reconstruction, motion protection, optional neural proc
 
 ## What is the current release?
 
-HF18.11.
+HF18.13.
 
-BuildId: `elysium45-hf18.11`  
-updateSerial: `1910`  
+BuildId: `elysium45-hf18.13`  
+updateSerial: `1930`  
 ABI: `143`
 
 Download:
@@ -57,7 +57,7 @@ Yes. It is one of the main test targets. The current route uses Direct3D 12 with
 
 Both are active routes.
 
-HF18.11 fixes staged neural promotion on D3D11. HF18.10 handles D3D12 startup/resize stabilization.
+HF18.11 provides staged neural promotion on D3D11. HF18.13 fixes the D3D12 warmup/resize transition regression while keeping Present fail-open and preserving the D3D12 startup protections.
 
 ## D3D9 / D3D10?
 

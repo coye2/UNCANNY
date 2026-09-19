@@ -7,11 +7,19 @@
 - Validates only the required x64 helper/bridge route for 32-bit titles.
 - Carries forward the verified original-game digest instead of repeatedly hashing a large EXE.
 - Skips byte-identical installed files before rollback backup/commit.
-- Backs up and installs only changed files while preserving integrity checks.
+- Healthy same-build updates use a verified no-op fast path; packaged second pass measured 3884 ms with zero file transaction.
+- Reuses a verified existing neural asset core instead of unpacking/re-hashing it again.
+- Bounds provider discovery and stops once required provider roles are found.
+- Removes unnecessary normal-ELYSIUM engine switching before PCSX2 startup.
+- Makes optional REVENANT proof recovery bounded/fail-open for PCSX2.
+- Gives PCSX2 a shorter bounded runtime-attach startup budget and allows fail-open resume.
+- Adds packaged PCSX2 wrapper acceptance proving verified-original spawn, runtime load, initialization acknowledgement and clean child exit.
 - Adds granular 24–95% installer progress to expose real work instead of apparent stalls.
 - Preserves HF18.5 scanner/library/logo fixes and all HF18 rendering/runtime behavior.
 
-Exact packaged installer/update, rollback, Windows, WARP, hash and Defender validation is required before publication.
+Exact validated source: `852e617c003a8672ead6bd7607e24163a99b8fc5`  
+Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35412014280  
+ZIP SHA-256: `3f9bbe8eb520918df9e23a84f879bce8079b197f2e194326430b3be4930be111`
 
 # v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.5 — 2026-09-18
 

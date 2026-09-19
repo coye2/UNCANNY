@@ -1,0 +1,26 @@
+name: Update HF18.11 release notes
+
+on:
+  push:
+    branches:
+      - release-staging-hf18-11
+    paths:
+      - .release-staging/HF18.11-RELEASE-NOTES.md
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update release description
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release edit v0.20.0-alpha.1-elysium-engine45-hf18.11 \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "UNCANNY v0.20.0-alpha.1 - ELYSIUM Engine 4.5 - HF18.11" \
+            --notes-file .release-staging/HF18.11-RELEASE-NOTES.md \
+            --latest

@@ -1,46 +1,77 @@
-# UNCANNY v0.20 ELYSIUM — HF18.6
+# UNCANNY v0.20 ELYSIUM — HF18.9
 
 UNCANNY is a Windows real-time reconstruction/remaster runtime for games and emulators.
 
-**HF18.6 is the installer/update performance + PCSX2 launch hotfix.** It addresses the tester-reproduced stalls around 7%, 24–48% staging, 70% rollback planning, and the case where PCSX2 finished installing but would not visibly open.
+**HF18.9 is the current stabilization release.** It focuses on the two failure classes reproduced during HF18.7/HF18.8 testing: direct-D3D11 games that could hard-freeze when UNCANNY advanced beyond native startup, and PCSX2 drifting away from the previously working Direct3D 12 / Feature-18 route.
 
 ## Start
 
 1. Extract the ZIP completely.
 2. Double-click **`UNCANNY.exe`**.
-3. Select a game/emulator.
+3. Select a game or emulator.
 4. Choose **Install UNCANNY** or **Update UNCANNY**.
-5. Launch normally and press **HOME** for the Control Deck.
+5. Launch from UNCANNY or normally through the installed sidecar route.
+6. Press **HOME** for the Control Deck.
 
-## HF18.6 installer/update changes
+## HF18.9 — universal D3D11 stability floor
 
-- Release binaries are verified once for the selected architecture instead of repeating the same full verification.
-- PE architecture checks use bounded streaming header/import reads instead of loading entire binaries into memory.
-- 32-bit game installs validate only the required x64 neural helper/bridge route instead of re-validating the entire x64 runtime set.
-- The verified original-game digest is carried forward so the same large EXE is not repeatedly hashed.
-- Byte-identical installed files are skipped instead of being backed up and rewritten.
-- Healthy same-build updates take a **verified no-op fast path**. The packaged gate measured the second pass at **3.884 seconds with zero file transaction**.
-- A verified existing neural asset core is reused instead of unpacking/re-hashing the same package again.
-- Provider discovery uses a bounded installed-target fast path and stops once the required roles are found.
-- Changed files still receive verified backup, staged-temp verification, current-destination verification, atomic replacement, and committed-destination verification.
-- Progress from 24–95% reports real work instead of sitting on one opaque percentage.
+The Fallout-class D3D11 hard-lock repair is no longer a title-specific exception.
 
-## PCSX2 launch repair
+- Every **direct D3D11** route starts from the proven current-frame compatibility floor.
+- Native presentation remains authoritative and fail-open.
+- Native depth capture, temporal history, optical-flow-dependent stages, and D3D11 neural interop are deferred on the safe floor.
+- The safe floor uses conservative current-frame ELYSIUM processing rather than risking a game hard lock.
+- This change is intended to cover the same failure class reproduced in Fallout 4 and Stray without maintaining executable-name allowlists.
+- External compatibility/feed surfaces keep their separately synchronized path.
 
-- Normal ELYSIUM installs no longer run an unnecessary engine-switch transaction before PCSX2 opens.
-- Optional REVENANT proof recovery is bounded and fail-open; it cannot block PCSX2 startup.
-- PCSX2 runtime attachment uses a shorter bounded startup budget instead of holding the emulator suspended for a long pre-window wait.
-- If optional attachment/engine preparation is unconfirmed, the emulator is allowed to resume.
-- The exact packaged acceptance gate verified the wrapper spawned the verified original executable, loaded the UNCANNY runtime, acknowledged runtime initialization, resumed the child, and exited cleanly.
+## HF18.9 — PCSX2 restores the known-good Direct3D 12 route
 
-## Verification
+PCSX2 is **not** forced through the D3D11 safe floor.
 
-Exact validated source: `852e617c003a8672ead6bd7607e24163a99b8fc5`  
-Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35412014280  
-ZIP SHA-256: `3f9bbe8eb520918df9e23a84f879bce8079b197f2e194326430b3be4930be111`
+- UNCANNY pins PCSX2's GS renderer to **Direct3D 12** using PCSX2's current `Renderer=15` mapping.
+- The setting is applied transactionally to the main PCSX2 GS configuration and existing per-game overrides that UNCANNY already manages.
+- Same-build verification treats renderer drift away from DX12 as stale, so **Update UNCANNY** repairs the route instead of silently accepting it.
+- The verified `UNCANNY.Launch.exe` sidecar remains the launch path; the selected `pcsx2-qt.exe` is kept at its real filename.
+- REVENANT texture replacement configuration, OneDrive/Cloud Files profile handling, and rollback remain transactional.
+- The purpose is to recover the previously working PCSX2 **D3D12 + Feature-18** path, not redesign it around D3D11.
 
-HF18.5's Scan PC/runtime-root fix, cache/manual/scan normalization, authoritative Add Game retention and official Library logo remain intact. HF18 rendering, Universal API Bridge, rollback, Motion Guard/Ghosting Guard and startup-policy recovery remain preserved.
+## Preserved HF18.7 / HF18.8 fixes
+
+- Universal sidecar launch no longer replaces or renames the selected game/emulator executable.
+- Legacy wrapper-in-place PCSX2 installs can be recovered transactionally back to the real `pcsx2-qt.exe`.
+- Valid Windows CRLF sidecar records no longer get marked stale immediately after installation.
+- PCSX2 profiles under OneDrive/Cloud Files are accepted when the reparse point is a normal cloud placeholder; true symlinks/junctions remain blocked.
+- Same-build verified no-op update, neural-core reuse, scanner/library fixes, manual Add Game persistence, rollback, Motion Guard, Ghosting Guard, and X2.5 clean-motion behavior remain preserved.
+
+## DLSS 5 / Feature-18 status
+
+DLSS 5 is a **separate optional NVIDIA/provider path**. ELYSIUM can run without it.
+
+The current runtime reports neural output separately from ordinary UNCANNY image processing. A working ELYSIUM frame does **not** prove DLSS 5 is producing current output. Tester hardware has confirmed the ELYSIUM path running in Fallout 4, while DLSS 5 current-output on that title still requires further hardware validation.
+
+## Validation
+
+Exact tested HF18.9 candidate: `b168d748d241851d8faf13c83ff64aab10cd19b2`  
+Dev-main merge: `cff224e353348df35d912d706b11061e0d56aba3`  
+Validation run: https://github.com/coye2/uncanny-dev/actions/runs/35420827416  
+Public release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.9  
+ZIP SHA-256: `7c469cc508b7fa999b1598c80156cbf4af6201925d3455b27f980c4acf9d4c37`
+
+The exact candidate passed:
+
+- static/regression contracts
+- x86/x64 production and Engine 4.5 acceptance builds
+- PowerShell parse, install, update, rollback, and PCSX2 migration regressions
+- dedicated PCSX2 Direct3D 12 configuration regression
+- packaged same-build install/update regression
+- packaged untouched PCSX2 + generic sidecar launch
+- Windows HLSL compilation
+- D3D11 WARP rendered visual-quality gate
+- launcher startup and AllSigned startup
+- Microsoft Defender ZIP + extracted-tree scan with 0 detections
+
+CI proves the packaged/runtime contracts above. Real-game visual, motion, performance, and provider behavior remain GPU/driver/title specific and require hardware testing.
 
 ## Windows trust
 
-UNCANNY is still unsigned. Windows SmartScreen / Unknown Publisher may appear until trusted Authenticode signing is configured.
+UNCANNY is currently unsigned. Windows SmartScreen / Unknown Publisher may appear until trusted Authenticode signing is configured.

@@ -32,11 +32,11 @@ ABI: `143`
 
 ZIP SHA-256:
 
-`8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41`
+`9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6`
 
-Validation run: `35430147608`  
-Publication run: `35454243517`
+Validation run: `35454458252`  
+Publication run: `35454757251`
 
-The exact ZIP passed the production build, Windows/package/sidecar/AllSigned gates and Microsoft Defender, then the public publisher downloaded that same artifact, checked the hash/identity again and Defender-scanned it again.
+The final clean repack passed the production build, Windows/package/sidecar/AllSigned gates and Microsoft Defender. The public publisher then downloaded that exact repack, checked the hash/identity again, Defender-scanned it again, and replaced the HF18.12 release assets.
 
 The PCSX2 freeze and Cyberpunk/Spider-Man launch behavior still need the actual machine retest. CI cannot replace that.

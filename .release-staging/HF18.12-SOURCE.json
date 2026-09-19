@@ -1,11 +1,11 @@
 {
   "format": "UNCANNY-HF18.12-PUBLIC-HANDOFF-1",
-  "url": "https://sdmntprcentralus.oaiusercontent.com/files/00000000-87c0-81f5-aacc-f722ff36860f/raw?se=2026-09-19T16%3A16%3A30Z&sp=r&sv=2026-02-06&sr=b&scid=93821f1b-12da-53c8-b783-c52adf31c28b&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-19T15%3A20%3A26Z&ske=2026-09-20T15%3A20%3A26Z&sks=b&skv=2026-02-06&sig=p3Wpg2G2MiYuRFQ%2BOl7MOYLebM3x%2BJmN5jNk4wsJEbo%3D",
-  "artifact_id": 10580721394,
-  "sha256": "8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41",
+  "url": "https://sdmntprcentralus.oaiusercontent.com/files/00000000-57d0-81f5-9966-b2510cfdc655/raw?se=2026-09-19T16%3A24%3A05Z&sp=r&sv=2026-02-06&sr=b&scid=8d389c4d-86a2-5a6e-9b0c-fd5798fd736f&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-19T14%3A56%3A33Z&ske=2026-09-20T14%3A56%3A33Z&sks=b&skv=2026-02-06&sig=ZYLF%2BS0HisJxf6edLahZrBRzPlhZfzboRcfu5TksFwU%3D",
+  "artifact_id": 10588195536,
+  "sha256": "9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6",
   "package": "UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.12.zip",
-  "source_revision": "0d5da5599b8dd10c0de0a54ad4a47e2210487944",
-  "merged_revision": "5915b7f5d4cc84c5eb93466c0b8d6122c97071b2",
-  "validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35430147608",
-  "notes_revision": 1
+  "source_revision": "fa7b150b172afb6c3de1e9e7f86e94e0afda3722",
+  "merged_revision": "3e12d2a93e262362ddb07114e64f0a49d9d5b2ef",
+  "validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35454458252",
+  "notes_revision": 2
 }

@@ -11,7 +11,7 @@
 
 BuildId: `elysium45-hf18.12`  
 updateSerial: `1920`  
-ZIP SHA-256: `8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41`
+ZIP SHA-256: `9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6`
 
 ## HF18.11 — 2026-09-19
 

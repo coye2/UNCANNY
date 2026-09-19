@@ -1,35 +1,35 @@
 # DLSS 5 integration
 
-UNCANNY is not just a DLSS feeder. The optional neural route is one part of a larger remaster runtime.
+UNCANNY is not just a DLSS feeder. The neural route is one part of the engine.
 
-The three main controls are separate:
+Three things are separate in the Control Deck:
 
 - **UNCANNY Passes** — ELYSIUM reconstruction depth
 - **Adaptive Realism** — scene-aware native processing
 - **DLSS 5 Passes** — optional provider-backed neural work
 
-That separation matters because ELYSIUM can run without the neural provider.
+That separation matters because ELYSIUM can work without the neural provider.
 
-## How the neural route is treated
+## What counts as a working neural path
 
-UNCANNY only counts the path as healthy when the frame makes it through the useful parts of the chain:
+UNCANNY does not count a loaded DLL or an enabled overlay as proof by itself.
+
+The useful path is:
 
 `attach → frame transport → provider → evaluate → return → compose → present`
 
-Loading a provider DLL or showing an overlay is not treated as proof that the final frame used neural output.
+If it breaks anywhere in that chain, the game should keep the live source frame instead of hanging on stale output.
 
-## HF18.11 and D3D11
+## HF18.11
 
-Earlier D3D11 stability work was too conservative: it protected Present, but it also kept neural execution disabled forever.
+The earlier D3D11 stability fix went too far and kept neural execution disabled forever.
 
-HF18.11 keeps the safe startup behavior and adds staged promotion after the D3D11 route has been stable long enough.
+HF18.11 keeps the protected startup behavior, but lets neural resources warm up after the route has stayed healthy long enough. The riskier direct depth/temporal path is still held back on the safe route.
 
-Native depth/temporal behavior stays conservative on that safe route, so the fix does not simply turn every old feature back on at once.
+## Where UNCANNY fits
 
-## Other projects
+UNCANNY overlaps with projects such as RenoDX, OptiScaler, DLSS feeders, DFC and RTX Remix, but it is not trying to be a clone of any one of them.
 
-UNCANNY can overlap with tools such as RenoDX, OptiScaler, DLSS feeders, DFC and RTX Remix, but it is not trying to be a drop-in clone of any of them.
-
-The project is built around one integrated runtime: live reconstruction, motion protection, compatibility routing, optional neural work, REVENANT, controls, diagnostics and rollback.
+The project is built around one runtime: live reconstruction, motion protection, compatibility routing, optional neural work, REVENANT, controls, diagnostics and rollback.
 
 UNCANNY is independent and is not affiliated with NVIDIA or those projects.

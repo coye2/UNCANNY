@@ -146,10 +146,10 @@
     "hf18_12_runtime_launch_recovery_regression": "PASS",
     "publication_run": "https://github.com/coye2/UNCANNY/actions/runs/35459735287",
     "publication_defender_scan": "PASS",
-    "runtime_fix_candidate_sha": "0d5da5599b8dd10c0de0a54ad4a47e2210487944",
-    "runtime_fix_validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35430147608",
     "hf18_13_d3d12_resize_regression": "PASS",
-    "hf18_13_headless_session_recovery": "PASS"
+    "hf18_13_headless_session_recovery": "PASS",
+    "hf18_12_runtime_fix_candidate_sha": "0d5da5599b8dd10c0de0a54ad4a47e2210487944",
+    "hf18_12_runtime_fix_validation_run": "https://github.com/coye2/uncanny-dev/actions/runs/35430147608"
   },
   "limitations": [
     "Real-game visual, motion, performance, and provider acceptance remains title/GPU/driver specific.",

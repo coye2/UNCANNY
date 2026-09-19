@@ -1,19 +1,19 @@
 # Latest UNCANNY public release
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.5**
+**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.6**
 
-- BuildId: `elysium45-hf18.5`
-- updateSerial: `1850`
-- Runtime revision: `release-alpha.1.elysium-engine45-hf18.5`
+- BuildId: `elysium45-hf18.6`
+- updateSerial: `1860`
+- Runtime revision: `release-alpha.1.elysium-engine45-hf18.6`
 - ABI: `143`
-- Source revision: `8414a99010fff395c117baaadb77d63dbde946bf`
-- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.5/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip
-- SHA-256: `bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9`
+- Source revision: `f14d29b1c321ee3b651511420993deab99af2062`
+- Windows ZIP: https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.1-elysium-engine45-hf18.6/UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.6.zip
+- SHA-256: `4cc88f35a53130c464671305cba3b8478f51a90149880fbafb19d86e956a9a13`
 
-HF18.5 fixes the tester-reproduced launcher/library break: packaged scanning now resolves runtime dependencies correctly, malformed/legacy cache records are normalized before WPF binding, manual Add Game targets survive later scans, and the launcher asset is a WPF-safe 64×64 RGBA crop from the official Library logo.
+HF18.6 is the installer/update performance hotfix. It removes duplicate verification work, skips byte-identical installed files before rollback/commit, reuses prior provider state on updates, and adds real progress through the formerly opaque install stages.
 
-Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35404395219
+Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35409019931
 
-The exact candidate passed x86/x64 builds, HLSL, WARP rendered-quality validation, Windows launcher/install/rollback regressions, packaged logo/cache validation, packaged scanner execution, normal startup, **AllSigned startup**, ZIP integrity, and Microsoft Defender with 0 detections.
+The exact candidate passed x86/x64 builds, HLSL, WARP rendered-quality validation, installer/rollback regressions, packaged install/update speed, official-logo/cache validation, scanner execution, normal startup, AllSigned startup, ZIP integrity and Microsoft Defender with 0 detections.
 
-**Signing note:** HF18.5 is still unsigned. SmartScreen / Unknown Publisher can still appear until UNCANNY is signed with a trusted Authenticode identity.
+**Signing note:** HF18.6 is still unsigned. SmartScreen / Unknown Publisher can still appear until UNCANNY is signed with a trusted Authenticode identity.

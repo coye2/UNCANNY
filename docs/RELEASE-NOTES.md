@@ -1,37 +1,42 @@
-# HF18.11
+# HF18.12
 
-HF18.11 fixes a D3D11 bug left behind by the earlier hard-lock work.
+HF18.12 is focused on the current launch/runtime failures from real hardware testing.
 
-The D3D11 safe floor was doing its job — keeping risky work out of Present — but it was also forcing the neural path off forever. That is why a title could show normal ELYSIUM processing while the neural route never came online.
+## PCSX2
 
-## What changed
+PCSX2 was getting into gameplay, rendering for a few seconds, then hard-freezing when the D3D12 path moved out of startup protection.
 
-Direct D3D11 now has two stages:
-
-1. start on the conservative native/current-frame path
-2. after the route stays healthy long enough, allow neural resources to warm up and neural processing to become eligible
-
-The promotion window currently requires 240 processed frames and at least 9 seconds since the last relevant DXGI transition.
-
-The riskier direct-depth/temporal path is still not re-enabled on the safe route. Resize, fullscreen and similar transitions reset the promotion window.
-
-## Also included
-
-HF18.10's D3D12 startup/resize protection is unchanged.
+First-use D3D12 frame-processor setup now happens off Present. Native Present stays fail-open while UNCANNY prepares the D3D12 resources in maintenance. Resize/resource retirement is also nonblocking instead of waiting behind UNCANNY-owned work on the game thread.
 
 PCSX2 stays on Direct3D 12 with `Renderer=15`.
 
-The current sidecar launcher, legacy PCSX2 migration, scanner/manual-add fixes, rollback, REVENANT, Motion Guard and Ghosting Guard are all preserved.
+## Cyberpunk / Spider-Man 2
+
+Some modern targets were failing before a usable game process stayed running and could leave a stale sidecar session behind.
+
+For non-PCSX2 targets with no static graphics API import, UNCANNY can now let native startup happen first and attempt runtime attachment afterward. If that optional attach is not confirmed, the game is left running instead of being blocked by UNCANNY.
+
+A crashed launch also gets a shorter replacement-ownership window, and the launcher can clear a verified dead sidecar monitor and retry once.
+
+## Preserved
+
+HF18.11's staged direct-D3D11 neural promotion is unchanged.
+
+The current sidecar architecture, rollback, scanner/manual add, Motion Guard, Ghosting Guard, Adaptive Realism and REVENANT are preserved.
 
 ## Build
 
-BuildId: `elysium45-hf18.11`  
-updateSerial: `1910`  
+BuildId: `elysium45-hf18.12`  
+updateSerial: `1920`  
 ABI: `143`
 
 ZIP SHA-256:
-`7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800`
 
-The release passed the normal build, regression, package, Windows, WARP and Defender gates before publication.
+`8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41`
 
-That does not replace real game testing. Fallout/Stray neural output and PCSX2 Feature-18 gameplay still need to be judged from actual hardware sessions.
+Validation run: `35430147608`  
+Publication run: `35454243517`
+
+The exact ZIP passed the production build, Windows/package/sidecar/AllSigned gates and Microsoft Defender, then the public publisher downloaded that same artifact, checked the hash/identity again and Defender-scanned it again.
+
+The PCSX2 freeze and Cyberpunk/Spider-Man launch behavior still need the actual machine retest. CI cannot replace that.

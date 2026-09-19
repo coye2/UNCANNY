@@ -1,52 +1,62 @@
 # how UNCANNY works
 
-people keep asking me to show source, so this is the middle ground.
+people keep asking me to show source. i get why. UNCANNY is closed source and if i was looking at a project like this from the outside i'd want to know what is actually happening too.
 
-i'm not dumping the private repo. that would expose the whole project layout, build system, full shaders, provider work, release tooling, etc. i don't think i need to publish all of that just to prove the engine isn't smoke and mirrors.
+i'm still not dumping the repo.
 
-what i *am* doing here is showing the parts that actually matter: how a frame gets handled, how ELYSIUM decides what it can safely do, how the neural path gets promoted, what happens when something isn't healthy, how REVENANT decides whether to keep or replace an asset, and some real code from the current HF18.11 line.
+what i can do is show real parts of the current code and explain what they do without giving out the whole tree, build system, full shader source, provider work and everything around it.
 
-the snippets are real. i removed file paths and unrelated surrounding code on purpose. i'm showing implementation, not handing out a source-tree map.
+this is from the current HF18.11 line.
 
-## quick version
+# the basic setup
 
-UNCANNY isn't one giant shader and it isn't just ReShade with a launcher around it.
+UNCANNY is split up pretty heavily.
 
-the current stack is roughly:
+the launcher handles installs, updates, rollback, game detection and saved state.
+
+the sidecar launcher starts the real game exe. it doesn't replace the game exe with an UNCANNY wrapper.
+
+the runtime is the part inside the graphics path. it tracks the active API, swapchain state, Present state, transitions and what parts of the engine are safe to use.
+
+ELYSIUM is the live image engine.
+
+the neural path is optional. ELYSIUM does not depend on it.
+
+Control Deck talks to the live runtime state.
+
+REVENANT handles persistent asset reconstruction and has its own validation before it writes anything.
+
+roughly this:
 
 ```text
-launcher / install state
-        |
-verified sidecar launch
-        |
+game
+ |
+UNCANNY launch
+ |
 native runtime
-        |
-active API / swapchain route
-        |
-startup + transition guards
-        |
-ELYSIUM current-frame reconstruction
-        |
-optional neural route if the route is actually healthy
-        |
-native Present
+ |
+active graphics route
+ |
+stability checks
+ |
+ELYSIUM
+ |
+neural path if it is actually ready
+ |
+Present
 ```
 
-Control Deck sits next to the runtime and edits live shared state.
-
-REVENANT is its own thing. it handles persistent asset reconstruction and doesn't sit in the middle of every Present.
-
-that split matters because i don't want one broken subsystem taking down everything else. ELYSIUM can work without neural. the runtime can work without the Deck being open. REVENANT can be off completely and the live renderer still works.
+REVENANT runs beside that. not inside every frame.
 
 # where the magic happens
 
-this is the useful part.
+this is the stuff people actually want to see.
 
-### D3D11 doesn't get neural just because the toggle is on
+## D3D11 neural promotion
 
-HF18.9 fixed the hard-lock class by giving direct D3D11 a safe current-frame path. the problem was that the safety floor also effectively kept neural dead forever.
+direct D3D11 starts safe first.
 
-HF18.11 changed that. now the route has to prove it's stable first.
+after the hard lock problems i did not want neural just turning on because the user clicked a toggle. the route has to prove it is healthy first.
 
 real code:
 
@@ -77,23 +87,17 @@ static bool direct_d3d11_neural_promotion_ready(IDXGISwapChain* sc){
 }
 ```
 
-so, before direct D3D11 neural can even be considered:
+that means D3D11 neural does nothing until Present is moving, the route is confirmed as D3D11, ELYSIUM has made it through 240 frames, 9 seconds have passed after the last transition and Present is still recent.
 
-- Present has to actually be advancing
-- the route has to really be D3D11
-- ELYSIUM needs 240 successful current-frame frames
-- the route needs 9 seconds of clean post-transition time
-- the last Present has to be recent
+if the game resizes, changes fullscreen state or ownership changes, it has to settle again.
 
-resize/fullscreen/ownership changes reset that progress.
+there are no Fallout 4 or Stray exe checks in this logic. i wanted the route itself to decide this. not the name of the game.
 
-there's also no `Fallout4.exe` or `Stray.exe` special-case in there. i stopped wanting title-name hacks for this stuff. if the route is healthy, it earns promotion. if it isn't, it doesn't.
+## Present does not wait on UNCANNY
 
-### Present is allowed to skip UNCANNY
+this is a big one.
 
-this one matters more than half the feature list.
-
-if maintenance/provider setup has the D3D11 state locked, Present does **not** wait for it.
+if maintenance is busy with the D3D11 state i do not want Present sitting there blocked.
 
 ```cpp
 std::unique_lock<std::mutex> lock(
@@ -116,19 +120,21 @@ if(!lock.owns_lock()){
 }
 ```
 
-that's intentional.
+if that lock is busy the frame just keeps going without the extra work.
 
-one unprocessed frame is way better than blocking the game because UNCANNY wanted to finish some background setup.
+that's why it uses `try_to_lock`.
 
-same reason neural/provider initialization gets pushed off the critical Present path where possible.
+dropping UNCANNY for one frame is fine. making the game wait on my maintenance thread is not.
 
-### what ELYSIUM is actually looking at
+this is also why provider and neural setup are kept off Present when possible.
 
-ELYSIUM isn't just "sharpen more when slider goes up."
+## what ELYSIUM is actually doing
 
-the stronger stages are gated by evidence from the frame. motion confidence, disocclusion, depth spread, source agreement, noise risk, skin protection, perf budget, etc.
+ELYSIUM is not just one sharpen value getting pushed harder.
 
-trimmed Adaptive Realism chunk:
+a lot of the stronger work gets scaled by what the frame is telling the engine.
+
+this is from Adaptive Realism:
 
 ```hlsl
 float arStable =
@@ -163,52 +169,67 @@ p += arDiffuse *
      arStable;
 ```
 
-the important part isn't the constants. it's the gates.
+the important part is not the numbers.
 
-if motion gets sketchy, `arStable` drops.
+`arFlowConf` is motion confidence.
 
-if the source doesn't agree with the reconstruction, `sourceAgreement` cuts it.
+`arDisocclusion` catches areas where history stops being trustworthy.
 
-if the area looks noisy, the contribution gets pulled back.
+`arDepthSpread` helps decide how much depth response makes sense.
 
-if skin protection is high, the contact term gets restrained.
+`skinProtect` pulls it back on skin.
 
-if there isn't trustworthy depth on that route, depth-dependent stuff shouldn't pretend otherwise.
+`noiseRisk` pulls it back when the source looks unstable.
 
-that's how i want the engine to behave. stronger when it has evidence, quieter when it doesn't.
+`sourceAgreement` makes the effect lose strength when the current source does not support it.
 
-### motion guard / ghosting guard
+so yeah, higher settings make it stronger. but the guards still get the final say.
 
-still screenshots are easy. motion is where bad reconstruction gets exposed instantly.
+if the route does not have trustworthy depth, UNCANNY should not act like it does.
 
-the later stack gets reduced when flow confidence drops, history disagrees with the current source, disocclusion shows up, or edges stop lining up.
+same thing with motion. same thing with neural.
 
-that's also why 2.5 exists separately from 3.
+## motion and ghosting
 
-2.5 isn't "almost 3." it's the mode i bias hardest toward clean motion. i'd rather give up a little still-frame detail than leave a trail behind somebody's face or a car.
+this is probably the area i care about the most.
 
-### pass modes
+a still screenshot can look insane while the game looks awful as soon as you move.
 
-1 / 1.5 / 2 / 2.5 / 3 are ELYSIUM pass-depth modes, not the DLSS/neural pass count.
+Motion Guard and Ghosting Guard reduce later reconstruction when flow confidence drops, history stops matching the current frame, disocclusion shows up or edges stop agreeing.
 
-higher modes let more of the later reconstruction/detail stack contribute and can spend more budget. they are not literally "run the exact same shader three times."
+2.5 exists for this reason.
 
-roughly:
+it is not just 3 with a smaller number.
 
-- 1 / 1.5 = lighter
-- 2 = normal strong path
-- 2.5 = strong path with the clean-motion bias
-- 3 = max bounded ELYSIUM depth/detail budget
+2.5 is biased harder toward clean motion. i would rather lose some tiny still detail than have a face, weapon or car leave a trail behind it.
 
-route capability still wins over the number. 3-pass does not get permission to fake depth or ignore motion guards.
+## ELYSIUM passes
 
-### REVENANT doesn't replace something just because a newer candidate exists
+the 1, 1.5, 2, 2.5 and 3 settings are ELYSIUM depth settings.
 
-persistent assets need way stricter behavior than live frames.
+they are not the neural pass setting and they are not just the exact same shader being called three times.
 
-if ELYSIUM has a bad frame, the next frame can recover. if REVENANT keeps replacing a good asset with worse candidates, now you get flicker and garbage sitting on disk.
+higher modes allow more of the later reconstruction stack to contribute and give it more room to work.
 
-this is part of the replacement decision:
+1 and 1.5 are lighter.
+
+2 is the normal strong path.
+
+2.5 is the clean motion path.
+
+3 is the hardest ELYSIUM can push the current stack.
+
+the route still decides what is actually available. choosing 3 does not suddenly give a game good depth or good motion data.
+
+## REVENANT
+
+REVENANT is way more strict about replacing something because its output can persist.
+
+if ELYSIUM has one bad frame, whatever. next frame is new.
+
+if REVENANT writes a worse asset and keeps swapping between versions, now you have a real problem.
+
+this is part of the current replacement logic:
 
 ```cpp
 struct ReplacementDecision {
@@ -259,28 +280,29 @@ inline ReplacementDecision ChooseReplacement(
 }
 ```
 
-before that point, the candidate already has to survive source/identity/residual/noise checks.
+before it even gets here the candidate already went through source identity and quality checks.
 
-so the basic idea is:
+the simple version is this:
 
 ```text
-source shows up
--> wait until it stops changing
--> isolate input
--> reconstruct
--> decode/verify
--> quality checks
--> compare against accepted result
--> only replace if it actually clears the gate
+see source
+wait for stable source
+reconstruct
+verify output
+check quality
+compare to accepted version
+replace only if it clears the gate
 ```
 
-newer does not automatically mean better.
+newer does not automatically win.
 
-### Control Deck is not part of boot
+## Control Deck
 
-this was another thing i changed because UI failures should not be able to kill a working renderer.
+Control Deck is not required for the runtime to boot.
 
-the Deck is lazy-started.
+that used to be way too coupled.
+
+current code arms it and waits for HOME:
 
 ```cpp
 deck_surface_create();
@@ -301,102 +323,99 @@ HANDLE maintenance = CreateThread(
 );
 ```
 
-runtime comes up first. Deck starts when HOME is requested.
+the runtime starts first.
 
-if the in-frame Deck can't establish a healthy handshake, the runtime can fall back to the desktop version instead of leaving the user with a dead hotkey and no clue what happened.
+when HOME is pressed it starts the Deck and tries the in frame path.
 
-the Deck is editing live versioned runtime state. it isn't just a UI that writes an ini and hopes the renderer notices later.
+if that handshake fails it can fall back to the desktop Deck.
 
-### launch/install side
+the Deck is editing live versioned runtime state. it is not just changing an ini and hoping the renderer catches up later.
 
-the current launch model is sidecar based.
+## launch system
 
-UNCANNY does not need to rename/replace the selected game exe just to launch it.
+the current launcher uses a sidecar setup.
 
-the install record tracks the selected target and UNCANNY's own launcher/runtime state. target/launcher hashes are used to tell whether an install is still the install we think it is.
+the selected game exe stays the selected game exe.
 
-if the state doesn't match anymore, it can be marked stale and repaired instead of blindly trusting old files.
+UNCANNY keeps its own launch record and checks the target and launcher state before using it.
 
-old wrapper-style installs can also be recovered/migrated instead of stacking another install on top of a broken one.
+if the install does not match what UNCANNY expects anymore, it can be marked stale and repaired.
 
-that ownership model is also why uninstall/rollback tries to only remove or restore things UNCANNY can prove it owns.
+older wrapper installs can be migrated too.
 
-## API stuff
+this also makes rollback and remove cleaner because UNCANNY has a better idea of what it actually owns.
 
-"universal" doesn't mean i'm pretending D3D9, D3D11 and D3D12 are the same API.
+## APIs
 
-the policy is shared. the implementation isn't.
+D3D11 and D3D12 do not use the exact same path because that would be stupid.
 
-D3D11 has its current-frame floor and staged neural promotion.
+they have different sync and resource rules.
 
-D3D12 has different startup/resize/resource-retirement rules.
+the common part is the policy.
 
-PCSX2 is intentionally on its D3D12 `Renderer=15` route right now.
+keep the game authoritative. prove the route is healthy. do advanced work only when the state supports it. back off when it does not.
 
-older or translated APIs can fall back to reduced capability when they don't expose the same reliable scene data.
+D3D11 has the current frame safety floor and staged neural promotion.
 
-that's the difference between *works on the route* and *full feature parity*.
+D3D12 has its own startup, resize and resource retirement logic.
 
-## what happens when something goes wrong
+PCSX2 is currently kept on D3D12 with `Renderer=15`.
 
-this is basically the rule set i keep coming back to:
+older APIs can still work but they do not magically get the same scene data as the best route.
+
+## when something goes wrong
+
+this is basically how the engine reacts rn:
 
 ```text
-UNCANNY lock busy        -> keep native frame
-settings mid-update      -> bypass that frame
-provider missing         -> ELYSIUM can still run
-provider busy/broken     -> keep current source/result
-Present stops advancing  -> no advanced promotion
-device removed           -> release route resources
-resize/fullscreen        -> reset/re-stabilize route
-bad depth confidence     -> reduce depth work
-bad motion confidence    -> reduce temporal work
-bad REVENANT candidate   -> keep accepted/original asset
-Deck handshake fails     -> desktop Deck fallback
-install identity changed -> mark stale / repair
+state lock busy           keep native frame
+settings changing         skip that frame
+provider missing          keep ELYSIUM
+provider fails            keep current result
+Present stops             no promotion
+device removed            release resources
+resize or fullscreen      reset and settle again
+bad depth                 reduce depth work
+bad motion                reduce temporal work
+bad REVENANT candidate    keep accepted asset
+Deck fails in frame       open desktop Deck
+install state changed     mark stale and repair
 ```
 
-i don't want the engine trying to "win" every frame.
-
-if UNCANNY isn't sure it owns something safely, or the evidence is bad, the right answer is usually to back off.
+that is the part people do not see in screenshots but it is half the reason the engine works at all.
 
 ## Adaptive Realism
 
-Adaptive Realism is supposed to react to the frame, not slap the same grade on every game.
+Adaptive Realism is supposed to make the game look more real without forcing the same look on every game.
 
-the current stack is doing source cleanup, form/material separation, contact response, bounded indirect-light-like work where the route actually supports it, local contrast, black-floor/veil handling, highlight shaping, color protection and detail recovery.
+it works with source cleanup, form, material response, contact response, local contrast, depth backed lighting work when it actually has depth, black level cleanup, highlight shaping, color protection and detail recovery.
 
-higher levels mostly let those supported stages work harder.
+higher levels push that stack harder.
 
-they are not supposed to mean "more saturation + more sharpen."
+they are not supposed to just mean more saturation and more sharpening.
 
-## what i'm not posting
+## what i'm keeping private
 
-i'm still not publishing:
+the full repo is still private.
 
-- the full private source tree
-- full shader source
-- complete runtime translation units
-- build/dependency graph
-- provider integration internals
-- release/package tooling
-- generated protected resources
-- every surrounding symbol/function needed to reconstruct the repo
+i am not posting the whole source tree, complete shaders, full runtime files, build graph, provider internals, package tooling or every surrounding function needed to rebuild the project.
 
-that's intentional.
+that's not what this page is for.
 
-this page is here so people can see real implementation and understand how the engine is put together without me turning the public repo into a source release.
+this page is just here because people asked to see how the engine actually works. now there is real code here to look at.
 
-## current proof
+## current build proof
 
-this page is based on the HF18.11 line.
+this is based on HF18.11.
 
-the public candidate went through the normal release gate: x86/x64 production builds, HLSL compile, static regressions, D3D11 WARP validation, install/update/rollback tests, scanner/sidecar tests, PCSX2 sidecar smoke, launcher startup checks, ZIP integrity and Defender scanning.
+the release candidate passed the normal build gate. x86 and x64 production builds, HLSL compile, static regressions, D3D11 WARP testing, install/update/rollback tests, scanner and sidecar tests, PCSX2 sidecar smoke, launcher checks, ZIP integrity and Defender scanning.
 
-that's build/release proof. it is not me claiming every game/GPU/provider combo is hardware-certified.
+that proves the package i released passed those checks.
 
-real-game acceptance still matters.
+it does not mean i am claiming every game on every GPU is perfect. real hardware testing is still real hardware testing.
 
-that's pretty much the whole idea behind UNCANNY right now: push the image hard when the route gives me good information, and get out of the game's way when it doesn't.
+that is pretty much UNCANNY rn.
+
+push the image as hard as i can when the engine has good data. back off when it doesn't.
 
 UNCANNY is independent and is not affiliated with or endorsed by NVIDIA.

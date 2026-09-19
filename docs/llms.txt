@@ -1,15 +1,18 @@
 # UNCANNY public release
 
-Version: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.11
-BuildId: elysium45-hf18.11
-updateSerial: 1910
+Version: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.13
+BuildId: elysium45-hf18.13
+updateSerial: 1930
 ABI: 143
-SHA-256: 7e4d0f990ab33f10abec01a23ff467e487ad45da2b250cd49b6823b321c3d800
+SHA-256: c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522
 Latest: https://github.com/coye2/UNCANNY/releases/latest
 
-HF18.11:
-- restores staged neural promotion on direct D3D11
-- keeps the fail-open/current-frame D3D11 stability floor
-- preserves HF18.10 D3D12 startup/resize protection
+HF18.13:
+- fixes the HF18.12 D3D12 warmup/resize race
+- keeps D3D12 Present fail-open
+- restores bounded transactional owned-resize handoff
+- serializes D3D12 warmup against resize for the same swapchain
+- hardens visible-window deferred attach and verified stale/headless session recovery
 - preserves PCSX2 Direct3D 12 Renderer=15
+- preserves HF18.11 staged direct-D3D11 neural promotion
 - keeps REVENANT experimental

@@ -1,27 +1,31 @@
 # UNCANNY — current public release
 
-UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.5
-Runtime revision: release-alpha.1.elysium-engine45-hf18.5
-BuildId: elysium45-hf18.5
-updateSerial: 1850
+UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.6
+Runtime revision: release-alpha.1.elysium-engine45-hf18.6
+BuildId: elysium45-hf18.6
+updateSerial: 1860
 ABI: 143
-Source revision: 8414a99010fff395c117baaadb77d63dbde946bf
-Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.5.zip
-SHA-256: bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9
-Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.5
+Source revision: 852e617c003a8672ead6bd7607e24163a99b8fc5
+Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.6.zip
+SHA-256: 3f9bbe8eb520918df9e23a84f879bce8079b197f2e194326430b3be4930be111
+Release: https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.1-elysium-engine45-hf18.6
 Latest: https://github.com/coye2/UNCANNY/releases/latest
-Validation: https://github.com/coye2/uncanny-dev/actions/runs/35404395219
+Validation: https://github.com/coye2/uncanny-dev/actions/runs/35412014280
 
-HF18.5:
-- packaged Scan PC resolves dependencies from runtime/
-- cache/manual/scan records are normalized before WPF binding
-- manual Add Game targets remain authoritative through later scans
-- official Library logo pixels are shipped as a 64x64 RGBA PNG and pass WPF decode
-- HF18.4 process-scoped startup recovery remains intact
-- persistent machine/user execution policy is not changed
-- Defender and SmartScreen are not disabled
-- HF18 rendering, Universal API Bridge, PCSX2, REVENANT, rollback and Motion/Ghosting Guard are preserved
+HF18.6:
+- single-pass release verification
+- streaming PE architecture/API checks
+- verified large target hash reuse
+- unchanged-file pruning + changed-files-only rollback transaction
+- verified same-build no-op update path; packaged second pass measured 3884 ms with zero file transaction
+- verified neural-core reuse
+- bounded provider-discovery fast path
+- PCSX2 no-op engine transaction removed for normal ELYSIUM
+- optional REVENANT proof recovery is bounded/fail-open
+- PCSX2 runtime attach has a bounded fast-start path
+- packaged PCSX2 wrapper launch gate PASS: verified original spawned, runtime loaded, initialization acknowledged, child resumed
+- HF18.5 scan/cache/manual/logo fixes preserved
 
-Exact package gates: build PASS; official-logo/cache PASS; packaged scanner PASS; Windows startup PASS; AllSigned startup PASS; WARP PASS; ZIP/hash PASS; Defender PASS / 0 detections.
+Exact package gates: build PASS; install/update speed PASS; official-logo/cache PASS; packaged scanner PASS; packaged PCSX2 launch PASS; Windows startup PASS; AllSigned startup PASS; WARP PASS; ZIP/hash PASS; Defender PASS / 0 detections.
 
 Signing status: unsigned. Windows SmartScreen/Unknown Publisher warnings may remain until trusted Authenticode signing is configured.

@@ -1,24 +1,17 @@
-# Changelog
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.6 — 2026-09-18
 
-## v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.5
+`release-alpha.1.elysium-engine45-hf18.6`, ABI 143, BuildId `elysium45-hf18.6`, updateSerial `1860`.
 
-- Fixed packaged scanner dependency resolution after PowerShell moved under `runtime\`.
-- Fixed cache/manual/scan schema handoff so missing legacy properties cannot blank the launcher.
-- Made manually added targets authoritative through subsequent scans instead of re-filtering them heuristically.
-- Replaced the broken launcher asset with a 64×64 RGBA crop derived from the official Library file `Monochrome Circular U Emblem(1).png`.
-- Packaged official-logo WPF decode: **PASS**.
-- Packaged cache normalization: **PASS**.
-- Packaged scanner execution + manual-entry retention: **PASS**.
-- Normal packaged launcher startup: **PASS**.
-- AllSigned packaged launcher startup: **PASS**.
-- Microsoft Defender final ZIP + extracted tree: **PASS / 0 detections**.
-- Preserved HF18.4 startup recovery and HF18 rendering/runtime behavior.
-- Validation: https://github.com/coye2/uncanny-dev/actions/runs/35404395219
-- Source: `8414a99010fff395c117baaadb77d63dbde946bf`
-- SHA-256: `bc9b34e32556e95ef6098c7c57d74340e3bea64cc66f6687f346c6b5e280d3a9`
-- Signing status: **unsigned**; SmartScreen/Unknown Publisher may remain until trusted Authenticode signing is configured.
+- Removes duplicate full release verification from game install/update.
+- Uses streaming PE checks for release-binary architecture validation.
+- Validates only the required x64 helper/bridge route for 32-bit titles.
+- Carries forward the verified original-game digest instead of repeatedly hashing a large EXE.
+- Skips byte-identical installed files before rollback backup/commit.
+- Backs up and installs only changed files while preserving integrity checks.
+- Adds granular 24–95% installer progress to expose real work instead of apparent stalls.
+- Preserves HF18.5 scanner/library/logo fixes and all HF18 rendering/runtime behavior.
 
----
+Exact packaged installer/update, rollback, Windows, WARP, hash and Defender validation is required before publication.
 
 # v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.5 — 2026-09-18
 

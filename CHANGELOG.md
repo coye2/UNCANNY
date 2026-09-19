@@ -1,5 +1,18 @@
 # Changelog
 
+## HF18.12 — 2026-09-19
+
+- Moved first-use D3D12 frame-processor setup off Present so native frames keep advancing while UNCANNY prepares resources.
+- Made owned D3D12 resize/resource retirement nonblocking/fail-fast instead of waiting on UNCANNY from the game thread.
+- Kept PCSX2 on Direct3D 12 `Renderer=15` while targeting the reproduced "gameplay for a few seconds, then hard-freeze" transition.
+- Added deferred startup attach for non-PCSX2 targets with no static graphics API import.
+- Added bounded stale sidecar recovery so a crashed launch does not keep returning `SESSION_ALREADY_TRACKED PID=0`.
+- Preserved HF18.11 staged direct-D3D11 neural promotion.
+
+BuildId: `elysium45-hf18.12`  
+updateSerial: `1920`  
+ZIP SHA-256: `8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41`
+
 ## HF18.11 — 2026-09-19
 
 - Fixed direct-D3D11 neural promotion being permanently blocked by the stability floor.

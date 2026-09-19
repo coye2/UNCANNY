@@ -65,7 +65,7 @@ https://github.com/coye2/UNCANNY/releases/latest
 
 HF18.12 ZIP SHA-256:
 
-`8aaa41cb7062ef92ad1ec216ca36a0a2fbddb32632d5746d022e8f5da38c2b41`
+`9a7e439967af1b7930769aa29b0a1830afee606ce6246291f4035c5a4927dce6`
 
 More:
 - [Usage](USAGE.md)

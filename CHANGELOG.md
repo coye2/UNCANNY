@@ -1,3 +1,48 @@
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.9 — 2026-09-19
+
+`release-alpha.1.elysium-engine45-hf18.9`, ABI 143, BuildId `elysium45-hf18.9`, updateSerial `1890`.
+
+- Generalizes the proven Fallout-class direct-D3D11 current-frame compatibility path into the **universal direct-D3D11 stability floor**.
+- Removes the Fallout4 executable-name special case from D3D11 stability policy.
+- Direct D3D11 safe-floor processing keeps native Present authoritative and defers depth/temporal/neural work that reproduced hard-lock behavior in Fallout 4 and Stray.
+- Restores PCSX2 to its previously working **Direct3D 12** route by transactionally setting `EmuCore/GS Renderer=15`.
+- Applies the PCSX2 DX12 renderer contract to the main GS config and existing per-game overrides managed by UNCANNY.
+- Same-build PCSX2 verification now treats renderer drift away from DX12 as stale so Update UNCANNY repairs the route.
+- Preserves the existing D3D12 / Feature-18 runtime path for PCSX2 instead of forcing the emulator through the D3D11 compatibility floor.
+- Preserves HF18.8 post-install state repair, legacy PCSX2 wrapper recovery, universal sidecar launch, Cloud Files support, rollback, scanner/library fixes and existing rendering controls.
+- Exact tested candidate: `b168d748d241851d8faf13c83ff64aab10cd19b2`.
+- Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35420827416 — **PASS**.
+- Public ZIP SHA-256: `7c469cc508b7fa999b1598c80156cbf4af6201925d3455b27f980c4acf9d4c37`.
+- CI validates the package/runtime contracts; real-game GPU/provider behavior remains a hardware acceptance requirement.
+
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.8 — 2026-09-19
+
+`release-alpha.1.elysium-engine45-hf18.8`, ABI 143, BuildId `elysium45-hf18.8`, updateSerial `1880`.
+
+- Fixes valid CRLF sidecar launch records being misclassified as stale immediately after successful installation.
+- Fixes the resulting Install/Update loop where a verified current install could immediately show Update again.
+- Detects poisoned legacy PCSX2 states where `pcsx2-qt.exe` is still byte-identical to the old UNCANNY wrapper despite a sidecar-mode record.
+- Transactionally restores the preserved real PCSX2 executable before returning the installation to the sidecar architecture.
+- Rebuilt `UNCANNY-Library.ps1` from the known-clean HF18.7 baseline after validation caught an intermediate corruption.
+- Exact tested candidate: `eafaae8524afc7f030c9cc3d4ce64a86f48e9538`.
+- Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35418324577 — **PASS**.
+- Public ZIP SHA-256: `2bd1633df4b039682151287e00e758cba3ca9b80fda9838c5e03b653c3466272`.
+
+# v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.7 — 2026-09-19
+
+`release-alpha.1.elysium-engine45-hf18.7`, ABI 143, BuildId `elysium45-hf18.7`, updateSerial `1870`.
+
+- Replaces wrapper-in-place launch with the verified `UNCANNY.Launch.exe` sidecar so selected game/emulator executables retain their original filenames and bytes.
+- Adds target and sidecar SHA-256 validation to the per-install launch record.
+- Migrates legacy wrapper-in-place installs transactionally.
+- Makes D3D11 Present non-blocking/fail-open while maintenance/provider work owns reconstruction state.
+- Moves D3D11 neural/provider initialization off Present and adds native-only stabilization after resize/fullscreen/target/color-space transitions.
+- Adds PCSX2 OneDrive/Cloud Files profile support while continuing to block true symlinks/junctions/name-surrogate redirects.
+- Preserves transactional REVENANT texture-replacement configuration.
+- Exact tested candidate: `8a211fc93efff76aef25b543f85d5c43c5a3b0da`.
+- Exact validation run: https://github.com/coye2/uncanny-dev/actions/runs/35416660890 — **PASS**.
+- Public ZIP SHA-256: `3e07ffb36a320d82b215a571adb883ca3f0a7958213988368ea1be5e54925f78`.
+
 # v0.20.0-alpha.1 ELYSIUM Engine 4.5 — HF18.6 — 2026-09-18
 
 `release-alpha.1.elysium-engine45-hf18.6`, ABI 143, BuildId `elysium45-hf18.6`, updateSerial `1860`.

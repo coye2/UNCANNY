@@ -27,8 +27,8 @@
   },
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.2-FINAL-ALPHA.zip",
-    "sha256": null,
-    "size_bytes": null,
-    "status": "AWAITING_PUBLICATION_GATE"
+    "sha256": "857a25b3d2035cc9c87dd78dadc5f15bd5cb203416e09a41554f3a7c894ea541",
+    "size_bytes": 8820081,
+    "status": "AWAITING_DEFENDER_PUBLICATION_GATE"
   }
 }

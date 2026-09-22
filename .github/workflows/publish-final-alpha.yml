@@ -1,0 +1,62 @@
+name: Publish UNCANNY Final Alpha
+on:
+  push:
+    branches: [release/final-alpha-0202]
+    paths:
+      - .release-final-alpha/**
+      - .github/workflows/publish-final-alpha.yml
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify package boundary and checksum
+        shell: pwsh
+        run: |
+          $dir='.release-final-alpha'
+          $zip=Join-Path $dir 'UNCANNY-v0.20.0-alpha.2-FINAL-ALPHA.zip'
+          $sum=Join-Path $dir 'UNCANNY-v0.20.0-alpha.2-FINAL-ALPHA.zip.sha256'
+          $expected=((Get-Content $sum -Raw).Trim() -split '\s+')[0].ToLowerInvariant()
+          $actual=(Get-FileHash $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if($actual -ne $expected){throw "checksum mismatch $actual"}
+          Remove-Item verify-tree -Recurse -Force -ErrorAction SilentlyContinue
+          Expand-Archive $zip verify-tree -Force
+          $files=@(Get-ChildItem verify-tree -Recurse -File)
+          $forbidden=@('.cpp','.c','.h','.hpp','.hlsl','.pdb','.obj','.lib','.exp','.py')
+          $leaks=@($files|Where-Object{$_.Extension.ToLowerInvariant() -in $forbidden -or $_.FullName -match '[\\/](src|tests|development|validation|developer-tools)[\\/]'})
+          if($leaks.Count){$leaks.FullName|Write-Host;throw 'private/developer material leaked into public package'}
+          foreach($required in @('UNCANNY.exe','USAGE.md')){if(-not ($files|Where-Object{$_.Name -eq $required})){throw "missing $required"}}
+          Write-Host "PASS public boundary SHA256=$actual"
+      - name: Microsoft Defender gate
+        shell: pwsh
+        run: |
+          $status=Get-MpComputerStatus -ErrorAction Stop
+          if(-not $status.AMServiceEnabled -or -not $status.AntivirusEnabled){throw 'Defender unavailable'}
+          Update-MpSignature -ErrorAction Stop
+          $zip=(Resolve-Path '.release-final-alpha/UNCANNY-v0.20.0-alpha.2-FINAL-ALPHA.zip').Path
+          Start-MpScan -ScanType CustomScan -ScanPath $zip -ErrorAction Stop
+          Start-MpScan -ScanType CustomScan -ScanPath (Resolve-Path verify-tree).Path -ErrorAction Stop
+          Start-Sleep -Seconds 2
+          $hits=@(Get-MpThreatDetection -ErrorAction SilentlyContinue|Where-Object{$_.Resources -match 'FINAL-ALPHA|verify-tree'})
+          if($hits.Count){$hits|Format-List *|Out-String|Write-Host;throw 'Defender detected a threat; publication blocked'}
+          $s=Get-MpComputerStatus
+          [ordered]@{result='PASS';AMEngineVersion=$s.AMEngineVersion;AntivirusSignatureVersion=$s.AntivirusSignatureVersion}|ConvertTo-Json|Set-Content '.release-final-alpha/DEFENDER.json'
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v0.20.0-alpha.2-final-alpha
+        shell: pwsh
+        run: |
+          $zip='.release-final-alpha/UNCANNY-v0.20.0-alpha.2-FINAL-ALPHA.zip'
+          $sum="$zip.sha256"
+          $notes='.release-final-alpha/RELEASE-NOTES.md'
+          gh release view $env:TAG --repo $env:GITHUB_REPOSITORY 2>$null | Out-Null
+          if($LASTEXITCODE -eq 0){
+            gh release edit $env:TAG --title 'UNCANNY v0.20.0-alpha.2 - Final Alpha' --notes-file $notes --prerelease --repo $env:GITHUB_REPOSITORY
+            gh release upload $env:TAG $zip $sum --clobber --repo $env:GITHUB_REPOSITORY
+          } else {
+            gh release create $env:TAG $zip $sum --target $env:GITHUB_SHA --title 'UNCANNY v0.20.0-alpha.2 - Final Alpha' --notes-file $notes --prerelease --repo $env:GITHUB_REPOSITORY
+          }

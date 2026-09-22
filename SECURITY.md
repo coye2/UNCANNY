@@ -1,30 +1,19 @@
 # Security
 
-UNCANNY installs low-level runtime components into game folders, so treat alpha builds like any other graphics injection/modding tool: use official packages, keep backups and do not mix files between releases.
+UNCANNY installs low-level runtime components into game folders. Use only official release packages, keep backups and do not mix files between releases.
 
-## Official builds
+## Closed-source boundary
 
-Use releases from:
-https://github.com/coye2/UNCANNY/releases
-
-The full development workspace is private and is not a redistributable release package.
+The full development repository is private. Public packages must not contain private source, full shaders, internal build graphs, provider internals, CI evidence bundles, developer harnesses or private package tooling.
 
 ## Antivirus
 
-HF18.13 was scanned with Microsoft Defender as part of its validated release/publication flow. The published release reports 0 detections.
-
-That result applies to the exact published package/hash. It is not a promise that antivirus signatures will never change.
-
-UNCANNY does not require users to disable Defender or add broad exclusions.
-
-See [docs/MALWARE-VERIFICATION.md](docs/MALWARE-VERIFICATION.md).
-
-## Reporting a security problem
-
-Do not post exploit details, private source, secrets or sensitive diagnostic data in a public issue.
-
-Contact the project owner through the GitHub account/repository first with the minimum information needed to reproduce the problem.
+UNCANNY does not require users to disable Defender, restore detections blindly or add broad exclusions. Final Alpha must pass the publication security gate before it is described as Defender-clean.
 
 ## Signing
 
-The current alpha binaries are unsigned, so SmartScreen / Unknown Publisher warnings are expected until code signing is set up.
+The current alpha binaries are unsigned, so SmartScreen / Unknown Publisher warnings may occur.
+
+## Reporting
+
+Do not post exploit details, private source, secrets or sensitive diagnostic data publicly. Report security issues through the repository owner with the minimum reproduction information required.

@@ -1,27 +1,18 @@
 # Releases
 
-## Current
+## Current candidate
 
-**UNCANNY v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.13**
+**UNCANNY v0.20.0-alpha.2 — Final Alpha — ELYSIUM Engine 4.5**
 
-- BuildId: `elysium45-hf18.13`
-- updateSerial: `1930`
-- ABI: `143`
-- package: `UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.13.zip`
-- SHA-256: `c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522`
+Exact private candidate: `748f80b6a63f64bc811479b185e00dc45d34c373`  
+Validation: private CI run `35683346915`
 
-Download:
-https://github.com/coye2/UNCANNY/releases/latest
+Final Alpha is the stable checkpoint before beta. Verified additions include source-bounded detail/noise control, conservative water recovery, restricted rigid geometry replacement, normal-only recovery and isolated material targeting/restoration.
 
-HF18.13 is the D3D12 freeze + launch/session recovery build. It keeps D3D12 Present nonblocking, restores bounded transactional resize handoff, serializes warmup against resize, and hardens deferred attach/stale-session recovery for modern targets.
+It does not claim universal tessellation, animated replacement, automatic rock/gravel displacement, universal DLSS 5, or real-game certification from controlled fixtures.
 
-## Recent
+## Previous
 
-**HF18.12** — moved first-use D3D12 setup off Present and added deferred startup attach.  
-**HF18.11** — staged direct-D3D11 neural promotion.  
-**HF18.10** — D3D12 startup/resize stabilization.  
-**HF18.9** — universal D3D11 stability floor + PCSX2 D3D12 recovery.  
-**HF18.8** — updater state and legacy PCSX2 wrapper repair.  
-**HF18.7** — sidecar launch architecture and D3D11 Present hardening.
+**v0.20.0-alpha.1 — HF18.13** — D3D12 freeze + launch/session recovery.
 
-The full development workspace is private. This repo is the public release/support side of UNCANNY.
+The full development workspace remains private. This repository is the public release/support surface.

@@ -1,19 +1,15 @@
 # UNCANNY
 
-Current public release: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.13
-BuildId: elysium45-hf18.13
-updateSerial: 1930
-ABI: 143
-Package: UNCANNY-v0.20.0-alpha.1-ELYSIUM-ENGINE45-HF18.13.zip
-SHA-256: c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522
-Release: https://github.com/coye2/UNCANNY/releases/latest
+Current candidate: v0.20.0-alpha.2 — Final Alpha — ELYSIUM Engine 4.5
+Exact private candidate: 748f80b6a63f64bc811479b185e00dc45d34c373
+Validation run: 35683346915
 
-UNCANNY is a Windows real-time graphics remastering runtime for games and emulators.
+Verified controlled evidence: source-bounded detail/noise governor; conservative water recovery; restricted D3D11 rigid geometry replacement; normal-only recovery; isolated material targeting/restoration; x86/x64 production builds.
 
-HF18.13 fixes the D3D12 warmup/resize regression reproduced by PCSX2 after a few seconds of gameplay. Present remains fail-open. Owned D3D12 resize gets a bounded transactional handoff and off-Present warmup is serialized against resize for the same swapchain.
+Material fixture: 65536 target pixels pink; 65536 unrelated pixels unchanged; exact restoration.
+Geometry fixture: 48 -> 120 triangles; independent silhouette-reference error 4464 -> 3816 pixels.
 
-Modern dynamically-bound games start natively first, require a stable visible window before late attach, and can recover verified stale/headless UNCANNY sessions without auto-terminating a visible game.
+No real-game run was part of this exact candidate. Do not describe controlled fixture results as real-game certification.
+Universal auto-tessellation, animated replacement, automatic rock/gravel displacement and universal DLSS 5 are not claimed.
 
-PCSX2 remains on Direct3D 12 Renderer=15. HF18.11 staged direct-D3D11 neural promotion remains in place.
-
-The native ELYSIUM path and optional neural/DLSS 5 route are separate. REVENANT asset replacement is experimental.
+UNCANNY is closed source. The public repository/package does not contain the private development tree.

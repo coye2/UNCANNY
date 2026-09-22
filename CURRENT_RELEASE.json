@@ -8,7 +8,7 @@
   "buildId": "elysium45-final-alpha",
   "updateSerial": 2000,
   "abi": 143,
-  "published": null,
+  "published": "2026-09-22",
   "source_revision": "748f80b6a63f64bc811479b185e00dc45d34c373",
   "verification": {
     "exact_candidate_run": "35683346915",
@@ -28,7 +28,9 @@
   "package": {
     "name": "UNCANNY-v0.20.0-alpha.2-FINAL-ALPHA.zip",
     "sha256": "673fa1a7ee9dbee10f67d656da24f0c4a53df2e5f384cc6f3026f1145263dc8a",
-    "size_bytes": 8820081,
-    "status": "AWAITING_DEFENDER_PUBLICATION_GATE"
-  }
+    "size_bytes": 8851683,
+    "status": "PUBLISHED_DEFENDER_PASS",
+    "url": "https://github.com/coye2/UNCANNY/releases/download/v0.20.0-alpha.2-final-alpha/UNCANNY-v0.20.0-alpha.2-FINAL-ALPHA.zip"
+  },
+  "release_url": "https://github.com/coye2/UNCANNY/releases/tag/v0.20.0-alpha.2-final-alpha"
 }

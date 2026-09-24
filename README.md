@@ -35,6 +35,12 @@ REVENANT remains experimental. The optional neural/DLSS route is separate from E
 5. Install/update UNCANNY.
 6. Press **HOME** in-game for Control Deck.
 
+## Support UNCANNY
+
+UNCANNY is built independently and released to the community. If you like what I'm building and want to help keep development moving, you can support the project on [Ko-fi](https://ko-fi.com/coye2).
+
+Support helps with development, testing, infrastructure, code signing, and keeping UNCANNY moving toward beta.
+
 ## Source and security
 
 UNCANNY is closed source. The public repository contains release/support material, not the private development tree. No private source, CI evidence bundle, developer harness, or internal build tooling is part of the public package.

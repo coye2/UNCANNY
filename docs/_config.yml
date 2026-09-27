@@ -1,5 +1,5 @@
-title: "UNCANNY — ELYSIUM Engine 4.5"
-description: "Independent real-time remaster engine for Windows PC games and emulators with Adaptive Realism, ELYSIUM reconstruction, Motion Guard, Ghosting Guard, REVENANT, legacy DirectX compatibility, diagnostics, rollback and optional DLSS 5 integration."
+title: "UNCANNY Engine 5 — STRATA"
+description: "UNCANNY is a real-time remastering project for Windows games and emulators. STRATA is the Engine 5 development line."
 url: "https://coye2.github.io"
 baseurl: "/UNCANNY"
 markdown: kramdown

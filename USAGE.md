@@ -1,29 +1,64 @@
-# Using UNCANNY — Final Alpha
+# using UNCANNY
 
-## Install
+## install
 
-1. Download the Final Alpha ZIP from the GitHub release.
-2. Extract it somewhere permanent. Do not run it from inside the ZIP.
+1. Download the build you want from **Releases**.
+2. Extract the whole folder.
 3. Open `UNCANNY.exe`.
-4. Let the launcher scan, or disable scan-on-startup and add games manually.
+4. Add a game or use **Scan PC**.
 5. Select the real game/emulator executable.
 6. Install/update UNCANNY.
-7. Launch the game and press **HOME** for Control Deck.
+7. Launch the game and press **Home** for the Control Deck.
 
-Do not mix files from different UNCANNY releases.
+Do not mix files from different UNCANNY builds.
 
-## Main controls
+## launcher
 
-ELYSIUM includes pass depth, Adaptive Realism, Motion Guard, Ghosting Guard and image controls. The optional neural/DLSS route is separate.
+Manual games stay in the library. If a game moves, the entry should stay there and show as missing until you locate it again.
+
+Startup scanning is not supposed to crawl the whole PC every launch. Use Scan PC when you actually want a scan.
+
+## Control Deck
+
+The Deck controls STRATA, REVENANT and the neural path.
+
+Some settings need data the game might not expose. If UNCANNY does not have a trustworthy input, it should show that instead of pretending the feature is working.
 
 ## REVENANT
 
-REVENANT remains experimental. Final Alpha has controlled evidence for a restricted D3D11 rigid-geometry/material path. That is not a claim of universal asset replacement or automatic rock/gravel displacement.
+PCSX2 has the strongest saved-pack path right now.
 
-## Evidence boundary
+Live mode captures supported textures and builds accepted replacements. Saved mode plays a finished captured pack without running reconstruction again.
 
-The Final Alpha candidate passed controlled Windows/GPU/CI fixtures. No real-game run was part of the exact candidate, so do not treat fixture results as certification for a specific game.
+Native D3D9 REVENANT is farther along than before: real Deadpool textures were captured and rebuilt. The final visible replacement proof from that exact run is still open.
 
-## Bug reports
+## neural bridge
 
-Include the game, executable, API, architecture, GPU/driver, UNCANNY version and relevant status/log output.
+D3D9, D3D11 and D3D12 have real development evidence for provider creation/evaluation/output use.
+
+Vulkan, OpenGL and AMD are not being called fully proven yet.
+
+## repair / remove
+
+**Repair** fixes UNCANNY-owned files that are missing or damaged.
+
+**Remove UNCANNY** restores recorded originals where possible and leaves unrelated mods, saves and user files alone.
+
+If a managed file changed outside UNCANNY, restore should stop and report the conflict instead of overwriting it.
+
+## bug reports
+
+Send:
+
+- game + version
+- exact executable
+- API
+- x86/x64
+- GPU + driver
+- UNCANNY build
+- what you did
+- what happened
+- status/log output
+- screenshot/video if it is visual
+
+Do not post tokens, private source archives or personal data.

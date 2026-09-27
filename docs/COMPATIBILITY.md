@@ -1,22 +1,30 @@
-# Compatibility — Final Alpha
+# compatibility
 
-UNCANNY remains alpha software. Compatibility depends on the route and on the frame/scene data a target exposes.
+UNCANNY is still being pushed across a lot of different graphics paths. I am keeping the statuses simple.
 
-| Route | Status | Notes |
-|---|---|---|
-| D3D11 x64 | active | strongest generic ELYSIUM route; restricted controlled rigid/material evidence exists |
-| D3D11 x86 | experimental | controlled fixture coverage exists |
-| D3D12 x64 | active | ELYSIUM compatibility route |
-| D3D10 / 10.1 | experimental | compatibility route |
-| D3D9 | legacy | reduced capability when scene data is limited |
-| PCSX2 | active test target | not real-game-certified by the Final Alpha fixture run |
-| Vulkan | early / partial | not DirectX parity |
-| OpenGL | early / partial | not DirectX parity |
+| route | current state |
+|---|---|
+| D3D9 | neural bridge has real game evidence; native REVENANT capture/reconstruction works, visible replacement proof still open |
+| D3D10 / 10.1 | experimental; real-game acceptance still open |
+| D3D11 | active; STRATA/REVENANT/neural paths have the strongest overall coverage |
+| D3D12 | active; real neural provider/output evidence exists |
+| PCSX2 | main REVENANT target; saved captured packs are working |
+| Vulkan | partial / still behind DirectX |
+| OpenGL | experimental / not final-game accepted |
+| AMD | integration work exists, real Radeon hardware acceptance is still missing |
 
-## Evidence terminology
+## what I mean by proof
 
-**Attached**, **processing**, **provider evaluated**, **presented**, **controlled fixture passed**, and **real-game verified** are different claims.
+These are not the same thing:
 
-Final Alpha's geometry/material/water evidence is controlled synthetic GPU evidence. It must not be described as a real-game pass.
+- attached
+- captured
+- reconstructed
+- provider loaded
+- provider evaluated
+- output composed
+- replacement uploaded
+- replacement actually visible
+- real-game motion accepted
 
-REVENANT remains restricted/experimental. Universal animated replacement, automatic rock/gravel displacement and universal tessellation are not supported claims.
+If a test only proves one stage, I am not using it to claim the next one.

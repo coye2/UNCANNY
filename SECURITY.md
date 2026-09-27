@@ -1,19 +1,25 @@
-# Security
+# security
 
-UNCANNY installs low-level runtime components into game folders. Use only official release packages, keep backups and do not mix files between releases.
+UNCANNY installs low-level graphics/runtime files into game folders, so use the official packages and keep your backups.
 
-## Closed-source boundary
+## Defender / SmartScreen
 
-The full development repository is private. Public packages must not contain private source, full shaders, internal build graphs, provider internals, CI evidence bundles, developer harnesses or private package tooling.
+UNCANNY does **not** require you to disable Defender or add a giant exclusion.
 
-## Antivirus
+The current binaries are unsigned, so Windows can show Unknown Publisher / SmartScreen warnings.
 
-UNCANNY does not require users to disable Defender, restore detections blindly or add broad exclusions. Final Alpha must pass the publication security gate before it is described as Defender-clean.
+If Windows actually detects something, do not blindly restore it. Send the exact detection name, file hash and build so it can be checked.
 
-## Signing
+## closed source
 
-The current alpha binaries are unsigned, so SmartScreen / Unknown Publisher warnings may occur.
+The development repo is private.
 
-## Reporting
+Public packages must not contain private C++/shader source, internal CI evidence, developer harnesses, credentials or private build tooling.
 
-Do not post exploit details, private source, secrets or sensitive diagnostic data publicly. Report security issues through the repository owner with the minimum reproduction information required.
+## third-party files
+
+Provider/model files keep their own licenses. UNCANNY does not claim ownership of NVIDIA/AMD/provider binaries or model weights.
+
+## reporting
+
+For a security issue, send the minimum reproduction details needed. Do not post secrets, private source or personal diagnostic data in a public issue.

@@ -1,35 +1,39 @@
-# DLSS 5 integration
+# neural bridge / DLSS route
 
-UNCANNY is not just a DLSS feeder. The neural route is one part of the engine.
+UNCANNY's neural bridge is one part of the engine. It is not the whole renderer and it is not REVENANT.
 
-Three things are separate in the Control Deck:
+## what counts as working
 
-- **UNCANNY Passes** — ELYSIUM reconstruction depth
-- **Adaptive Realism** — scene-aware native processing
-- **DLSS 5 Passes** — optional provider-backed neural work
+I do not count a DLL being present as proof.
 
-That separation matters because ELYSIUM can work without the neural provider.
+The useful chain is:
 
-## What counts as a working neural path
+`attach -> get the frame -> create provider feature -> evaluate -> return output -> compose -> present`
 
-UNCANNY does not count a loaded DLL or an enabled overlay as proof by itself.
+If the chain breaks, the game should keep the real source frame instead of hanging on stale output.
 
-The useful path is:
+## current proof
 
-`attach → frame transport → provider → evaluate → return → compose → present`
+Development testing has real provider create/evaluate/output-use evidence in:
 
-If it breaks anywhere in that chain, the game should keep the live source frame instead of hanging on stale output.
+- D3D9 — Deadpool
+- D3D11 — Fallout 4
+- D3D12 — Subnautica 2
 
-## HF18.11
+Those tests are real progress, but they do not make Vulkan/OpenGL/AMD magically complete.
 
-The earlier D3D11 stability fix went too far and kept neural execution disabled forever.
+## D3D9
 
-HF18.11 keeps the protected startup behavior, but lets neural resources warm up after the route has stayed healthy long enough. The riskier direct depth/temporal path is still held back on the safe route.
+The current D3D9 neural route uses the compatibility/helper path. That is different from REVENANT's D3D9 asset-replacement path.
 
-## Where UNCANNY fits
+Do not mix the two when reporting a bug.
 
-UNCANNY overlaps with projects such as RenoDX, OptiScaler, DLSS feeders, DFC and RTX Remix, but it is not trying to be a clone of any one of them.
+## controls
 
-The project is built around one runtime: live reconstruction, motion protection, compatibility routing, optional neural work, REVENANT, controls, diagnostics and rollback.
+STRATA/Control Deck keeps normal reconstruction controls separate from provider-backed neural work. If a control does not have a real runtime path, it should not be presented as doing something.
 
-UNCANNY is independent and is not affiliated with NVIDIA or those projects.
+## vendor naming
+
+UNCANNY does not call FSR or another provider “DLSS”.
+
+NVIDIA and DLSS are NVIDIA trademarks. UNCANNY is independent and is not endorsed by NVIDIA.

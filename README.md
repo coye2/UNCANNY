@@ -1,50 +1,72 @@
 # UNCANNY
 
-UNCANNY is a real-time graphics remastering project for Windows games and emulators.
+UNCANNY is my real-time remastering project for Windows games and emulators.
 
-**Current release candidate:** v0.20.0-alpha.2 — Final Alpha — ELYSIUM Engine 4.5
+The current stable build is **v0.20.0-alpha.2 — Final Alpha**.
 
-This is the final alpha checkpoint before beta. It is based on the exact private candidate `748f80b6a63f64bc811479b185e00dc45d34c373`, whose full private CI run passed.
+The newest development preview is **UNCANNY Engine 5 — STRATA**, built from the `cad2556` checkpoint.
 
-## Verified additions
+## what STRATA is
 
-- source-bounded detail/noise governor
-- conservative depth/history-gated water recovery
-- restricted D3D11 rigid-geometry replacement evidence
-- normal-only rigid-mesh recovery
-- content-identified material targeting with exact restoration
-- matched synthetic motion/water evidence and GPU timing
-- x86/x64 production builds and full private validation
+STRATA is the next engine line. The goal is simple: make UNCANNY feel like one actual program instead of a launcher, graphics runtime, REVENANT worker and a bunch of separate tools.
 
-The controlled material fixture changed 65,536 target pixels to unmistakable pink, kept 65,536 pixels from the unrelated material byte-identical, and restored the original exactly.
+The current preview already brings those pieces much closer together.
 
-The corrected rigid silhouette fixture changed 48 to 120 triangles and reduced independent-reference coverage error from 4,464 to 3,816 pixels while preserving the unrelated scene component.
+## what's working in the STRATA preview
 
-## Boundaries
+- rebuilt launcher with a saved game library, manual add, scanning, search, themes and fullscreen mode
+- Control Deck profiles, themes and live controls
+- REVENANT captured-texture packs for PCSX2
+- saved REVENANT packs can play without running the reconstruction worker again
+- backup/restore around managed texture packs
+- native-PC REVENANT capture + reconstruction work on D3D9
+- real neural provider create/evaluate/output-use evidence on D3D9, D3D11 and D3D12 test games
+- safer repair/remove paths that protect files UNCANNY does not own
 
-This release does **not** claim universal auto-tessellation, animated mesh replacement, automatic rock/gravel displacement, dramatic water geometry, universal DLSS 5, or real-game certification from synthetic fixtures.
+## what is not finished yet
 
-REVENANT remains experimental. The optional neural/DLSS route is separate from ELYSIUM.
+I am not going to call unfinished stuff finished just because a harness passed.
 
-## Install
+- native D3D9 REVENANT has real capture + reconstruction proof, but the latest Deadpool run did not finish visible replacement A/B proof
+- Vulkan/OpenGL are not at DirectX parity yet
+- AMD hardware proof is still missing
+- full controller/handheld acceptance is still open
+- sky seams, water/reflections and some motion cases are still being pushed
+- the full shader/profile archive and replay/comparison capture system are not done
 
-1. Download the Final Alpha ZIP from the release.
-2. Extract the whole folder.
+## install
+
+1. Download a build from **Releases**.
+2. Extract the whole ZIP somewhere permanent.
 3. Run `UNCANNY.exe`.
-4. Pick a detected game or use **Add game**.
-5. Install/update UNCANNY.
-6. Press **HOME** in-game for Control Deck.
+4. Add a game manually or use **Scan PC**.
+5. Select the game and install/update UNCANNY.
+6. Launch it and press **Home** for the Control Deck.
 
-## Support UNCANNY
+Do not run UNCANNY from inside the ZIP and do not mix files from different builds.
 
-UNCANNY is built independently and released to the community. If you like what I'm building and want to help keep development moving, you can support the project on [Ko-fi](https://ko-fi.com/coye2).
+## REVENANT
 
-Support helps with development, testing, infrastructure, code signing, and keeping UNCANNY moving toward beta.
+REVENANT is the asset side of UNCANNY. It can capture supported assets, rebuild accepted ones and feed replacements back into supported games/emulators.
 
-## Source and security
+PCSX2 currently has the strongest saved-pack workflow. Build a captured pack once, switch to saved mode, then play it without keeping the reconstruction worker alive.
 
-UNCANNY is closed source. The public repository contains release/support material, not the private development tree. No private source, CI evidence bundle, developer harness, or internal build tooling is part of the public package.
+See [Captured texture packs](docs/CAPTURED-TEXTURE-PACKS.md).
 
-The binaries remain unsigned, so Windows may show Unknown Publisher. Do not disable Defender or add broad exclusions.
+## neural rendering
 
-UNCANNY is independent and is not affiliated with or endorsed by NVIDIA.
+The neural bridge is separate from REVENANT. Current development has real provider execution evidence on D3D9, D3D11 and D3D12. That does not mean every API, GPU or game is certified.
+
+UNCANNY does not rename another vendor's technology and call it DLSS.
+
+## support UNCANNY
+
+If you like what I'm building and want to help me keep pushing it, you can support UNCANNY on [Ko-fi](https://ko-fi.com/coye2).
+
+## source / security
+
+UNCANNY is closed source. The public repo is for releases, docs and support material.
+
+The binaries are currently unsigned, so Windows can show Unknown Publisher. Do not disable Defender or add broad exclusions for UNCANNY.
+
+UNCANNY is independent and is not affiliated with or endorsed by NVIDIA, AMD, PCSX2 or the games it supports.

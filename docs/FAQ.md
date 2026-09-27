@@ -1,33 +1,47 @@
-# FAQ — Final Alpha
+# FAQ
 
-## What is the current release?
+## what is UNCANNY?
 
-v0.20.0-alpha.2 — **Final Alpha**, based on exact private candidate `748f80b6a63f64bc811479b185e00dc45d34c373`.
+My real-time remastering project for Windows games and emulators.
 
-## What is verified?
+STRATA is the Engine 5 line. REVENANT handles asset reconstruction/replacement. The neural bridge handles provider-backed neural rendering.
 
-Controlled tests verified cleaner bounded detail, conservative water response, restricted rigid D3D11 geometry changes, normal recovery and isolated material targeting/restoration. Production x86/x64 and the full private candidate CI passed.
+## is this just ReShade?
 
-## Does that mean it was proven in games?
+No.
 
-No. The exact Final Alpha candidate did not exercise real games. Controlled fixtures are not presented as gameplay certification.
+UNCANNY has native runtime/graphics hooks, game install/repair handling, REVENANT asset work, neural provider paths, its own Control Deck and rollback/recovery systems.
 
-## Is it a ReShade preset?
+## what is the stable release?
 
-No. UNCANNY uses native runtime components, API hooks, install/rollback tooling and its own controls.
+v0.20.0-alpha.2 — Final Alpha.
 
-## Is ELYSIUM DLSS 5?
+## what is STRATA?
 
-No. ELYSIUM is UNCANNY's native image path. The neural/DLSS route is separate and optional.
+STRATA is the newer Engine 5 preview line.
 
-## What is REVENANT?
+It is more integrated and has newer REVENANT/neural/launcher work, but some paths are still being finished.
 
-The experimental asset side. Final Alpha verifies a restricted controlled path, not universal replacement.
+## is D3D9 REVENANT working?
 
-## Is the source public?
+The current preview has real Deadpool capture + reconstruction proof and produced validated replacement assets.
 
-No. The full development repository remains private. The public repository is release/support material only.
+The final visible replacement A/B from that exact real-game run is still open, so I am not calling the whole path proven yet.
 
-## Do I need to disable Defender?
+## does DLSS/neural work?
 
-No. Never broadly disable security software for UNCANNY.
+The development bridge has real provider create/evaluate/output-use evidence on D3D9, D3D11 and D3D12.
+
+That is not the same as saying every API/game/GPU is done.
+
+## AMD?
+
+Not fully accepted yet. Real Radeon hardware proof is still missing.
+
+## is the source public?
+
+No. The full development repo is private. This repo is releases/docs/support.
+
+## do I need to disable Defender?
+
+No.

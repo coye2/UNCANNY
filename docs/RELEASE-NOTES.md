@@ -1,22 +1,40 @@
-# v0.20.0-alpha.2 — Final Alpha
+# UNCANNY Engine 5 — STRATA preview cad2556
 
-Final Alpha freezes the validated `748f80b6a63f64bc811479b185e00dc45d34c373` candidate before the beta line.
+This is the first STRATA preview from the current Engine 5 line.
 
-## Verified in the exact candidate
+The biggest change is that UNCANNY is starting to feel like one program instead of a pile of separate pieces.
 
-- source-bounded detail governor: controlled overshoot fell from 0.0391917 to 0.0129333
-- flat-region variance fell from 0.00182544 to 0.000234787 in the controlled fixture
-- conservative water response was measurable but subtle; no dramatic-water claim
-- restricted rigid D3D11 replacement changed 48 → 120 triangles
-- corrected silhouette error against an independent reference fell 4,464 → 3,816 pixels
-- normal-only tests changed real normal buffers while preserving depth exactly
-- material targeting produced 65,536 pink target pixels, left 65,536 unrelated pixels exact and restored the original exactly
-- x86/x64 production builds and the exact-candidate private CI completed successfully
+## REVENANT
 
-Validation run: `35683346915`.
+PCSX2 saved packs are working: build accepted captured textures, switch to saved mode and play without keeping reconstruction alive every launch.
 
-## Explicitly not claimed
+Native D3D9 moved forward too. Deadpool produced real captures and five validated neural replacement assets automatically.
 
-No real games were exercised by this exact candidate. No approved game geometry profile ships as proof. Universal auto-tessellation, native LOD tracking, animated replacement, automatic rock/gravel displacement, dramatic water geometry and universal DLSS 5 are not claimed.
+The last Deadpool run did **not** finish visible GPU replacement proof because the full graphics stack kept the performance guard high enough to defer uploads. I left the safety guard intact instead of cheating the test.
 
-Beta will continue the newer bridge/REVENANT work separately instead of destabilizing this final alpha checkpoint.
+## STRATA
+
+- newer launcher/library integration
+- themes + fullscreen work
+- Control Deck profiles/themes
+- safer repair/remove/restore paths
+- combined renderer + REVENANT + neural integration
+
+## neural bridge
+
+Real provider create/evaluate/output-use evidence already exists on D3D9, D3D11 and D3D12.
+
+Vulkan, OpenGL and AMD are not being called complete in this preview.
+
+## still open
+
+- D3D9 REVENANT visible A/B
+- full sky/cubemap seam acceptance
+- full water/reflection + motion acceptance
+- Radeon hardware acceptance
+- Vulkan/OpenGL parity
+- full controller/handheld sign-off
+- shader/profile archive
+- replay + automatic comparison capture
+
+This is a preview. I am not using a new engine name to pretend every single Engine 5 feature is already done.

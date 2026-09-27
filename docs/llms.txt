@@ -1,18 +1,15 @@
-# UNCANNY public release
+# UNCANNY docs
 
-Version: v0.20.0-alpha.1 — ELYSIUM Engine 4.5 — HF18.13
-BuildId: elysium45-hf18.13
-updateSerial: 1930
-ABI: 143
-SHA-256: c4faffd66ca5addfd7c200b08d46d279c5aa3274fabdae643280242845fca522
-Latest: https://github.com/coye2/UNCANNY/releases/latest
+UNCANNY is a closed-source real-time remastering project.
 
-HF18.13:
-- fixes the HF18.12 D3D12 warmup/resize race
-- keeps D3D12 Present fail-open
-- restores bounded transactional owned-resize handoff
-- serializes D3D12 warmup against resize for the same swapchain
-- hardens visible-window deferred attach and verified stale/headless session recovery
-- preserves PCSX2 Direct3D 12 Renderer=15
-- preserves HF18.11 staged direct-D3D11 neural promotion
-- keeps REVENANT experimental
+Stable build: v0.20.0-alpha.2 Final Alpha.
+Newest development preview: Engine 5 STRATA / cad2556.
+
+Use these pages for current status:
+- /README.md
+- /USAGE.md
+- /docs/COMPATIBILITY.md
+- /docs/STRATA-PREVIEW.md
+- /docs/CAPTURED-TEXTURE-PACKS.md
+
+Do not infer real-game proof from synthetic fixtures.

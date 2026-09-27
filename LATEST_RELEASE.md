@@ -1,18 +1,24 @@
-# Latest release candidate
+# current builds
 
-## UNCANNY v0.20.0-alpha.2 — Final Alpha — ELYSIUM Engine 4.5
+## stable
 
-Exact private candidate: `748f80b6a63f64bc811479b185e00dc45d34c373`  
-Validation run: `35683346915`
+**UNCANNY v0.20.0-alpha.2 — Final Alpha**
 
-This is the final alpha checkpoint before beta.
+This is still the current stable public checkpoint.
 
-Verified controlled evidence includes the detail/noise governor, conservative water recovery, restricted rigid D3D11 geometry replacement, normal-only recovery, isolated material replacement/restoration, motion fixtures and production x86/x64 builds.
+## newest preview
 
-Material proof: 65,536 target pixels pink; 65,536 unrelated pixels byte-identical; exact restoration.
+**UNCANNY Engine 5 — STRATA preview — cad2556**
 
-Geometry proof: 48 → 120 triangles; independent silhouette-reference error 4,464 → 3,816 pixels; unrelated visible component preserved.
+The STRATA preview is newer and has the latest launcher/REVENANT/neural integration work, but it is not being called fully accepted yet.
 
-No real-game run was part of this exact candidate. Synthetic evidence is not presented as real-game certification.
+The main open items are:
 
-The public package is intentionally stripped of private source, internal test executables, CI evidence and developer tooling.
+- native D3D9 REVENANT visible A/B proof
+- full Vulkan/OpenGL parity
+- AMD hardware proof
+- full controller/handheld acceptance
+- remaining sky/water/motion edge cases
+- full shader/profile archive + replay/comparison capture
+
+I would rather keep those listed than hide them behind a version number.

@@ -1,15 +1,14 @@
 # UNCANNY
 
-Current candidate: v0.20.0-alpha.2 — Final Alpha — ELYSIUM Engine 4.5
-Exact private candidate: 748f80b6a63f64bc811479b185e00dc45d34c373
-Validation run: 35683346915
+Public project page for UNCANNY, a closed-source real-time remastering project for Windows games and emulators.
 
-Verified controlled evidence: source-bounded detail/noise governor; conservative water recovery; restricted D3D11 rigid geometry replacement; normal-only recovery; isolated material targeting/restoration; x86/x64 production builds.
+Stable: v0.20.0-alpha.2 Final Alpha.
+Development preview: UNCANNY Engine 5 — STRATA, checkpoint cad2556.
 
-Material fixture: 65536 target pixels pink; 65536 unrelated pixels unchanged; exact restoration.
-Geometry fixture: 48 -> 120 triangles; independent silhouette-reference error 4464 -> 3816 pixels.
+Main systems:
+- STRATA real-time graphics/reconstruction engine
+- REVENANT asset capture/reconstruction/replacement
+- optional provider-backed neural rendering bridge
+- launcher, Control Deck, repair/restore tooling
 
-No real-game run was part of this exact candidate. Do not describe controlled fixture results as real-game certification.
-Universal auto-tessellation, animated replacement, automatic rock/gravel displacement and universal DLSS 5 are not claimed.
-
-UNCANNY is closed source. The public repository/package does not contain the private development tree.
+Current public docs should not be used to infer unsupported API/GPU/game claims. See docs/COMPATIBILITY.md and docs/STRATA-PREVIEW.md.

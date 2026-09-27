@@ -2,9 +2,25 @@
 
 UNCANNY is my real-time remastering project for Windows games and emulators.
 
-The current stable build is **v0.20.0-alpha.2 — Final Alpha**.
+## latest preview release
 
-The newest development preview is **UNCANNY Engine 5 — STRATA**, built from the `cad2556` checkpoint.
+### UNCANNY Engine 5 — STRATA Preview cad2556
+
+**STRATA is live now.**
+
+[**Download STRATA Preview cad2556**](https://github.com/coye2/UNCANNY/releases/tag/strata-preview-cad2556)
+
+Direct ZIP:
+
+[UNCANNY-STRATA-PUBLIC-PREVIEW-cad2556-POLISHED.zip](https://github.com/coye2/UNCANNY/releases/download/strata-preview-cad2556/UNCANNY-STRATA-PUBLIC-PREVIEW-cad2556-POLISHED.zip)
+
+SHA-256:
+
+`d41be8a9794cbe0426cfb9a1840b00c509b946bd1056a869e8ad80dd3fe408ac`
+
+This is the newest public build. It is marked **Pre-release** because some STRATA paths are still being finished.
+
+**Stable build:** v0.20.0-alpha.2 — Final Alpha
 
 ## what STRATA is
 
@@ -36,7 +52,7 @@ I am not going to call unfinished stuff finished just because a harness passed.
 
 ## install
 
-1. Download a build from **Releases**.
+1. Download the STRATA preview above or another build from **Releases**.
 2. Extract the whole ZIP somewhere permanent.
 3. Run `UNCANNY.exe`.
 4. Add a game manually or use **Scan PC**.

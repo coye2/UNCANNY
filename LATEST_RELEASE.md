@@ -1,18 +1,24 @@
 # current builds
 
+## newest public build
+
+**UNCANNY Engine 5 — STRATA Preview cad2556**
+
+[Download the STRATA preview](https://github.com/coye2/UNCANNY/releases/tag/strata-preview-cad2556)
+
+ZIP SHA-256:
+
+`d41be8a9794cbe0426cfb9a1840b00c509b946bd1056a869e8ad80dd3fe408ac`
+
+This is the newest public build and it is intentionally marked **Pre-release** while the remaining STRATA acceptance work is finished.
+
 ## stable
 
 **UNCANNY v0.20.0-alpha.2 — Final Alpha**
 
-This is still the current stable public checkpoint.
+Final Alpha is still the current stable release.
 
-## newest preview
-
-**UNCANNY Engine 5 — STRATA preview — cad2556**
-
-The STRATA preview is newer and has the latest launcher/REVENANT/neural integration work, but it is not being called fully accepted yet.
-
-The main open items are:
+## open STRATA work
 
 - native D3D9 REVENANT visible A/B proof
 - full Vulkan/OpenGL parity
@@ -20,5 +26,3 @@ The main open items are:
 - full controller/handheld acceptance
 - remaining sky/water/motion edge cases
 - full shader/profile archive + replay/comparison capture
-
-I would rather keep those listed than hide them behind a version number.
